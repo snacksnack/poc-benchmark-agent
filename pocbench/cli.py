@@ -31,6 +31,13 @@ def _cmd_cost(args) -> int:
 def _cmd_spike_load(args) -> int:
     with psycopg.connect(args.dsn, autocommit=True, connect_timeout=30) as conn:
         conn.execute(spike.SCHEMA)
+        # Neon's file-cache view (cache evidence, ADR 0013) needs the `neon`
+        # extension. Stock Postgres has no such extension; evidence is then
+        # recorded as unavailable.
+        try:
+            conn.execute("CREATE EXTENSION IF NOT EXISTS neon")
+        except psycopg.errors.FeatureNotSupported:
+            print("neon extension unavailable (not Neon); file-cache evidence will be null")
         for sql in spike.LOAD:
             conn.execute(sql)
         size = conn.execute("SELECT pg_size_pretty(pg_database_size(current_database()))")

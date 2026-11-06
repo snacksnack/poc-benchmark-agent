@@ -1,8 +1,13 @@
 name: Benchmark
 
 # Scored runs execute from a GitHub-hosted runner, never a laptop (ADR 0014).
-# Manual dispatch only: every run spends Neon compute.
+# Never on push: every run spends Neon compute. Two triggers, both deliberate:
+# manual dispatch (needs this file on main), or adding the
+# `benchmark: noise-gate` label to a PR, which runs the PR's own copy of this
+# file. Same-repo PRs only; fork PRs never receive the secret.
 on:
+  pull_request:
+    types: [labeled]
   workflow_dispatch:
     inputs:
       task:
@@ -20,8 +25,14 @@ permissions:
 
 jobs:
   run:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.label.name == 'benchmark: noise-gate' &&
+       github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    env:
+      TASK: ${{ inputs.task || 'noise-gate' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -40,7 +51,7 @@ jobs:
           uv run pocbench fingerprint
 
       - name: Noise gate
-        if: inputs.task == 'noise-gate'
+        if: env.TASK == 'noise-gate'
         env:
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
           NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
@@ -52,6 +63,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.task }}-${{ github.run_id }}
+          name: ${{ env.TASK }}-${{ github.run_id }}
           path: runs/
           retention-days: 90
