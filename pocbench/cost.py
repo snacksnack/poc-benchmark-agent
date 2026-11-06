@@ -13,7 +13,7 @@ from pocbench import sizing
 # Work the matrix does not describe. Each is a guess until the phase that
 # owns it measures it; the estimate is re-run at each phase exit.
 ASSUMPTIONS = {
-    "build_months": 2.0,
+    "build_months": 0.5,  # ~35-40 h of benchmark runs spread over about two weeks
     "phase1_load_cu_hours": 8.0,  # generate ~10.5 GB on 4 CU, ~2 h
     "phase1_index_measure_cu_hours": 4.0,  # build all 8 candidates once on 4 CU
     "phase1_profile_cu_hours": 2.0,  # capture the workload profile, 1 h at 2 CU

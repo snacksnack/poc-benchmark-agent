@@ -13,12 +13,12 @@ Rates: Neon Launch, $0.106/CU-hour, $0.35/GB-month storage, $0.2/GB-month instan
 | Phase 4 adaptive loop (profiling slice) | 97.5 | 10.33 | 20 experiments x 4.9 CU-h (candidate at 2.33 CU + interleaved default baseline) |
 | Phase 4 held-out evaluation | 23.5 | 2.49 | frozen candidate + 2 baselines, eval protocol (3.7 h each) |
 | Phase 4 ablations | 17.3 | 1.84 | 2 ablations at the candidate tier, eval protocol |
-| Root branch storage |  | 7.35 | 10.5 GB x $0.35/GB-month x 2 months |
-| Instant-restore history |  | 4.20 | upper bound: the whole root rewritten inside a 1-day window |
-| Index storage on child branches |  | 1.74 | all 8 candidates (5.0 GB upper bound) live for 1 month(s) |
+| Root branch storage |  | 1.84 | 10.5 GB x $0.35/GB-month x 0.5 months |
+| Instant-restore history |  | 1.05 | upper bound: the whole root rewritten inside a 1-day window |
+| Index storage on child branches |  | 0.43 | all 8 candidates (5.0 GB upper bound) live for 0.25 month(s) |
 | Model spend, Phase 4 loop |  | 10.00 | budget cap |
 | Model spend, Phase 6 evals |  | 5.00 | assumed |
-| **Total** | **160.2** | **45.27** | |
+| **Total** | **160.2** | **35.31** | |
 
 ## Worst case
 
@@ -29,18 +29,18 @@ Rates: Neon Launch, $0.106/CU-hour, $0.35/GB-month storage, $0.2/GB-month instan
 | Phase 4 adaptive loop (profiling slice) | 120.0 | 12.72 | 20 experiments x 6.9 CU-h (candidate at 4.00 CU + interleaved default baseline), capped by the 120 CU-h budget |
 | Phase 4 held-out evaluation | 29.7 | 3.15 | frozen candidate + 2 baselines, eval protocol (3.7 h each) |
 | Phase 4 ablations | 29.7 | 3.15 | 2 ablations at the candidate tier, eval protocol |
-| Root branch storage |  | 7.35 | 10.5 GB x $0.35/GB-month x 2 months |
-| Instant-restore history |  | 4.20 | upper bound: the whole root rewritten inside a 1-day window |
-| Index storage on child branches |  | 3.48 | all 8 candidates (5.0 GB upper bound) live for 2 month(s) |
+| Root branch storage |  | 1.84 | 10.5 GB x $0.35/GB-month x 0.5 months |
+| Instant-restore history |  | 1.05 | upper bound: the whole root rewritten inside a 1-day window |
+| Index storage on child branches |  | 0.87 | all 8 candidates (5.0 GB upper bound) live for 0.5 month(s) |
 | Model spend, Phase 4 loop |  | 10.00 | budget cap |
 | Model spend, Phase 6 evals |  | 5.00 | assumed |
-| **Total** | **201.3** | **51.37** | |
+| **Total** | **201.3** | **40.10** | |
 
 After the build: about $3.67/month to keep the root branch (compute scales to zero; delete the project to stop it entirely).
 
 ## Assumptions
 
-- `build_months` = 2.0
+- `build_months` = 0.5
 - `phase1_load_cu_hours` = 8.0
 - `phase1_index_measure_cu_hours` = 4.0
 - `phase1_profile_cu_hours` = 2.0

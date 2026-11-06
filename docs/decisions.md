@@ -140,8 +140,10 @@ Results: `docs/noise-gate.md`.
 ## Cost
 
 `docs/cost-estimate.md`, generated from the two config files by
-`pocbench cost` (a test fails if it goes stale). At Phase 0: about **$45
-expected, $51 worst case** for the build, and about $3.70 a month to keep the
-dataset afterward. The epic's provisional $100-130 was high: compute for the
-whole matrix is 160-200 CU-hours (about $17-21); storage, history and the model
-budgets make up the rest.
+`pocbench cost` (a test fails if it goes stale). At Phase 0: about **$35
+expected, $40 worst case** for the build, assuming about two weeks of calendar
+time (the binding constraint is 35-40 hours of benchmark runs, not build
+work), and about $3.70 a month to keep the dataset afterward. The epic's
+provisional $100-130 was high: compute for the whole matrix is 160-200
+CU-hours (about $17-21); the model budgets, storage and history make up the
+rest.
