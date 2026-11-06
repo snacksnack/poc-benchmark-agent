@@ -1,0 +1,25 @@
+# secrets — never commit; editor swap files have leaked these before
+.env
+.env.*
+!.env.example
+*.swp
+*.swo
+*~
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# os
+.DS_Store
+
+.ruff_cache/
+site/
+
+# benchmark run output (raw per-query latency logs; summaries are committed under results/)
+runs/

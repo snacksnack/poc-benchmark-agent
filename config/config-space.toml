@@ -1,0 +1,160 @@
+# Configuration space and experiment budgets (RC1-628, Phase 0).
+# docs/decisions.md explains every entry; ADR 0003 and ADR 0015 hold the
+# reasoning. The Phase 4 loop may only propose bundles drawn from this file.
+
+schema_version = 1
+postgres_major = 18
+region = "aws-us-east-1"
+
+[tiers]
+# Fixed size (autoscaling min = max). 0.25 and 0.5 CU are shared compute on
+# Neon and add a noise source the experiment cannot control; excluded (ADR 0015).
+compute_units = [1, 2, 4]
+# The tier the "prospect" runs today. Both baselines run here.
+default_cu = 2
+
+[dataset]
+# Phase 1 targets. The size is set by its ratio to compute cache, not in
+# absolute GB: ~10.5 GB against 3 / 6 / 12 GB of compute cache at 1 / 2 / 4 CU
+# spans "working set does not fit" to "fits". The ratio is a design parameter,
+# not a claim that results transfer across scales.
+rows = { accounts = 2_000, campaigns = 20_000, contacts = 6_000_000, events = 50_000_000 }
+# Estimated heap bytes per row including the 24-byte tuple header and line
+# pointer. Phase 1 measures them.
+row_bytes = { accounts = 120, campaigns = 120, contacts = 200, events = 160 }
+target_gb = 10.5
+
+# Bounded index candidates. Sizes are upper-bound estimates from
+# pocbench.sizing (no btree deduplication credit); Phase 1 replaces them with
+# measured pg_relation_size values. Each built index is diverged pages on a
+# child branch and is billed storage (R8).
+[[index]]
+id = "I1"
+ddl = "CREATE INDEX ON events (contact_id, occurred_at DESC)"
+table = "events"
+key_bytes = 16
+serves = "N+1 latest-event lookups per contact"
+
+[[index]]
+id = "I2"
+ddl = "CREATE INDEX ON events (account_id, occurred_at)"
+table = "events"
+key_bytes = 16
+serves = "per-account time-range scans, deep pagination"
+
+[[index]]
+id = "I3"
+ddl = "CREATE INDEX ON events (campaign_id, event_type)"
+table = "events"
+key_bytes = 8
+serves = "campaign funnel counts"
+
+[[index]]
+id = "I4"
+ddl = "CREATE INDEX ON events USING brin (occurred_at)"
+table = "events"
+kind = "brin"
+serves = "large time-window sorts and aggregates (rows are generated in time order)"
+
+[[index]]
+id = "I5"
+ddl = "CREATE INDEX ON contacts (account_id, status)"
+table = "contacts"
+key_bytes = 16
+serves = "account contact lists filtered by status (skewed: a few accounts own most contacts)"
+
+[[index]]
+id = "I6"
+ddl = "CREATE INDEX ON contacts (email_status) WHERE email_status = 'bounced'"
+table = "contacts"
+key_bytes = 16
+selectivity = 0.005
+serves = "the useless-looking useful index: a low-cardinality column whose rare value is queried hot"
+
+[[index]]
+id = "I7"
+ddl = "CREATE INDEX ON contacts (lower(email))"
+table = "contacts"
+key_bytes = 32
+serves = "case-insensitive email lookup"
+
+[[index]]
+id = "I8"
+ddl = "CREATE INDEX ON contacts (country, region)"
+table = "contacts"
+key_bytes = 16
+serves = "correlated predicates (region implies country)"
+
+[baselines]
+# Untuned default: primary keys only (Postgres does not index foreign keys),
+# at default_cu.
+default = { cu = 2, indexes = [] }
+# Deliberately naive: one single-column btree on every column that appears in
+# a WHERE predicate of the profiled workload, at default_cu. The rule is fixed
+# here; Phase 1 derives the column list mechanically from the query shapes.
+naive = { cu = 2, rule = "single-column btree per WHERE column" }
+
+[split]
+# Held-out split at the ACCOUNT level, stratified by account-size decile so
+# both slices hold hot and cold accounts. A query instance belongs to the slice
+# of the account it targets; queries with no account predicate split 70/30 by
+# instance. Seeded and recorded so the split is reproducible.
+profiling_fraction = 0.7
+held_out_fraction = 0.3
+unit = "account"
+stratify_by = "account_size_decile"
+seed = 628
+
+[budgets.phase4]
+# The adaptive loop stops at whichever budget runs out first, then freezes a
+# candidate or refuses (ADR 0005, ADR 0011).
+max_experiments = 20
+max_compute_cu_hours = 120
+max_model_spend_usd = 10
+
+[cache_states]
+# Named for the procedure attempted, not the state achieved (ADR 0013). The
+# evidence (pg_statio / pg_stat_io and neon_stat_file_cache before and after)
+# is recorded with every run; eviction is measured, never assumed. The
+# pageserver tier is unobservable from the client (R5).
+warm = { procedure = "load-model warm-up on the run's own mix", extra_minutes = 0.0, uses_warmup = true }
+post-restart-with-eviction = { procedure = "restart the compute, then run a scan workload over tables outside the mix", extra_minutes = 2.5, uses_warmup = false }
+
+[protocol.dev]
+# Phase 4 development runs on the profiling slice: reduced protocol.
+levels = [8, 32]
+repetitions = 2
+cache_states = ["warm", "post-restart-with-eviction"]
+interleave_baseline = true
+
+[protocol.eval]
+# Held-out evaluation of the frozen candidate and both baselines: full
+# protocol, randomized order, interleaved.
+levels = [1, 8, 32]
+repetitions = 5
+cache_states = ["warm", "post-restart-with-eviction"]
+interleave_baseline = true
+
+[noise_gate]
+# Feasibility gate only (ADR 0009). Real uncertainty is measured alongside
+# the Phase 4 experiments, never borrowed from this run.
+plan = "free"
+cu = 1
+sessions = 8
+cache_state = "warm"
+runs = 5
+# The smallest p99 improvement the Phase 2 criteria may call a pass. Phase 2
+# may raise it; lowering it below this value re-opens the gate.
+smallest_pass_effect = 0.20
+# Go when the run-to-run spread, (max - min) / median, is below the smallest
+# pass effect for both p95 and p99.
+go_if_spread_below = 0.20
+supplementary = { cu = 0.25, runs = 3, gating = false, note = "shared compute, pageserver-bound; informational" }
+
+[cost]
+# Neon Launch, read from neon.com/pricing (last updated 2026-11-04) on 2026-11-06.
+cu_hour_usd = 0.106
+storage_gb_month_usd = 0.35
+instant_restore_gb_month_usd = 0.20
+extra_branch_month_usd = 1.50
+branches_included = 10

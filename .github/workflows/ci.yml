@@ -1,0 +1,59 @@
+name: CI
+
+# push scoped to main so a PR commit runs once (the pull_request event).
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    # The load generator's integration tests run against a real Postgres 18,
+    # the version the benchmark uses. No Neon access in CI.
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_PASSWORD: pocbench
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Sync
+        run: uv sync --all-groups
+
+      - name: Lint (ruff)
+        run: uv run ruff check .
+
+      # --ddtrace reports test-level results to Test Optimization, agentless.
+      - name: Tests
+        env:
+          POCBENCH_TEST_DSN: postgresql://postgres:pocbench@localhost:5432/postgres
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+          DD_CIVISIBILITY_AGENTLESS_ENABLED: "true"
+          DD_SITE: datadoghq.com
+          DD_SERVICE: poc-benchmark-agent
+          DD_ENV: ci
+        run: uv run pytest --ddtrace --cov
+
+      # The pinned files' fingerprints, printed so every CI log records which
+      # load model and config space the code was tested against.
+      - name: Fingerprint pinned config
+        run: uv run pocbench fingerprint
