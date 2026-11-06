@@ -57,3 +57,15 @@ def test_branches_are_deleted_even_when_a_run_fails(fake, monkeypatch, tmp_path)
         gate.run_gate(tmp_path, "neondb", "owner", measure_s=1)
     assert fake.deleted and set(fake.deleted) == {v.name for v in fake.created}
     assert "branches_deleted" in json.loads((tmp_path / "gate.json").read_text())
+
+
+def test_report_renders_the_verdict_runs_and_housekeeping(fake, monkeypatch, tmp_path):
+    p99s = iter([20.0, 26.0, 20.5, 20.2, 20.8, 300.0, 40.0, 44.0, 41.0])
+    monkeypatch.setattr(gate.loadgen, "run", lambda spec, inst, out: {
+        "overall": _overall(next(p99s)), "probe": _overall(1.0), "throughput_qps": 100.0,
+        "by_shape": {}})
+    text = gate.render(gate.run_gate(tmp_path, "neondb", "owner", measure_s=1), "https://x")
+    assert "## Verdict: FALLBACK" in text
+    assert "p99 spread" in text  # the reason is printed, not just the verdict
+    assert text.count("| gate-") == 5 and text.count("| shared-") == 3
+    assert "Branches deleted:" in text and "Delete failures" not in text

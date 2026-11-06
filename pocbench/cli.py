@@ -62,6 +62,16 @@ def _cmd_gate(args) -> int:
     return 0 if "delete_failures" not in result else 1
 
 
+def _cmd_gate_report(args) -> int:
+    result = json.loads(Path(args.json).read_text())
+    text = gate.render(result, args.run_url)
+    if args.write:
+        Path(args.write).write_text(text)
+    else:
+        print(text)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     load_dotenv()
     p = argparse.ArgumentParser(prog="pocbench")
@@ -90,11 +100,17 @@ def main(argv: list[str] | None = None) -> int:
     g.add_argument("--role", default=os.environ.get("NEON_ROLE", "neondb_owner"))
     g.add_argument("--measure", type=float, help="override (dev only; never in a scored run)")
 
+    gr = sub.add_parser("gate-report", help="render gate.json as markdown")
+    gr.add_argument("--json", default="results/phase0/gate.json")
+    gr.add_argument("--run-url")
+    gr.add_argument("--write")
+
     args = p.parse_args(argv)
     if getattr(args, "dsn", "unset") is None:
         p.error("--dsn or DATABASE_URL is required")
     handlers = {"fingerprint": _cmd_fingerprint, "cost": _cmd_cost,
-                "spike-load": _cmd_spike_load, "run": _cmd_run, "gate": _cmd_gate}
+                "spike-load": _cmd_spike_load, "run": _cmd_run, "gate": _cmd_gate,
+                "gate-report": _cmd_gate_report}
     return handlers[args.cmd](args)
 
 
