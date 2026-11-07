@@ -55,6 +55,9 @@ def validate_load_model(lm: dict) -> None:
     timing = lm["timing"]
     if timing["measure_seconds"] <= 0 or timing["per_query_timeout_ms"] <= 0:
         raise ValueError("measure window and per-query timeout must be positive")
+    report = lm["report"]
+    if report["min_samples_for_p99"] != round(report["tail_beyond"] / 0.01):
+        raise ValueError("min_samples_for_p99 must equal tail_beyond / 0.01")
     errors = lm["errors"]
     if not errors["count_as_results"]:
         raise ValueError("errors and timeouts must be counted as results (epic rule 2)")

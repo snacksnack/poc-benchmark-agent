@@ -9,7 +9,7 @@ from pathlib import Path
 import psycopg
 from dotenv import load_dotenv
 
-from pocbench import config, cost, gate, loadgen, spike
+from pocbench import config, corpus, cost, gate, loadgen, phase1, phase1_report, spike
 
 
 def _cmd_fingerprint(_args) -> int:
@@ -72,6 +72,49 @@ def _cmd_gate_report(args) -> int:
     return 0
 
 
+def _cmd_corpus_load(args) -> int:
+    out = Path(args.out)
+    if args.dsn:  # local Postgres: test scale unless --full
+        space = config.config_space().data
+        spec = corpus.CorpusSpec.from_config(space) if args.full else corpus.TEST_SPEC
+        record = corpus.load(args.dsn, spec, fresh=args.fresh)
+        phase1._write(out / "corpus.json", record)
+    else:
+        record = phase1.run_corpus_load(out, args.database, args.role, args.fresh)
+    print(json.dumps({k: record[k] for k in ("database_bytes", "load_seconds")}, indent=2))
+    return 0
+
+
+def _cmd_profile(args) -> int:
+    out = Path(args.out)
+    if args.dsn:  # local Postgres: same sequence, one compute size
+        lm, sp = config.load_model(), config.config_space()
+        cap = dict(sp.data["capture"])
+        if args.measure:
+            cap["measure_seconds"] = args.measure
+        report = phase1.profile_core(args.dsn, out, lm, sp, cap)
+        valid = report["capture"]["stats_validity"]["valid"]
+    else:
+        result = phase1.run_profile(out, args.database, args.role, measure_s=args.measure)
+        valid = result.get("stats_valid", False) and "delete_failures" not in result
+    print(f"profile written to {out}; capture statistics valid: {valid}")
+    return 0 if valid else 1
+
+
+def _cmd_tier_probe(args) -> int:
+    result = phase1.run_tier_probe(Path(args.out), args.database, args.role)
+    return 0 if "delete_failures" not in result else 1
+
+
+def _cmd_profile_report(args) -> int:
+    text = phase1_report.render(Path(args.results), args.run_url)
+    if args.write:
+        Path(args.write).write_text(text)
+    else:
+        print(text)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     load_dotenv()
     p = argparse.ArgumentParser(prog="pocbench")
@@ -105,12 +148,39 @@ def main(argv: list[str] | None = None) -> int:
     gr.add_argument("--run-url")
     gr.add_argument("--write")
 
+    neon_args = {"database": os.environ.get("NEON_DATABASE", "neondb"),
+                 "role": os.environ.get("NEON_ROLE", "neondb_owner")}
+
+    cl = sub.add_parser("corpus-load", help="Phase 1 dataset: Neon corpus branch, or --dsn")
+    cl.add_argument("--dsn", help="local Postgres instead of the Neon corpus branch")
+    cl.add_argument("--full", action="store_true", help="with --dsn: full size, not test size")
+    cl.add_argument("--fresh", action="store_true", help="drop and reload instead of resuming")
+    cl.add_argument("--out", default="runs/phase1")
+    cl.set_defaults(**neon_args)
+
+    pr = sub.add_parser("profile", help="Phase 1 split, capture and profile")
+    pr.add_argument("--dsn", help="local Postgres (adds indexes to it) instead of Neon")
+    pr.add_argument("--out", default="runs/phase1")
+    pr.add_argument("--measure", type=float, help="override the capture window (dev only)")
+    pr.set_defaults(**neon_args)
+
+    tp = sub.add_parser("tier-probe", help="settings and parallel workers per compute tier")
+    tp.add_argument("--out", default="runs/phase1")
+    tp.set_defaults(**neon_args)
+
+    rp = sub.add_parser("profile-report", help="render Phase 1 results as markdown")
+    rp.add_argument("--results", default="results/phase1")
+    rp.add_argument("--run-url")
+    rp.add_argument("--write")
+
     args = p.parse_args(argv)
-    if getattr(args, "dsn", "unset") is None:
+    if args.cmd in ("spike-load", "run") and args.dsn is None:
         p.error("--dsn or DATABASE_URL is required")
     handlers = {"fingerprint": _cmd_fingerprint, "cost": _cmd_cost,
                 "spike-load": _cmd_spike_load, "run": _cmd_run, "gate": _cmd_gate,
-                "gate-report": _cmd_gate_report}
+                "gate-report": _cmd_gate_report, "corpus-load": _cmd_corpus_load,
+                "profile": _cmd_profile, "tier-probe": _cmd_tier_probe,
+                "profile-report": _cmd_profile_report}
     return handlers[args.cmd](args)
 
 

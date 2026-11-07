@@ -106,6 +106,36 @@ held_out_fraction = 0.3
 unit = "account"
 stratify_by = "account_size_decile"
 seed = 628
+# An account-level split cannot hit 30% exactly per shape (one hot tenant
+# carries several shapes). Draw this many seeded candidates and keep the one
+# whose worst per-shape held-out fraction is nearest 30%. Counts only, never
+# latency (ADR 0017).
+candidates = 64
+
+[corpus]
+# Phase 1 dataset branch; every configuration variant is a child of it, so
+# all of them read identical pages. Loaded at load_cu, fixed size.
+branch = "corpus"
+load_cu = 4
+# The prospect's query log: literal SQL, seeded (pocbench/workload.py).
+log_entries = 200_000
+log_seed = 629
+
+[capture]
+# The profile's timing input (ADR 0016): a closed-loop run of the PROFILING
+# slice on the naive baseline at the prospect's tier, standing in for the
+# prospect's production. Not a scored run, so its window may differ from the
+# load model's; it is labeled as a capture everywhere it is reported.
+config = "naive"
+cu = 2
+build_cu = 4
+sessions = 8
+warmup_seconds = 60
+measure_seconds = 1200
+explain_samples = 8
+explain_timeout_ms = 30000
+count_samples = 8
+count_timeout_ms = 60000
 
 [budgets.phase4]
 # The adaptive loop stops at whichever budget runs out first, then freezes a

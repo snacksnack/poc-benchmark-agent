@@ -2,9 +2,9 @@ name: Benchmark
 
 # Scored runs execute from a GitHub-hosted runner, never a laptop (ADR 0014).
 # Never on push: every run spends Neon compute. Two triggers, both deliberate:
-# manual dispatch (needs this file on main), or adding the
-# `benchmark: noise-gate` label to a PR, which runs the PR's own copy of this
-# file. Same-repo PRs only; fork PRs never receive the secret.
+# manual dispatch (needs this file on main), or adding a `benchmark: <task>`
+# label to a PR, which runs the PR's own copy of this file. Same-repo PRs
+# only; fork PRs never receive the secret.
 on:
   pull_request:
     types: [labeled]
@@ -13,7 +13,7 @@ on:
       task:
         description: "What to run"
         type: choice
-        options: [noise-gate]
+        options: [noise-gate, corpus-load, profile, tier-probe]
         default: noise-gate
 
 concurrency:
@@ -27,13 +27,17 @@ jobs:
   run:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.label.name == 'benchmark: noise-gate' &&
+      (startsWith(github.event.label.name, 'benchmark: ') &&
        github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
-    timeout-minutes: 120
-    env:
-      TASK: ${{ inputs.task || 'noise-gate' }}
+    timeout-minutes: 240
     steps:
+      - name: Resolve task
+        env:
+          LABEL: ${{ github.event.label.name }}
+          INPUT: ${{ inputs.task }}
+        run: echo "TASK=${INPUT:-${LABEL#benchmark: }}" >> "$GITHUB_ENV"
+
       - uses: actions/checkout@v4
 
       - name: Install uv
@@ -57,8 +61,31 @@ jobs:
           NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
         run: uv run pocbench gate --out runs/phase0
 
-      # Raw per-query logs and gate.json; the summary is committed by hand
-      # into docs/noise-gate.md after review.
+      # Phase 1 (RC1-629). corpus-load resumes if it is cut off; profile and
+      # tier-probe delete every branch they create.
+      - name: Corpus load
+        if: env.TASK == 'corpus-load'
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+        run: uv run pocbench corpus-load --out runs/phase1
+
+      - name: Profile
+        if: env.TASK == 'profile'
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+        run: uv run pocbench profile --out runs/phase1
+
+      - name: Tier probe
+        if: env.TASK == 'tier-probe'
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+        run: uv run pocbench tier-probe --out runs/phase1
+
+      # Raw per-query logs and result JSON; summaries are committed by hand
+      # after review.
       - name: Upload results
         if: always()
         uses: actions/upload-artifact@v4
