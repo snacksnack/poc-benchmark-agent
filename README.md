@@ -10,7 +10,7 @@ any experiment runs, the recommendation is scored on a held-out slice it never
 saw, and the results document reports losses and refusals as well as wins.
 
 Status: **Phase 1** (RC1-629): corpus, query log, profiler and held-out split
-(`docs/phase1-profile.md`). Phase 0 (RC1-628) committed the decisions, risk
+(`docs/phase1-profile.md`, `docs/phase1-findings.md`). Phase 0 (RC1-628) committed the decisions, risk
 log, load model and cost model, and passed the noise gate
 (`docs/noise-gate.md`). Epic: RC1-595.
 

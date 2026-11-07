@@ -21,20 +21,22 @@ default_cu = 2
 # 0.25 / 0.5 / 1 / 2 / 4 CU spans "14x the cache" to "fits". The ratio is a design parameter,
 # not a claim that results transfer across scales.
 rows = { accounts = 2_000, campaigns = 20_000, contacts = 6_000_000, events = 50_000_000 }
-# Estimated heap bytes per row including the 24-byte tuple header and line
-# pointer. Phase 1 measures them.
-row_bytes = { accounts = 120, campaigns = 120, contacts = 200, events = 160 }
+# Heap bytes per row, measured on the loaded corpus by Phase 1
+# (results/phase1/corpus.json; the Phase 0 estimates were 120/120/200/160).
+row_bytes = { accounts = 78, campaigns = 54, contacts = 102, events = 182 }
 target_gb = 10.5
+# pg_database_size of the loaded corpus, primary keys included (RC1-629).
+measured_gb = 10.98
 
-# Bounded index candidates. Sizes are upper-bound estimates from
-# pocbench.sizing (no btree deduplication credit); Phase 1 replaces them with
-# measured pg_relation_size values. Each built index is diverged pages on a
-# child branch and is billed storage (R8).
+# Bounded index candidates. measured_bytes is pg_relation_size on the corpus
+# (RC1-629); the cost model uses it over the pocbench.sizing upper bound. Each
+# built index is diverged pages on a child branch and is billed storage (R8).
 [[index]]
 id = "I1"
 ddl = "CREATE INDEX ON events (contact_id, occurred_at DESC)"
 table = "events"
 key_bytes = 16
+measured_bytes = 1576214528  # RC1-629, pg_relation_size on the corpus
 serves = "N+1 latest-event lookups per contact"
 
 [[index]]
@@ -42,6 +44,7 @@ id = "I2"
 ddl = "CREATE INDEX ON events (account_id, occurred_at)"
 table = "events"
 key_bytes = 16
+measured_bytes = 1576484864  # RC1-629, pg_relation_size on the corpus
 serves = "per-account time-range scans, deep pagination"
 
 [[index]]
@@ -49,6 +52,7 @@ id = "I3"
 ddl = "CREATE INDEX ON events (campaign_id, event_type)"
 table = "events"
 key_bytes = 8
+measured_bytes = 354713600  # RC1-629, pg_relation_size on the corpus
 serves = "campaign funnel counts"
 
 [[index]]
@@ -56,6 +60,7 @@ id = "I4"
 ddl = "CREATE INDEX ON events USING brin (occurred_at)"
 table = "events"
 kind = "brin"
+measured_bytes = 311296  # RC1-629, pg_relation_size on the corpus
 serves = "large time-window sorts and aggregates (rows are generated in time order)"
 
 [[index]]
@@ -63,6 +68,7 @@ id = "I5"
 ddl = "CREATE INDEX ON contacts (account_id, status)"
 table = "contacts"
 key_bytes = 16
+measured_bytes = 43458560  # RC1-629, pg_relation_size on the corpus
 serves = "account contact lists filtered by status (skewed: a few accounts own most contacts)"
 
 [[index]]
@@ -71,6 +77,7 @@ ddl = "CREATE INDEX ON contacts (email_status) WHERE email_status = 'bounced'"
 table = "contacts"
 key_bytes = 16
 selectivity = 0.005
+measured_bytes = 229376  # RC1-629, pg_relation_size on the corpus
 serves = "the useless-looking useful index: a low-cardinality column whose rare value is queried hot"
 
 [[index]]
@@ -78,6 +85,7 @@ id = "I7"
 ddl = "CREATE INDEX ON contacts (lower(email))"
 table = "contacts"
 key_bytes = 32
+measured_bytes = 298442752  # RC1-629, pg_relation_size on the corpus
 serves = "case-insensitive email lookup"
 
 [[index]]
@@ -85,6 +93,7 @@ id = "I8"
 ddl = "CREATE INDEX ON contacts (country, region)"
 table = "contacts"
 key_bytes = 16
+measured_bytes = 41607168  # RC1-629, pg_relation_size on the corpus
 serves = "correlated predicates (region implies country)"
 
 [baselines]

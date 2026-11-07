@@ -151,3 +151,24 @@ work), and about $3.70 a month to keep the dataset afterward. The epic's
 provisional $100-130 was high: compute for the whole matrix is 130-200
 CU-hours (about $14-21); the model budgets, storage and history make up the
 rest.
+
+## Phase 1 (RC1-629)
+
+The corpus is a seeded 10.98 GB contact/event dataset on its own `corpus`
+branch; every variant is a child of it. The prospect's query log is 200,000
+literal SQL statements; the profiler derives shapes from the text alone.
+Traps are listed in `docs/nastiness.md`, committed before any run. Three
+decisions:
+
+- **ADR 0016:** the profile's timing comes from a capture of the profiling
+  slice on the naive baseline at 2 CU, because PK-only cannot serve the
+  workload at this scale (Reid's call).
+- **ADR 0017:** the account-level split is the best of 64 seeded candidates,
+  chosen on per-shape counts only.
+- **ADR 0018:** a tail is supported when 100 observations from 10 distinct
+  instances lie beyond it (p95: 2,000 and 200; p99: 10,000 and 1,000).
+
+Results: `docs/phase1-profile.md` and `docs/phase1-findings.md`, which carry
+two changes forward: Phase 3 gates scored jobs on the network probe (R9),
+and Phase 2 criteria handle baselines that fail outright (R13).
+

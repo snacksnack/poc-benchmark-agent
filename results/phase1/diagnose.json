@@ -1,0 +1,1721 @@
+{
+  "s01": {
+    "plans": [
+      {
+        "execution_ms": 15.434,
+        "planning_ms": 9.217,
+        "scans": [
+          "Index Scan:naive_events_contact_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 10,
+        "shared_read": 303,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 25
+          }
+        ]
+      },
+      {
+        "execution_ms": 3.677,
+        "planning_ms": 0.095,
+        "scans": [
+          "Index Scan:naive_events_contact_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 5,
+        "shared_read": 10,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 25
+          }
+        ]
+      },
+      {
+        "execution_ms": 4.76,
+        "planning_ms": 0.082,
+        "scans": [
+          "Index Scan:naive_events_contact_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 2,
+        "shared_read": 33,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 25
+          }
+        ]
+      },
+      {
+        "execution_ms": 3.084,
+        "planning_ms": 0.08,
+        "scans": [
+          "Index Scan:naive_events_contact_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 1,
+        "shared_read": 10,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 25
+          }
+        ]
+      },
+      {
+        "execution_ms": 6.07,
+        "planning_ms": 0.081,
+        "scans": [
+          "Index Scan:naive_events_contact_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 2,
+        "shared_read": 62,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 25
+          }
+        ]
+      },
+      {
+        "execution_ms": 3.285,
+        "planning_ms": 0.076,
+        "scans": [
+          "Index Scan:naive_events_contact_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 1,
+        "shared_read": 5,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 25
+          }
+        ]
+      },
+      {
+        "execution_ms": 27.476,
+        "planning_ms": 0.078,
+        "scans": [
+          "Index Scan:naive_events_contact_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 9,
+        "shared_read": 375,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 25
+          }
+        ]
+      },
+      {
+        "execution_ms": 5.877,
+        "planning_ms": 0.083,
+        "scans": [
+          "Index Scan:naive_events_contact_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 2,
+        "shared_read": 51,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 25
+          }
+        ]
+      }
+    ],
+    "selectivity": [
+      {
+        "estimate": 27,
+        "actual": 304,
+        "selectivity": 6.0825020980630595e-06,
+        "q_error": 11.26
+      },
+      {
+        "estimate": 27,
+        "actual": 9,
+        "selectivity": 1.8007407527160372e-07,
+        "q_error": 3.0
+      },
+      {
+        "estimate": 27,
+        "actual": 32,
+        "selectivity": 6.4026337874348e-07,
+        "q_error": 1.19
+      },
+      {
+        "estimate": 27,
+        "actual": 8,
+        "selectivity": 1.6006584468587e-07,
+        "q_error": 3.38
+      },
+      {
+        "estimate": 27,
+        "actual": 61,
+        "selectivity": 1.2205020657297587e-06,
+        "q_error": 2.26
+      },
+      {
+        "estimate": 27,
+        "actual": 3,
+        "selectivity": 6.002469175720124e-08,
+        "q_error": 9.0
+      },
+      {
+        "estimate": 27,
+        "actual": 381,
+        "selectivity": 7.623135853164558e-06,
+        "q_error": 14.11
+      },
+      {
+        "estimate": 27,
+        "actual": 50,
+        "selectivity": 1.0004115292866874e-06,
+        "q_error": 1.85
+      }
+    ]
+  },
+  "s02": {
+    "plans": [
+      {
+        "execution_ms": 485.244,
+        "planning_ms": 4.703,
+        "scans": [
+          "Seq Scan:contacts"
+        ],
+        "rows_removed": 6000000,
+        "workers_planned": 2,
+        "workers_launched": 2,
+        "shared_hit": 6548,
+        "shared_read": 68482,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 497.648,
+        "planning_ms": 0.067,
+        "scans": [
+          "Seq Scan:contacts"
+        ],
+        "rows_removed": 6000000,
+        "workers_planned": 2,
+        "workers_launched": 2,
+        "shared_hit": 6809,
+        "shared_read": 68221,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 488.658,
+        "planning_ms": 0.066,
+        "scans": [
+          "Seq Scan:contacts"
+        ],
+        "rows_removed": 6000000,
+        "workers_planned": 2,
+        "workers_launched": 2,
+        "shared_hit": 7070,
+        "shared_read": 67960,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 493.199,
+        "planning_ms": 0.068,
+        "scans": [
+          "Seq Scan:contacts"
+        ],
+        "rows_removed": 6000000,
+        "workers_planned": 2,
+        "workers_launched": 2,
+        "shared_hit": 7331,
+        "shared_read": 67699,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 505.678,
+        "planning_ms": 0.068,
+        "scans": [
+          "Seq Scan:contacts"
+        ],
+        "rows_removed": 6000000,
+        "workers_planned": 2,
+        "workers_launched": 2,
+        "shared_hit": 7592,
+        "shared_read": 67438,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 481.555,
+        "planning_ms": 0.072,
+        "scans": [
+          "Seq Scan:contacts"
+        ],
+        "rows_removed": 6000000,
+        "workers_planned": 2,
+        "workers_launched": 2,
+        "shared_hit": 7853,
+        "shared_read": 67177,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 499.442,
+        "planning_ms": 0.071,
+        "scans": [
+          "Seq Scan:contacts"
+        ],
+        "rows_removed": 6000000,
+        "workers_planned": 2,
+        "workers_launched": 2,
+        "shared_hit": 8114,
+        "shared_read": 66916,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 490.412,
+        "planning_ms": 0.069,
+        "scans": [
+          "Seq Scan:contacts"
+        ],
+        "rows_removed": 6000000,
+        "workers_planned": 2,
+        "workers_launched": 2,
+        "shared_hit": 8375,
+        "shared_read": 66655,
+        "spills": false,
+        "sorts": []
+      }
+    ],
+    "selectivity": [
+      {
+        "estimate": 30000,
+        "actual": 1,
+        "selectivity": 1.666680833453751e-07,
+        "q_error": 30000.0
+      },
+      {
+        "estimate": 30000,
+        "actual": 1,
+        "selectivity": 1.666680833453751e-07,
+        "q_error": 30000.0
+      },
+      {
+        "estimate": 30000,
+        "actual": 1,
+        "selectivity": 1.666680833453751e-07,
+        "q_error": 30000.0
+      },
+      {
+        "estimate": 30000,
+        "actual": 1,
+        "selectivity": 1.666680833453751e-07,
+        "q_error": 30000.0
+      },
+      {
+        "estimate": 30000,
+        "actual": 1,
+        "selectivity": 1.666680833453751e-07,
+        "q_error": 30000.0
+      },
+      {
+        "estimate": 30000,
+        "actual": 1,
+        "selectivity": 1.666680833453751e-07,
+        "q_error": 30000.0
+      },
+      {
+        "estimate": 30000,
+        "actual": 1,
+        "selectivity": 1.666680833453751e-07,
+        "q_error": 30000.0
+      },
+      {
+        "estimate": 30000,
+        "actual": 1,
+        "selectivity": 1.666680833453751e-07,
+        "q_error": 30000.0
+      }
+    ]
+  },
+  "s03": {
+    "plans": [
+      {
+        "execution_ms": 4.002,
+        "planning_ms": 0.121,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 13499,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 8,
+        "shared_read": 335,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 59.912,
+        "planning_ms": 0.085,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 255225,
+        "workers_planned": 2,
+        "workers_launched": 2,
+        "shared_hit": 1073,
+        "shared_read": 5959,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 0.799,
+        "planning_ms": 0.079,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 5263,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 137,
+        "shared_read": 0,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 22.577,
+        "planning_ms": 0.065,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 243333,
+        "workers_planned": 2,
+        "workers_launched": 2,
+        "shared_hit": 6655,
+        "shared_read": 0,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 20.168,
+        "planning_ms": 0.085,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 200604,
+        "workers_planned": 2,
+        "workers_launched": 2,
+        "shared_hit": 5454,
+        "shared_read": 0,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 57.732,
+        "planning_ms": 0.094,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 450663,
+        "workers_planned": 2,
+        "workers_launched": 2,
+        "shared_hit": 7609,
+        "shared_read": 4848,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 0.99,
+        "planning_ms": 0.087,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 6669,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 172,
+        "shared_read": 0,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 0.142,
+        "planning_ms": 0.088,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 398,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 16,
+        "shared_read": 0,
+        "spills": false,
+        "sorts": []
+      }
+    ],
+    "selectivity": [
+      {
+        "estimate": 136610,
+        "actual": 167741,
+        "selectivity": 0.0033562006066815645,
+        "q_error": 1.23
+      },
+      {
+        "estimate": 16237,
+        "actual": 51559,
+        "selectivity": 0.0010316043607698463,
+        "q_error": 3.18
+      },
+      {
+        "estimate": 431489,
+        "actual": 420095,
+        "selectivity": 0.008405357627913819,
+        "q_error": 1.03
+      },
+      {
+        "estimate": 16237,
+        "actual": 17460,
+        "selectivity": 0.00034934370602691126,
+        "q_error": 1.08
+      },
+      {
+        "estimate": 16237,
+        "actual": 24052,
+        "selectivity": 0.0004812379620480681,
+        "q_error": 1.48
+      },
+      {
+        "estimate": 61641,
+        "actual": 58991,
+        "selectivity": 0.0011803055304830195,
+        "q_error": 1.04
+      },
+      {
+        "estimate": 349856,
+        "actual": 310152,
+        "selectivity": 0.0062055927326264936,
+        "q_error": 1.13
+      },
+      {
+        "estimate": 4583114,
+        "actual": 4436749,
+        "selectivity": 0.08877149704302362,
+        "q_error": 1.03
+      }
+    ]
+  },
+  "s04": {
+    "plans": [
+      {
+        "execution_ms": 1.27,
+        "planning_ms": 0.124,
+        "scans": [
+          "Index Scan:contacts_pkey"
+        ],
+        "rows_removed": 4446,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 0,
+        "shared_read": 71,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 27.538,
+        "planning_ms": 0.092,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id"
+        ],
+        "rows_removed": 1266,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 367,
+        "shared_read": 3676,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 28
+          }
+        ]
+      },
+      {
+        "execution_ms": 17.665,
+        "planning_ms": 0.09,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id"
+        ],
+        "rows_removed": 615,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 267,
+        "shared_read": 1681,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 28
+          }
+        ]
+      },
+      {
+        "execution_ms": 16.223,
+        "planning_ms": 0.096,
+        "scans": [
+          "Index Scan:contacts_pkey"
+        ],
+        "rows_removed": 55133,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 134,
+        "shared_read": 713,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 27.619,
+        "planning_ms": 0.098,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id"
+        ],
+        "rows_removed": 1473,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 597,
+        "shared_read": 4097,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 28
+          }
+        ]
+      },
+      {
+        "execution_ms": 20.314,
+        "planning_ms": 0.101,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id"
+        ],
+        "rows_removed": 1139,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 544,
+        "shared_read": 3172,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 28
+          }
+        ]
+      },
+      {
+        "execution_ms": 18.987,
+        "planning_ms": 0.098,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id"
+        ],
+        "rows_removed": 1098,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 595,
+        "shared_read": 2974,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 32
+          }
+        ]
+      },
+      {
+        "execution_ms": 12.446,
+        "planning_ms": 0.092,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id"
+        ],
+        "rows_removed": 676,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 470,
+        "shared_read": 1785,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 28
+          }
+        ]
+      }
+    ],
+    "selectivity": [
+      {
+        "estimate": 57030,
+        "actual": 60740,
+        "selectivity": 0.010123419382398084,
+        "q_error": 1.07
+      },
+      {
+        "estimate": 1385,
+        "actual": 2875,
+        "selectivity": 0.0004791707396179534,
+        "q_error": 2.08
+      },
+      {
+        "estimate": 1385,
+        "actual": 1356,
+        "selectivity": 0.00022600192101632864,
+        "q_error": 1.02
+      },
+      {
+        "estimate": 10623,
+        "actual": 10458,
+        "selectivity": 0.0017430148156259329,
+        "q_error": 1.02
+      },
+      {
+        "estimate": 1385,
+        "actual": 3355,
+        "selectivity": 0.0005591714196237335,
+        "q_error": 2.42
+      },
+      {
+        "estimate": 1385,
+        "actual": 2663,
+        "selectivity": 0.0004438371059487339,
+        "q_error": 1.92
+      },
+      {
+        "estimate": 1385,
+        "actual": 2549,
+        "selectivity": 0.00042483694444736113,
+        "q_error": 1.84
+      },
+      {
+        "estimate": 1385,
+        "actual": 1599,
+        "selectivity": 0.0002665022652692548,
+        "q_error": 1.15
+      }
+    ]
+  },
+  "s05": {
+    "plans": [
+      {
+        "execution_ms": 607.56,
+        "planning_ms": 2.262,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 0,
+        "shared_read": 9027,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 1116.739,
+        "planning_ms": 0.06,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 145,
+        "shared_read": 17205,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 28.79,
+        "planning_ms": 0.08,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 16,
+        "shared_read": 426,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 82.219,
+        "planning_ms": 0.076,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 47,
+        "shared_read": 1414,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "timeout_ms": 30000
+      },
+      {
+        "execution_ms": 52.569,
+        "planning_ms": 0.087,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 14,
+        "shared_read": 786,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 543.056,
+        "planning_ms": 0.087,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 112,
+        "shared_read": 4511,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 58.193,
+        "planning_ms": 0.082,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 7,
+        "shared_read": 1219,
+        "spills": false,
+        "sorts": []
+      }
+    ],
+    "selectivity": [
+      {
+        "estimate": 3081,
+        "actual": 9060,
+        "selectivity": 0.00018127456910674774,
+        "q_error": 2.94
+      },
+      {
+        "estimate": 3081,
+        "actual": 17467,
+        "selectivity": 0.00034948376364101136,
+        "q_error": 5.67
+      },
+      {
+        "estimate": 3081,
+        "actual": 438,
+        "selectivity": 8.763604996551382e-06,
+        "q_error": 7.03
+      },
+      {
+        "estimate": 3081,
+        "actual": 1456,
+        "selectivity": 2.9131983732828337e-05,
+        "q_error": 2.12
+      },
+      {
+        "estimate": 588091,
+        "actual": 580611,
+        "selectivity": 0.011616998768613458,
+        "q_error": 1.01
+      },
+      {
+        "estimate": 3081,
+        "actual": 795,
+        "selectivity": 1.590654331565833e-05,
+        "q_error": 3.88
+      },
+      {
+        "estimate": 3081,
+        "actual": 4630,
+        "selectivity": 9.263810761194726e-05,
+        "q_error": 1.5
+      },
+      {
+        "estimate": 3081,
+        "actual": 1225,
+        "selectivity": 2.4510082467523842e-05,
+        "q_error": 2.52
+      }
+    ]
+  },
+  "s06": {
+    "plans": [
+      {
+        "execution_ms": 26.356,
+        "planning_ms": 1.993,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id",
+          "Bitmap Index Scan:naive_contacts_email_status"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 0,
+        "shared_read": 72,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 27
+          }
+        ]
+      },
+      {
+        "execution_ms": 5.14,
+        "planning_ms": 0.093,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id",
+          "Bitmap Index Scan:naive_contacts_email_status"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 29,
+        "shared_read": 8,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 25
+          }
+        ]
+      },
+      {
+        "execution_ms": 6.686,
+        "planning_ms": 0.076,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id",
+          "Bitmap Index Scan:naive_contacts_email_status"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 29,
+        "shared_read": 14,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 25
+          }
+        ]
+      },
+      {
+        "execution_ms": 6.672,
+        "planning_ms": 0.093,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id",
+          "Bitmap Index Scan:naive_contacts_email_status"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 29,
+        "shared_read": 17,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 25
+          }
+        ]
+      },
+      {
+        "execution_ms": 16.062,
+        "planning_ms": 0.118,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id",
+          "Bitmap Index Scan:naive_contacts_email_status"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 29,
+        "shared_read": 50,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 27
+          }
+        ]
+      },
+      {
+        "execution_ms": 14.835,
+        "planning_ms": 0.097,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id",
+          "Bitmap Index Scan:naive_contacts_email_status"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 29,
+        "shared_read": 52,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 27
+          }
+        ]
+      },
+      {
+        "execution_ms": 7.154,
+        "planning_ms": 0.095,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id",
+          "Bitmap Index Scan:naive_contacts_email_status"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 29,
+        "shared_read": 13,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 25
+          }
+        ]
+      },
+      {
+        "execution_ms": 11.131,
+        "planning_ms": 0.155,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id",
+          "Bitmap Index Scan:naive_contacts_email_status"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 30,
+        "shared_read": 37,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 27
+          }
+        ]
+      }
+    ],
+    "selectivity": [
+      {
+        "estimate": 9,
+        "actual": 35,
+        "selectivity": 5.833382917088128e-06,
+        "q_error": 3.89
+      },
+      {
+        "estimate": 9,
+        "actual": 5,
+        "selectivity": 8.333404167268755e-07,
+        "q_error": 1.8
+      },
+      {
+        "estimate": 9,
+        "actual": 10,
+        "selectivity": 1.666680833453751e-06,
+        "q_error": 1.11
+      },
+      {
+        "estimate": 9,
+        "actual": 14,
+        "selectivity": 2.3333531668352513e-06,
+        "q_error": 1.56
+      },
+      {
+        "estimate": 50,
+        "actual": 40,
+        "selectivity": 6.666723333815004e-06,
+        "q_error": 1.25
+      },
+      {
+        "estimate": 34,
+        "actual": 42,
+        "selectivity": 7.000059500505754e-06,
+        "q_error": 1.24
+      },
+      {
+        "estimate": 9,
+        "actual": 9,
+        "selectivity": 1.5000127501083759e-06,
+        "q_error": 1.0
+      },
+      {
+        "estimate": 9,
+        "actual": 30,
+        "selectivity": 5.000042500361253e-06,
+        "q_error": 3.33
+      }
+    ]
+  },
+  "s07": {
+    "plans": [
+      {
+        "execution_ms": 851.408,
+        "planning_ms": 2.21,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 23,
+        "shared_read": 3356,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 27
+          }
+        ]
+      },
+      {
+        "execution_ms": 850.4,
+        "planning_ms": 0.103,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 58,
+        "shared_read": 3780,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 27
+          }
+        ]
+      },
+      {
+        "execution_ms": 890.871,
+        "planning_ms": 0.107,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 16,
+        "shared_read": 3583,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 27
+          }
+        ]
+      },
+      {
+        "execution_ms": 816.74,
+        "planning_ms": 0.109,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 22,
+        "shared_read": 3373,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 27
+          }
+        ]
+      },
+      {
+        "execution_ms": 911.104,
+        "planning_ms": 0.106,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 14,
+        "shared_read": 3032,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 27
+          }
+        ]
+      },
+      {
+        "execution_ms": 831.365,
+        "planning_ms": 0.108,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 14,
+        "shared_read": 3567,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 27
+          }
+        ]
+      },
+      {
+        "execution_ms": 937.949,
+        "planning_ms": 0.085,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 18,
+        "shared_read": 3182,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 28
+          }
+        ]
+      },
+      {
+        "execution_ms": 899.904,
+        "planning_ms": 0.096,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 6,
+        "shared_read": 3267,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "top-N heapsort",
+            "space_type": "Memory",
+            "space_kb": 27
+          }
+        ]
+      }
+    ],
+    "selectivity": [
+      {
+        "estimate": 139635,
+        "actual": 135208,
+        "selectivity": 0.0027052728410358884,
+        "q_error": 1.03
+      },
+      {
+        "estimate": 153353,
+        "actual": 153620,
+        "selectivity": 0.003073664382580418,
+        "q_error": 1.0
+      },
+      {
+        "estimate": 139935,
+        "actual": 144061,
+        "selectivity": 0.0028824057064113892,
+        "q_error": 1.03
+      },
+      {
+        "estimate": 137866,
+        "actual": 135895,
+        "selectivity": 0.0027190184954482876,
+        "q_error": 1.01
+      },
+      {
+        "estimate": 114504,
+        "actual": 121874,
+        "selectivity": 0.0024384830944057146,
+        "q_error": 1.06
+      },
+      {
+        "estimate": 151304,
+        "actual": 143343,
+        "selectivity": 0.0028680397968508325,
+        "q_error": 1.06
+      },
+      {
+        "estimate": 132506,
+        "actual": 128060,
+        "selectivity": 0.0025622540088090636,
+        "q_error": 1.03
+      },
+      {
+        "estimate": 123853,
+        "actual": 130965,
+        "selectivity": 0.0026203779186606204,
+        "q_error": 1.06
+      }
+    ]
+  },
+  "s08": {
+    "plans": [
+      {
+        "execution_ms": 16.593,
+        "planning_ms": 0.967,
+        "scans": [
+          "Index Scan:contacts_pkey"
+        ],
+        "rows_removed": 2553,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 0,
+        "shared_read": 43,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 0.743,
+        "planning_ms": 0.097,
+        "scans": [
+          "Index Scan:contacts_pkey"
+        ],
+        "rows_removed": 2568,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 43,
+        "shared_read": 0,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "timeout_ms": 30000
+      },
+      {
+        "execution_ms": 0.806,
+        "planning_ms": 0.109,
+        "scans": [
+          "Index Scan:contacts_pkey"
+        ],
+        "rows_removed": 2568,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 0,
+        "shared_read": 43,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 0.625,
+        "planning_ms": 0.099,
+        "scans": [
+          "Index Scan:contacts_pkey"
+        ],
+        "rows_removed": 2910,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 43,
+        "shared_read": 5,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 0.558,
+        "planning_ms": 0.108,
+        "scans": [
+          "Index Scan:contacts_pkey"
+        ],
+        "rows_removed": 2780,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 46,
+        "shared_read": 0,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 0.538,
+        "planning_ms": 0.104,
+        "scans": [
+          "Index Scan:contacts_pkey"
+        ],
+        "rows_removed": 2675,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 44,
+        "shared_read": 0,
+        "spills": false,
+        "sorts": []
+      },
+      {
+        "execution_ms": 0.743,
+        "planning_ms": 0.098,
+        "scans": [
+          "Index Scan:contacts_pkey"
+        ],
+        "rows_removed": 3357,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 48,
+        "shared_read": 7,
+        "spills": false,
+        "sorts": []
+      }
+    ],
+    "selectivity": [
+      {
+        "estimate": 85348,
+        "actual": 209849,
+        "selectivity": 0.03497513062194362,
+        "q_error": 2.46
+      },
+      {
+        "estimate": 40898,
+        "actual": 208531,
+        "selectivity": 0.034755462088094415,
+        "q_error": 5.1
+      },
+      {
+        "estimate": 40042,
+        "actual": 0,
+        "selectivity": 0.0,
+        "q_error": 40042.0
+      },
+      {
+        "estimate": 40898,
+        "actual": 208531,
+        "selectivity": 0.034755462088094415,
+        "q_error": 5.1
+      },
+      {
+        "estimate": 41536,
+        "actual": 209067,
+        "selectivity": 0.03484479618076754,
+        "q_error": 5.03
+      },
+      {
+        "estimate": 85460,
+        "actual": 208906,
+        "selectivity": 0.034817962619348934,
+        "q_error": 2.44
+      },
+      {
+        "estimate": 82386,
+        "actual": 209116,
+        "selectivity": 0.03485296291685146,
+        "q_error": 2.54
+      },
+      {
+        "estimate": 42172,
+        "actual": 209071,
+        "selectivity": 0.03484546285310092,
+        "q_error": 4.96
+      }
+    ]
+  },
+  "s09": {
+    "plans": [
+      {
+        "execution_ms": 185.209,
+        "planning_ms": 0.085,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 0,
+        "shared_read": 3145,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 219
+          }
+        ]
+      },
+      {
+        "execution_ms": 197.961,
+        "planning_ms": 0.086,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 4,
+        "shared_read": 3208,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 222
+          }
+        ]
+      },
+      {
+        "execution_ms": 626.06,
+        "planning_ms": 0.089,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 59,
+        "shared_read": 9943,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 776
+          }
+        ]
+      },
+      {
+        "execution_ms": 311.787,
+        "planning_ms": 0.087,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 82,
+        "shared_read": 4708,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 380
+          }
+        ]
+      },
+      {
+        "execution_ms": 433.022,
+        "planning_ms": 0.091,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 110,
+        "shared_read": 6533,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 452
+          }
+        ]
+      },
+      {
+        "execution_ms": 204.976,
+        "planning_ms": 0.089,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 70,
+        "shared_read": 3069,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 219
+          }
+        ]
+      },
+      {
+        "timeout_ms": 30000
+      },
+      {
+        "execution_ms": 316.826,
+        "planning_ms": 0.096,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "rows_removed": 0,
+        "workers_planned": 0,
+        "workers_launched": 0,
+        "shared_hit": 48,
+        "shared_read": 2079,
+        "spills": false,
+        "sorts": [
+          {
+            "method": "quicksort",
+            "space_type": "Memory",
+            "space_kb": 179
+          }
+        ]
+      }
+    ],
+    "selectivity": [
+      {
+        "estimate": 3081,
+        "actual": 3140,
+        "selectivity": 6.282584403920396e-05,
+        "q_error": 1.02
+      },
+      {
+        "estimate": 3081,
+        "actual": 3207,
+        "selectivity": 6.416639548844812e-05,
+        "q_error": 1.04
+      },
+      {
+        "estimate": 3081,
+        "actual": 10032,
+        "selectivity": 0.00020072256923608095,
+        "q_error": 3.26
+      },
+      {
+        "estimate": 3081,
+        "actual": 4791,
+        "selectivity": 9.585943273625039e-05,
+        "q_error": 1.56
+      },
+      {
+        "estimate": 3081,
+        "actual": 6648,
+        "selectivity": 0.00013301471693395796,
+        "q_error": 2.16
+      },
+      {
+        "estimate": 3081,
+        "actual": 3138,
+        "selectivity": 6.27858275780325e-05,
+        "q_error": 1.02
+      },
+      {
+        "estimate": 328198,
+        "actual": 275506,
+        "selectivity": 0.005512387575753162,
+        "q_error": 1.19
+      },
+      {
+        "estimate": 3081,
+        "actual": 2122,
+        "selectivity": 4.245746530292701e-05,
+        "q_error": 1.45
+      }
+    ]
+  }
+}
