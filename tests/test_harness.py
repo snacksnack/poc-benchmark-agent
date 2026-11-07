@@ -59,6 +59,14 @@ def test_an_unmeasured_network_is_not_a_stable_one():
     assert not harness.probe_verdict([], 0, 300, RULE)["valid"]
 
 
+def test_preflight_takes_as_many_round_trips_as_a_run_probe():
+    # 300: one spike in 60 samples is the p99; in 300 it is not.
+    assert harness.preflight_rounds(LM.data) == 300
+    one_spike = [69.2] * 299 + [139.3]  # the 2026-11-07 preflight's shape
+    assert harness.probe_verdict(one_spike, 0, 300, RULE)["valid"]
+    assert not harness.probe_verdict([69.2] * 59 + [139.3], 0, 60, RULE)["valid"]
+
+
 def test_require_network_stops_the_job():
     with pytest.raises(harness.NetworkRejected, match="slow network"):
         harness.require_network(harness.probe_verdict([150.0] * 60, 0, 60, RULE))

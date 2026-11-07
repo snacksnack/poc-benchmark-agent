@@ -76,7 +76,8 @@ def test_post_restart_cells_are_skipped_where_the_platform_cannot_restart(tmp_pa
 
 def test_preflight_accepts_a_local_network_and_rejects_on_the_rule():
     lm = copy.deepcopy(config.load_model().data)
-    lm["probe"]["interval_ms"] = 50
+    lm["timing"]["measure_seconds"] = 3
+    lm["probe"]["interval_ms"] = 100
     rule = criteria.load_verified()["method"]["latency_basis"]["run_valid_if"]
     assert harness.preflight(DSN, lm, rule, seconds=1)["valid"]
     strict = {"probe_p50_ms_at_most": 0.0, "probe_p99_minus_p50_ms_at_most": 0.0}

@@ -127,14 +127,23 @@ def probe_verdict(latencies_ms: list[float], errors: int, expected: int, rule: d
             "samples": len(v), "expected": expected, "errors": errors, "reasons": reasons}
 
 
+def preflight_rounds(lm: dict) -> int:
+    """As many round trips as a scored run's probe takes, so the preflight's
+    p99 has the same meaning as a run's. With fewer (60 at one per second),
+    the p99 is the single slowest round trip and one spike fails the job."""
+    return int(lm["timing"]["measure_seconds"] * 1000 / lm["probe"]["interval_ms"])
+
+
 def preflight(dsn: str, lm: dict, rule: dict, seconds: float = PREFLIGHT_SECONDS) -> dict:
-    """The job's first act: probe the target alone for `seconds`. A slow or
-    jittery network stops the job before any run spends compute."""
-    query, interval = lm["probe"]["query"], lm["probe"]["interval_ms"] / 1000
+    """The job's first act: probe the target alone. A slow or jittery network
+    stops the job before any run spends compute. The cadence is faster than
+    a run's probe; the sample count is the same."""
+    query, rounds = lm["probe"]["query"], preflight_rounds(lm)
+    interval = seconds / rounds
     lat, errors = [], 0
     with psycopg.connect(dsn, autocommit=True, connect_timeout=15) as conn:
-        end = time.monotonic() + seconds
-        while (t := time.monotonic()) < end:
+        for _ in range(rounds):
+            t = time.monotonic()
             t0 = time.perf_counter()
             try:
                 conn.execute(query)
@@ -142,7 +151,7 @@ def preflight(dsn: str, lm: dict, rule: dict, seconds: float = PREFLIGHT_SECONDS
             except psycopg.Error:
                 errors += 1
             time.sleep(max(0.0, interval - (time.monotonic() - t)))
-    return probe_verdict(lat, errors, int(seconds / interval), rule)
+    return probe_verdict(lat, errors, rounds, rule) | {"seconds": seconds}
 
 
 def require_network(verdict: dict) -> None:

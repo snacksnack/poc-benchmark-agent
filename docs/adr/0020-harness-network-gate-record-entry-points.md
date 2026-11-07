@@ -22,9 +22,12 @@ no development aid can write to.
   document it returned, and checks the load model and config space it loads
   against the criteria's pins. The probe rule, order seed, tail floors and
   interval come from the frozen file, not from module constants.
-- **Network gate (R9).** A job opens with a 60-second preflight probe on the
-  first branch. A slow or jittery network stops the job (exit 2) before index
-  builds or runs spend compute. Every run is then checked against the frozen
+- **Network gate (R9).** A job opens with a preflight probe on the first
+  branch: as many round trips as a scored run's probe takes (300), over 60
+  seconds. A slow or jittery network stops the job (exit 2) before index
+  builds or runs spend compute. The first version took 60 round trips at one
+  per second, so its p99 was the single slowest one; it rejected a far runner
+  (p50 69 ms) on one 139 ms spike that a run's p99 would not have seen. Every run is then checked against the frozen
   rule. A probe that measured fewer than 90% of its expected round trips, or
   lost any, also fails: an unmeasured network is not a stable one. A failed
   run is recorded as `rejected` with its reasons and re-run, up to three
