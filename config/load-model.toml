@@ -1,0 +1,71 @@
+# Load model (RC1-628, Phase 0). ADR 0004, ADR 0012, ADR 0014.
+#
+# This file is embedded by hash in the Phase 2 success criteria. Changing it
+# after the criteria freeze fails the run (epic rule 1). Every number below is
+# what one measured run means; nothing here is tuned per configuration.
+
+schema_version = 1
+
+# Closed loop: each session sends its next query only after the previous one
+# returns. Results are performance AT N SESSIONS, never a sustained arrival
+# rate. A closed loop offers less load when the system slows, which flatters
+# the tail (coordinated omission). The open-loop generator that corrects this
+# is v2 (ADR 0012).
+generator = "closed-loop"
+think_time_ms = 0
+
+[sessions]
+levels = [1, 8, 32]
+# Concurrency 1 shows per-query cost without queueing. It is diagnostic and
+# can never alone support a sizing claim.
+diagnostic_only = [1]
+
+[connections]
+# One dedicated Postgres connection per session, opened before warm-up and
+# held for the run. Pool size therefore equals the session count at every
+# level. Neon's pooler (PgBouncer, transaction mode) is excluded: it adds a
+# hop and its own queue, and is a configuration choice v1 does not test.
+mode = "direct"
+pool_size = "sessions"
+# A session whose connection drops reconnects after this backoff; the time
+# lost counts against the run, and the failed query counts as an error.
+reconnect_backoff_ms = 250
+
+[timing]
+warmup_seconds = 60
+measure_seconds = 300
+# Server-side statement_timeout. The client also abandons a query at
+# timeout + client_grace_ms, so a hung connection still yields a result.
+per_query_timeout_ms = 5000
+client_grace_ms = 1000
+
+[errors]
+# Errors and timeouts are results, recorded per query with their class.
+count_as_results = true
+# More than 1% errors + timeouts in a measured run: that configuration cannot
+# qualify at that session level, whatever its latency.
+error_ceiling_fraction = 0.01
+# Above 25% the harness stops the run early and records it as failed.
+abort_run_fraction = 0.25
+
+[mix]
+# Query instances are drawn from the slice under test (profiling slice in
+# Phase 4 development, held-out slice in evaluation), weighted by observed
+# frequency. Each session has its own RNG stream derived from this seed and
+# its session index, so a run is reproducible query for query.
+weighting = "observed-frequency"
+seed = 628
+
+[probe]
+# A separate connection runs this on a fixed interval through every measured
+# run. Its latency is reported beside the workload's so network and client
+# jitter can be told apart from database time. Never mixed into the workload
+# percentiles.
+query = "SELECT 1"
+interval_ms = 1000
+
+[report]
+percentiles = [50, 95, 99]
+also = ["max", "sample_count", "error_count", "timeout_count"]
+# A p99 from fewer samples than this is reported but flagged as unstable.
+min_samples_for_p99 = 10000

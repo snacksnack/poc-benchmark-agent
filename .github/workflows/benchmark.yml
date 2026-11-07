@@ -1,0 +1,68 @@
+name: Benchmark
+
+# Scored runs execute from a GitHub-hosted runner, never a laptop (ADR 0014).
+# Never on push: every run spends Neon compute. Two triggers, both deliberate:
+# manual dispatch (needs this file on main), or adding the
+# `benchmark: noise-gate` label to a PR, which runs the PR's own copy of this
+# file. Same-repo PRs only; fork PRs never receive the secret.
+on:
+  pull_request:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "What to run"
+        type: choice
+        options: [noise-gate]
+        default: noise-gate
+
+concurrency:
+  group: benchmark
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.label.name == 'benchmark: noise-gate' &&
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      TASK: ${{ inputs.task || 'noise-gate' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Sync
+        run: uv sync
+
+      - name: Record runner
+        run: |
+          echo "runner_os=$RUNNER_OS arch=$RUNNER_ARCH image=$ImageOS/$ImageVersion cpus=$(nproc)"
+          uv run pocbench fingerprint
+
+      - name: Noise gate
+        if: env.TASK == 'noise-gate'
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+        run: uv run pocbench gate --out runs/phase0
+
+      # Raw per-query logs and gate.json; the summary is committed by hand
+      # into docs/noise-gate.md after review.
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.TASK }}-${{ github.run_id }}
+          path: runs/
+          retention-days: 90
