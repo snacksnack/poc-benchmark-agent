@@ -228,3 +228,12 @@ Three decisions:
   `phase4` task runs whatever is next; jobs dispatch the next job only after
   a clean exit or network rejection, with a hop counter and a kill switch.
   Evaluation runs both slices with every row pinned to the freeze.
+- **First live jobs (2026-11-07).** Two loop jobs stopped on the probe rule
+  at the naive 32-session post-restart cell, 3 attempts each (255-258 of 300
+  probe samples, latency healthy). The cause was the load generator, not the
+  network: the measured window opened at a fixed time while 33 processes
+  were still connecting to the just-restarted compute (first probe sample at
+  42 s). Processes now connect first and the clock starts when all report
+  (cap 120 s); the wait is recorded as `connect_wait`. The first of the two
+  jobs also lost its state (`git add` with a missing `candidates/` path staged
+  nothing); about 2.5 CU-h from it is outside the loop's compute count.

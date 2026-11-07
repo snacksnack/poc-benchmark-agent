@@ -16,6 +16,7 @@ import csv
 import json
 import multiprocessing
 import platform
+import queue
 import random
 import sys
 import time
@@ -38,6 +39,10 @@ FIELDS = ["phase", "shape", "instance", "start_ms", "latency_ms", "outcome", "sq
 ABORT_MIN_SAMPLES = 200
 EXIT_ABORTED = 3
 EXIT_CONNECT_FAILED = 4
+# The clock starts once every process has connected, or after this long. A
+# just-restarted compute took ~42 s to accept 33 connections (RC1-632), which
+# under a fixed start ate the first 42 s of a post-restart run.
+CONNECT_WAIT_S = 120
 
 CACHE_EVIDENCE_SQL = {
     "pg_stat_database": (
@@ -125,12 +130,23 @@ async def _execute(conn: psycopg.AsyncConnection, inst: Instance) -> None:
             await cur.fetchall()
 
 
-async def _session(spec: RunSpec, idx: int, instances: list[Instance], start_at: float,
+def _await_start(gate, connected: bool) -> float:
+    """Report this process connected (or not), then block until the parent
+    starts the clock. Returns the shared start time."""
+    ready, go, start_at = gate
+    ready.put(connected)
+    go.wait()
+    return start_at.value
+
+
+async def _session(spec: RunSpec, idx: int, instances: list[Instance], gate,
                    out: Path) -> int:
     try:
         conn = await _connect(spec)
     except psycopg.Error:
+        _await_start(gate, False)
         return EXIT_CONNECT_FAILED
+    start_at = _await_start(gate, True)
     rng = random.Random(f"{spec.seed}:{idx}")
     measure_at = start_at + spec.warmup_s
     end_at = measure_at + spec.measure_s
@@ -182,11 +198,13 @@ async def _session(spec: RunSpec, idx: int, instances: list[Instance], start_at:
     return EXIT_ABORTED if aborted else 0
 
 
-async def _probe(spec: RunSpec, start_at: float, out: Path) -> int:
+async def _probe(spec: RunSpec, gate, out: Path) -> int:
     try:
         conn = await _connect(spec)
     except psycopg.Error:
+        _await_start(gate, False)
         return EXIT_CONNECT_FAILED
+    start_at = _await_start(gate, True)
     measure_at = start_at + spec.warmup_s
     end_at = measure_at + spec.measure_s
     await asyncio.sleep(max(0.0, measure_at - time.time()))
@@ -207,12 +225,31 @@ async def _probe(spec: RunSpec, start_at: float, out: Path) -> int:
     return 0
 
 
-def _session_entry(spec, idx, instances, start_at, out):
-    sys.exit(asyncio.run(_session(spec, idx, instances, start_at, out)))
+def _session_entry(spec, idx, instances, gate, out):
+    sys.exit(asyncio.run(_session(spec, idx, instances, gate, out)))
 
 
-def _probe_entry(spec, start_at, out):
-    sys.exit(asyncio.run(_probe(spec, start_at, out)))
+def _probe_entry(spec, gate, out):
+    sys.exit(asyncio.run(_probe(spec, gate, out)))
+
+
+def _start_clock(procs, gate, wait_s: float) -> dict:
+    """Wait until every process has reported, has died, or wait_s passes;
+    then set the shared start time and release them all."""
+    ready, go, start_at = gate
+    t0 = time.time()
+    reported = connected = 0
+    while reported < len(procs) and time.time() - t0 < wait_s:
+        try:
+            connected += bool(ready.get(timeout=0.5))
+            reported += 1
+        except queue.Empty:
+            if all(not p.is_alive() for p in procs):
+                break
+    start_at.value = time.time() + 1
+    go.set()
+    return {"seconds": round(time.time() - t0, 3), "processes": len(procs),
+            "connected": connected, "reported": reported}
 
 
 def snapshot(dsn: str, queries: dict[str, str]) -> dict:
@@ -241,15 +278,16 @@ def run(spec: RunSpec, instances: list[Instance], out_dir: Path) -> dict:
     server = snapshot(spec.dsn, SERVER_FACTS_SQL)
     cache_before = snapshot(spec.dsn, CACHE_EVIDENCE_SQL)
     ctx = multiprocessing.get_context("spawn")
-    start_at = time.time() + 3 + 0.1 * spec.sessions
+    gate = (ctx.Queue(), ctx.Event(), ctx.Value("d", 0.0))
     procs = [
         ctx.Process(target=_session_entry,
-                    args=(spec, i, instances, start_at, out_dir / f"session-{i:03d}.csv"))
+                    args=(spec, i, instances, gate, out_dir / f"session-{i:03d}.csv"))
         for i in range(spec.sessions)
     ]
-    procs.append(ctx.Process(target=_probe_entry, args=(spec, start_at, out_dir / "probe.csv")))
+    procs.append(ctx.Process(target=_probe_entry, args=(spec, gate, out_dir / "probe.csv")))
     for p in procs:
         p.start()
+    connect_wait = _start_clock(procs, gate, CONNECT_WAIT_S)
     for p in procs:
         p.join()
     codes = [p.exitcode for p in procs]
@@ -259,6 +297,7 @@ def run(spec: RunSpec, instances: list[Instance], out_dir: Path) -> dict:
         exit_codes=codes,
         aborted=any(c == EXIT_ABORTED for c in codes),
         failed_to_connect=any(c == EXIT_CONNECT_FAILED for c in codes),
+        connect_wait=connect_wait,
         server=server,
         cache_evidence={"procedure": spec.cache_state, "before": cache_before,
                         "after": cache_after},

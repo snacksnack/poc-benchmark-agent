@@ -4,6 +4,7 @@ skipped unless POCBENCH_TEST_DSN is set (CI starts a service container)."""
 import csv
 import dataclasses
 import os
+import time
 from collections import Counter
 
 import pytest
@@ -102,3 +103,27 @@ def test_cache_evidence_is_recorded_before_and_after(tmp_path):
     assert ev["after"]["pg_stat_database"][0]["blks_hit"] is not None
     # Stock Postgres has no Neon file cache: recorded as unavailable, not dropped.
     assert ev["after"]["neon_stat_file_cache"] == {"unavailable": "42P01"}
+
+
+@pytest.mark.postgres
+@pytest.mark.skipif(not DSN, reason="POCBENCH_TEST_DSN not set")
+def test_clock_starts_after_every_process_connects(tmp_path):
+    # Post-restart runs have no warmup: a client that connects late used to
+    # lose the start of the measured window (RC1-632).
+    spec = dataclasses.replace(_spec(sessions=8), warmup_s=0)
+    summary = loadgen.run(spec, [loadgen.Instance("fast", "SELECT 1", ())], tmp_path)
+    assert summary["connect_wait"]["connected"] == 9
+    for path in [*tmp_path.glob("session-*.csv"), tmp_path / "probe.csv"]:
+        with path.open() as fh:
+            first = next(csv.DictReader(fh))
+        assert float(first["start_ms"]) < 500, path.name
+
+
+def test_unreachable_target_fails_fast_instead_of_waiting(tmp_path, monkeypatch):
+    monkeypatch.setattr(loadgen, "snapshot", lambda dsn, queries: {})
+    spec = dataclasses.replace(_spec(sessions=2), dsn="postgresql://x@127.0.0.1:1/x")
+    t0 = time.time()
+    summary = loadgen.run(spec, [loadgen.Instance("q", "SELECT 1", ())], tmp_path)
+    assert summary["failed_to_connect"] is True
+    assert summary["connect_wait"]["connected"] == 0
+    assert time.time() - t0 < 30
