@@ -110,10 +110,18 @@ def render(results: Path, run_url: str | None = None) -> str:
               f"(p95 {prof['tail_floor_observations']['p95']:,} and p99 "
               f"{prof['tail_floor_observations']['p99']:,} observations): reported, not "
               "supported.", "",
+              "Client latency includes the runner-to-Neon round trip (probe p50 "
+              f"{_ms(cap['probe']['p50_ms'])} ms). Server mean and server share come from "
+              "pg_stat_statements: no network, but it drops cancelled statements and "
+              "includes the warm-up.", "",
               "| Shape | What | Log share | Obs | p50 ms | p95 ms | p99 ms | Err+TO | Time share "
-              "| Selectivity | Max q-error | Plan |",
-              "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |"]
+              "| Server mean ms | Server share | Selectivity | Max q-error | Plan |",
+              "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: "
+              "| ---: | --- |"]
+    server_total = sum((s["pg_stat_statements"] or {}).get("total_exec_time", 0)
+                       for s in prof["shapes"]) or 1.0
     for s in prof["shapes"]:
+        pg = s["pg_stat_statements"] or {}
         c, ts = s["capture"], s["tail_supported"]
         sel = s["selectivity"]
         plan = s["plan"]
@@ -127,6 +135,8 @@ def render(results: Path, run_url: str | None = None) -> str:
             f"| {s['shape']} | {s['label']} | {s['log_share']:.1%} | {c['sample_count'] or 0:,} "
             f"| {_ms(c['p50_ms'])} | {_ms(c['p95_ms'])}{'' if ts['p95'] else '*'} "
             f"| {_ms(c['p99_ms'])}{'' if ts['p99'] else '*'} | {fails:,} | {s['time_share']:.1%} "
+            f"| {_ms(pg.get('mean_exec_time'))} "
+            f"| {pg.get('total_exec_time', 0) / server_total:.1%} "
             f"| {'-' if sel['median'] is None else f'{sel['median']:.2e}'} "
             f"| {sel['max_q_error'] or '-'} | {notes} |")
 
@@ -175,7 +185,8 @@ def render(results: Path, run_url: str | None = None) -> str:
     lines += ["", "| Index | Size |", "| --- | ---: |"]
     for name, b in sorted(prof["index_bytes"].items()):
         if name.startswith(("naive_", "cand_")):
-            lines.append(f"| {name} | {b / 1024 ** 2:,.0f} MiB |")
+            size = f"{b / 1024 ** 2:,.0f} MiB" if b >= 1024 ** 2 else f"{b / 1024:,.0f} KiB"
+            lines.append(f"| {name} | {size} |")
     if corp:
         lines += ["", f"Corpus load: {corp['load_seconds'] / 60:.0f} min; "
                   f"{corp['events_generated_ids']:,} event ids generated, "

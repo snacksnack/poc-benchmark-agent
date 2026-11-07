@@ -88,3 +88,18 @@ def test_candidate_ddl_names_every_index():
     ddl = profile.candidate_ddl(config.config_space().data)
     assert [i for i, _ in ddl] == [f"I{n}" for n in range(1, 9)]
     assert all(f"cand_{i.lower()} ON" in d for i, d in ddl)
+
+
+def test_pgss_entries_for_one_shape_are_summed_across_parameter_types():
+    templates = {"s01": "select id from events where contact_id = $1 limit $2"}
+    rows = [
+        {"query": "select id from events where contact_id = $1 limit $2", "calls": 3,
+         "total_exec_time": 30.0, "rows": 3, "shared_blks_hit": 5, "shared_blks_read": 1},
+        {"query": "select id from events where contact_id = $1 limit $2", "calls": 1,
+         "total_exec_time": 10.0, "rows": 1, "shared_blks_hit": 2, "shared_blks_read": 0},
+        {"query": "select pg_stat_statements_reset()", "calls": 1, "total_exec_time": 1.0,
+         "rows": 1, "shared_blks_hit": 0, "shared_blks_read": 0},
+    ]
+    got = profile.pgss_by_shape(rows, templates)
+    assert got == {"s01": {"calls": 4, "total_exec_time": 40.0, "rows": 4, "shared_blks_hit": 7,
+                           "shared_blks_read": 1, "entries": 2, "mean_exec_time": 10.0}}

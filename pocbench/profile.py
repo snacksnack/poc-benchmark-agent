@@ -195,7 +195,7 @@ STATS_SQL = {
     "now": "SELECT now()",
 }
 PGSS_SQL = """
-SELECT query, calls, total_exec_time, mean_exec_time, rows,
+SELECT queryid, query, calls, total_exec_time, mean_exec_time, rows,
        shared_blks_hit, shared_blks_read
 FROM pg_stat_statements
 WHERE dbid = (SELECT oid FROM pg_database WHERE datname = current_database())"""
@@ -234,15 +234,33 @@ def capture(dsn: str, p: Prepared, lm, cap: dict, out_dir: Path) -> dict:
         cur = conn.execute(PGSS_SQL)
         cols = [d.name for d in cur.description]
         pgss = [dict(zip(cols, r, strict=True)) for r in cur.fetchall()]
-    by_template = {t: sid for sid, t in p.templates.items()}
-    per_shape = {}
+    return {"summary": summary, "stats_validity": stats_validity(before, after),
+            "pg_stat_statements": pgss_by_shape(pgss, p.templates),
+            "pg_stat_statements_rows": [{k: (str(v) if k == "queryid" else v)
+                                         for k, v in r.items()} for r in pgss]}
+
+
+PGSS_SUMMED = ("calls", "total_exec_time", "rows", "shared_blks_hit", "shared_blks_read")
+
+
+def pgss_by_shape(pgss: list[dict], templates: dict[str, str]) -> dict[str, dict]:
+    """Sum pg_stat_statements entries per shape. One shape can own several
+    entries: psycopg binds an int as int2, int4 or int8 by value, and the
+    parameter types are part of the statement's identity."""
+    by_template = {t: sid for sid, t in templates.items()}
+    out: dict[str, dict] = {}
     for row in pgss:
         sid = by_template.get(shapes.normalize(row["query"]).template)
-        if sid:
-            per_shape[sid] = {k: (round(v, 3) if isinstance(v, float) else v)
-                              for k, v in row.items() if k != "query"}
-    return {"summary": summary, "stats_validity": stats_validity(before, after),
-            "pg_stat_statements": per_shape}
+        if sid is None:
+            continue
+        acc = out.setdefault(sid, {k: 0 for k in PGSS_SUMMED} | {"entries": 0})
+        acc["entries"] += 1
+        for k in PGSS_SUMMED:
+            acc[k] += row[k]
+    for acc in out.values():
+        acc["mean_exec_time"] = round(acc["total_exec_time"] / acc["calls"], 3)
+        acc["total_exec_time"] = round(acc["total_exec_time"], 3)
+    return out
 
 
 def capture_totals(out_dir: Path, timeout_ms: int) -> dict[str, dict]:
