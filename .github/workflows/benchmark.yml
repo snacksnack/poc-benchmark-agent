@@ -13,8 +13,13 @@ on:
       task:
         description: "What to run"
         type: choice
-        options: [noise-gate, corpus-load, profile, tier-probe, harness-baselines]
+        options: [noise-gate, corpus-load, profile, tier-probe, harness-baselines, phase4,
+                  phase4-status]
         default: noise-gate
+      chain_left:
+        description: "Phase 4: how many more jobs this chain may dispatch"
+        type: string
+        default: "14"
 
 concurrency:
   group: benchmark
@@ -25,6 +30,11 @@ permissions:
 
 jobs:
   run:
+    # Phase 4 commits its state back to the branch and dispatches the next
+    # job (R15, ADR 0024); the other tasks only read.
+    permissions:
+      contents: write
+      actions: write
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (startsWith(github.event.label.name, 'benchmark: ') &&
@@ -42,6 +52,8 @@ jobs:
           echo "TASK=${INPUT:-${LABEL#benchmark: }}" >> "$GITHUB_ENV"
 
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref_name || github.head_ref }}
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -129,12 +141,112 @@ jobs:
           NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
         run: uv run pocbench cleanup-branches --prefix p3-
 
-      # Raw per-query logs and result JSON; summaries are committed by hand
-      # after review.
+      # Phase 4 (RC1-632). One task, `phase4`, does whatever the committed
+      # state says is next: the adaptive loop, the held-out evaluation, or
+      # the final pooling. Each job commits its state and, if work remains,
+      # dispatches the next job on this branch (ADR 0024).
+      - name: Phase 4 next step
+        if: env.TASK == 'phase4' || env.TASK == 'phase4-status'
+        run: echo "NEXT=$(uv run pocbench phase4-next)" >> "$GITHUB_ENV"
+
+      - name: Phase 4 status
+        if: env.TASK == 'phase4-status'
+        run: |
+          echo "next phase4 task: $NEXT (chain_left=${{ inputs.chain_left }}, ref=${{ github.ref_name }})"
+          uv run pocbench harness-eval || true
+
+      - name: Evaluation gate (must refuse before the freeze)
+        if: env.TASK == 'phase4' && env.NEXT == 'loop'
+        run: |
+          if uv run pocbench harness-eval; then
+            echo "evaluation gate opened before the loop froze anything" >&2
+            exit 1
+          fi
+
+      # The step records its own exit code so the chain step can tell a clean
+      # pause or network rejection (0, 2) from a failure (anything else).
+      - name: Phase 4 loop
+        if: env.TASK == 'phase4' && env.NEXT == 'loop'
+        timeout-minutes: 335
+        shell: bash {0}
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          uv run pocbench loop-run --minutes 315
+          rc=$?; echo "STEP_RC=$rc" >> "$GITHUB_ENV"; exit $rc
+
+      - name: Phase 4 held-out evaluation
+        if: env.TASK == 'phase4' && env.NEXT == 'evaluate'
+        timeout-minutes: 335
+        shell: bash {0}
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+        run: |
+          uv run pocbench eval-run --minutes 315
+          rc=$?; echo "STEP_RC=$rc" >> "$GITHUB_ENV"; exit $rc
+
+      - name: Phase 4 evaluation report
+        if: env.TASK == 'phase4' && env.NEXT == 'eval-report'
+        shell: bash {0}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          uv run pocbench eval-report
+          rc=$?; echo "STEP_RC=$rc" >> "$GITHUB_ENV"; exit $rc
+
+      - name: Clean up Phase 4 branches
+        if: always() && env.TASK == 'phase4'
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+        run: uv run pocbench cleanup-branches --prefix p4-
+
+      - name: Verify Phase 4 records
+        if: always() && env.TASK == 'phase4'
+        run: |
+          for f in results/phase4/loop-log.jsonl results/phase4/dev-record.jsonl \
+                   results/phase4/eval-record.jsonl; do
+            [ -f "$f" ] && uv run pocbench verify-record "$f"
+          done; true
+
+      - name: Commit Phase 4 state
+        if: always() && env.TASK == 'phase4'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/phase4 candidates 2>/dev/null || true
+          if git diff --cached --quiet; then echo "no state change"; exit 0; fi
+          git commit -m "RC1-632: phase4 $NEXT job ${{ github.run_id }} (rc ${STEP_RC:-none})"
+          git pull --rebase origin "${{ github.ref_name }}"
+          git push origin "HEAD:${{ github.ref_name }}"
+
+      # Raw per-query logs and result JSON. Phase 4 evaluation artifacts are
+      # fetched back by the final pooling, so they keep a fixed name.
       - name: Upload results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.TASK }}-${{ github.run_id }}
+          name: ${{ env.TASK == 'phase4' && env.NEXT || env.TASK }}-${{ github.run_id }}
           path: runs/
           retention-days: 90
+
+      - name: Dispatch the next Phase 4 job
+        if: always() && !cancelled() && env.TASK == 'phase4'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHAIN_LEFT: ${{ inputs.chain_left }}
+          CHAIN_SWITCH: ${{ vars.POCBENCH_CHAIN }}
+        run: |
+          after=$(uv run pocbench phase4-next)
+          echo "step rc=${STEP_RC:-none}; next=$after; chain_left=$CHAIN_LEFT"
+          if [ "$after" = "done" ]; then echo "phase 4 complete"; exit 0; fi
+          if [ "${STEP_RC:-x}" != "0" ] && [ "${STEP_RC:-x}" != "2" ]; then
+            echo "not chaining after a failed step; a human looks first" >&2; exit 0
+          fi
+          if [ "$CHAIN_SWITCH" = "off" ]; then echo "chain switched off"; exit 0; fi
+          if [ "${CHAIN_LEFT:-0}" -le 0 ]; then echo "chain budget spent" >&2; exit 0; fi
+          gh workflow run benchmark.yml --ref "${{ github.ref_name }}" \
+            -f task=phase4 -f chain_left=$((CHAIN_LEFT - 1))

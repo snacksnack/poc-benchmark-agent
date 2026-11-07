@@ -1,0 +1,199 @@
+{
+  "name": "qualifying",
+  "base_cu": 2,
+  "cu_hour_usd": 0.106,
+  "spread": 0.03,
+  "naive": {
+    "s01": 33,
+    "s02": 1400,
+    "s03": 100,
+    "s04": 80,
+    "s05": 900,
+    "s06": 27,
+    "s07": 1200,
+    "s08": 4,
+    "s09": 800
+  },
+  "about": "Every goal shape has a serving index; the daily report (s07) is CPU-bound, so it holds its ceiling at 1 CU but not at 0.5 CU. The cheapest qualifying bundle is all eight candidates at 1 CU. Two planted illegal proposals must be rejected and must not count as experiments.",
+  "expected": {
+    "kind": "candidate",
+    "bundle": "1cu-I1+I2+I3+I4+I5+I6+I7+I8",
+    "experiments": 3
+  },
+  "shapes": {
+    "s01": {
+      "share": 0.3992,
+      "pk_ms": 6000,
+      "served_by": [
+        "I1"
+      ],
+      "served_ms": 3,
+      "tier_exponent": 0.2
+    },
+    "s02": {
+      "share": 0.1503,
+      "pk_ms": 2000,
+      "served_by": [
+        "I7"
+      ],
+      "served_ms": 2,
+      "tier_exponent": 0.2
+    },
+    "s03": {
+      "share": 0.1007,
+      "pk_ms": 6000,
+      "served_by": [
+        "I2"
+      ],
+      "served_ms": 20,
+      "tier_exponent": 0.3
+    },
+    "s04": {
+      "share": 0.1,
+      "pk_ms": 70,
+      "served_by": [
+        "I5"
+      ],
+      "served_ms": 3,
+      "tier_exponent": 0.2
+    },
+    "s05": {
+      "share": 0.0599,
+      "pk_ms": 6000,
+      "served_by": [
+        "I3"
+      ],
+      "served_ms": 60,
+      "tier_exponent": 0.5
+    },
+    "s06": {
+      "share": 0.0603,
+      "pk_ms": 700,
+      "served_by": [
+        "I5",
+        "I6"
+      ],
+      "served_ms": 4,
+      "tier_exponent": 0.2
+    },
+    "s07": {
+      "share": 0.05,
+      "pk_ms": 6000,
+      "served_by": [
+        "I4"
+      ],
+      "served_ms": 400,
+      "tier_exponent": 0.8,
+      "level_factor": {
+        "32": 1.5
+      }
+    },
+    "s08": {
+      "share": 0.0498,
+      "pk_ms": 4,
+      "served_by": [
+        "I8"
+      ],
+      "served_ms": 2,
+      "tier_exponent": 0.1
+    },
+    "s09": {
+      "share": 0.0298,
+      "pk_ms": 6000,
+      "served_by": [
+        "I3"
+      ],
+      "served_ms": 50,
+      "tier_exponent": 0.5
+    }
+  },
+  "script": [
+    {
+      "hypothesis": "Every slow shape has a candidate that serves it; all eight at 2 CU should meet every criterion.",
+      "action": "experiment",
+      "cu": 2,
+      "index_ids": [
+        "I1",
+        "I2",
+        "I3",
+        "I4",
+        "I5",
+        "I6",
+        "I7",
+        "I8"
+      ],
+      "why": "establish a qualifying bundle"
+    },
+    {
+      "hypothesis": "planted: illegal tier",
+      "action": "experiment",
+      "cu": 3,
+      "index_ids": [
+        "I1",
+        "I2",
+        "I3",
+        "I4",
+        "I5",
+        "I6",
+        "I7",
+        "I8"
+      ],
+      "why": "planted"
+    },
+    {
+      "hypothesis": "planted: out-of-scope setting",
+      "action": "experiment",
+      "cu": 1,
+      "index_ids": [
+        "I1",
+        "I2",
+        "I3",
+        "I4",
+        "I5",
+        "I6",
+        "I7",
+        "I8"
+      ],
+      "work_mem": "64MB",
+      "why": "planted"
+    },
+    {
+      "hypothesis": "Index-served shapes are cheap; 1 CU should still hold s07.",
+      "action": "experiment",
+      "cu": 1,
+      "index_ids": [
+        "I1",
+        "I2",
+        "I3",
+        "I4",
+        "I5",
+        "I6",
+        "I7",
+        "I8"
+      ],
+      "why": "lower cost"
+    },
+    {
+      "hypothesis": "0.5 CU may break s07 at 32 sessions.",
+      "action": "experiment",
+      "cu": 0.5,
+      "index_ids": [
+        "I1",
+        "I2",
+        "I3",
+        "I4",
+        "I5",
+        "I6",
+        "I7",
+        "I8"
+      ],
+      "why": "lowest tier"
+    },
+    {
+      "hypothesis": "",
+      "action": "stop",
+      "why": "",
+      "stop_reason": "1 CU qualifies and 0.5 CU fails s07; nothing cheaper is plausible"
+    }
+  ]
+}

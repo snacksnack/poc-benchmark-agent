@@ -206,3 +206,25 @@ scored (`docs/phase3-baselines.md`). `docs/phase3-findings.md` carries three
 things forward to Phase 4: the baselines fail on errors and tail support
 (R13), post-restart reads as warm (R14), and evaluation needs more than one
 job (R15).
+
+
+## Phase 4 (RC1-632)
+
+An adaptive loop proposes, Python decides, and Phase 4 runs across GitHub jobs.
+Three decisions:
+
+- **ADR 0022:** Claude proposes one experiment per iteration under a JSON
+  schema; `pocbench.space` validates it (tiers and index ids only, no
+  redundant index, memory and autoscaling rejected by name); Python enforces
+  the experiment, CU-hour and model-spend budgets. An experiment is the
+  candidate and naive interleaved on the development protocol. Predictions
+  apply the frozen verdict rules (`pocbench.verdicts`), with naive pooled
+  across experiments and tail support projected to the evaluation protocol.
+- **ADR 0023:** after the stop, Python picks the cheapest bundle whose 80
+  predicted criteria are all met, or refuses with a class (BUDGET EXHAUSTED,
+  then INSUFFICIENT EVIDENCE, NO IMPROVEMENT FOUND, CRITERIA UNMET). Two
+  fixtures pin both outputs.
+- **ADR 0024:** state is committed to the story branch after each job; one
+  `phase4` task runs whatever is next; jobs dispatch the next job only after
+  a clean exit or network rejection, with a hop counter and a kill switch.
+  Evaluation runs both slices with every row pinned to the freeze.

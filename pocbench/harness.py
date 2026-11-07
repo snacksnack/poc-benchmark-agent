@@ -27,7 +27,9 @@ configuration, and a slice. Neon orchestration lives in pocbench.phase3.
 """
 
 import csv
+import gzip
 import hashlib
+import io
 import json
 import multiprocessing
 import os
@@ -306,22 +308,40 @@ def schedule(configs: list[str], levels: list[int], cache_states: list[str], rep
 
 # ------------------------------------------------------ one run's summary
 
+def _raw_files(run_dir: Path) -> dict[str, bytes]:
+    """CSV name -> bytes. A run's logs may be committed gzipped (Phase 4 keeps
+    the naive baseline's logs in git); the name and hash are always those of
+    the uncompressed CSV, so the record's hashes hold either way."""
+    out = {p.name: p.read_bytes() for p in run_dir.glob("*.csv")}
+    for p in run_dir.glob("*.csv.gz"):
+        out.setdefault(p.name.removesuffix(".gz"), gzip.decompress(p.read_bytes()))
+    return dict(sorted(out.items()))
+
+
 def read_raw(run_dir: Path) -> tuple[list[dict], list[dict]]:
     """Measured workload rows and probe rows of one run."""
+    files = _raw_files(run_dir)
     rows = []
-    for path in sorted(run_dir.glob("session-*.csv")):
-        with path.open() as fh:
-            rows += [r for r in csv.DictReader(fh) if r["phase"] == "measure"]
-    probe = []
-    if (run_dir / "probe.csv").exists():
-        with (run_dir / "probe.csv").open() as fh:
-            probe = list(csv.DictReader(fh))
+    for name, raw in files.items():
+        if name.startswith("session-"):
+            rows += [r for r in csv.DictReader(io.StringIO(raw.decode()))
+                     if r["phase"] == "measure"]
+    probe = list(csv.DictReader(io.StringIO(files["probe.csv"].decode()))) \
+        if "probe.csv" in files else []
     return rows, probe
 
 
 def raw_hashes(run_dir: Path) -> dict[str, str]:
-    return {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sorted(run_dir.glob("*.csv"))}
+    return {n: hashlib.sha256(b).hexdigest() for n, b in _raw_files(run_dir).items()}
+
+
+def find_run_dir(roots: Path | list[Path], run_id: str) -> Path:
+    """The first root that holds this run's logs."""
+    roots = [roots] if isinstance(roots, Path) else roots
+    for r in roots:
+        if (r / run_id).is_dir():
+            return r / run_id
+    raise FileNotFoundError(f"raw logs of {run_id} are in none of {[str(r) for r in roots]}")
 
 
 def _pcts(values: list[float]) -> dict:
@@ -445,6 +465,11 @@ class Session:
     cu_hour_usd: float
     runner: dict = field(default_factory=runner_facts)
     rows: list[dict] = field(default_factory=list)
+    # Prefix for run ids, so runs of the same cell in different experiments
+    # or jobs never share a raw-log directory (Phase 4).
+    run_prefix: str = ""
+    # Set by the evaluation entry point; every evaluation row carries it.
+    frozen: dict | None = None
 
 
 def criteria_sha256(doc: dict) -> str:
@@ -472,12 +497,21 @@ def open_session(entry_point: str, raw_root: Path, record_path: Path,
                    sp.data["cost"]["cu_hour_usd"]), doc
 
 
+def _slice_tag(entry_point: str, name: str) -> str:
+    """Development runs keep their Phase 3 ids; evaluation ids name the slice."""
+    if entry_point != "evaluation":
+        return ""
+    return {"held_out": "ho-", "profiling": "pr-"}[name]
+
+
 def run_cell(s: Session, cell: Cell, target: Target, si: slices.SliceInstances) -> dict:
     uses_warmup = s.space["cache_states"][cell.cache_state]["uses_warmup"]
     warmup = s.lm["timing"]["warmup_seconds"] if uses_warmup else 0
     expected_probe = int(s.lm["timing"]["measure_seconds"] * 1000 / s.lm["probe"]["interval_ms"])
     for attempt in range(1, MAX_ATTEMPTS + 1):
-        run_id = (f"{s.entry_point[:3]}-r{cell.repetition}-{cell.config}-s{cell.level:02d}-"
+        tag = _slice_tag(s.entry_point, si.name)
+        run_id = (f"{s.run_prefix}{s.entry_point[:3]}-{tag}r{cell.repetition}-"
+                  f"{cell.config}-s{cell.level:02d}-"
                   f"{'warm' if cell.cache_state == 'warm' else 'evict'}-a{attempt}")
         out = s.raw_root / run_id
         started = datetime.now(UTC).isoformat(timespec="seconds")
@@ -532,6 +566,7 @@ def run_cell(s: Session, cell: Cell, target: Target, si: slices.SliceInstances) 
             "server": summary["server"],
             "runner": s.runner,
             "raw": {"dir": run_id, "files": raw_hashes(out)},
+            **({"frozen": s.frozen} if s.frozen else {}),
         }
         s.rows.append(s.record.append(row))
         if not reasons:
@@ -576,23 +611,81 @@ def require_frozen(criteria_sha256: str, **paths) -> candidate.Frozen:
     return candidate.load_frozen(criteria_sha256, **paths)
 
 
-def evaluation(s: Session, frozen: candidate.Frozen,
-               make_targets: Callable[[list[Config]], dict[str, Target]],
-               load_rebuilt: Callable[[], slices.Rebuilt], base: list[Config]) -> dict:
-    """Held-out evaluation of the frozen candidate (or, after a refusal, of
-    the baselines alone), on the full protocol from the frozen criteria."""
-    if not isinstance(frozen, candidate.Frozen) or not frozen.verified:
-        raise candidate.NotFrozenError("evaluation needs a verified frozen record")
+@dataclass(frozen=True)
+class EvalCell:
+    slice: str
+    repetition: int
+    config: str
+    level: int
+    cache_state: str
+
+    @property
+    def cell(self) -> Cell:
+        return Cell(self.repetition, self.config, self.level, self.cache_state)
+
+
+def eval_schedule(configs: list[str], m: Method, slice_names: list[str]) -> list[EvalCell]:
+    """The full protocol from the frozen criteria, on every slice: each
+    repetition runs every (slice, configuration, level, cache state) once in
+    a seeded random order, so baselines, candidate and slices interleave."""
+    rng = random.Random(f"{m.order_seed}:evaluation")
+    out = []
+    for r in range(1, m.eval_repetitions + 1):
+        block = [EvalCell(sl, r, c, lvl, cs) for sl in slice_names for c in configs
+                 for lvl in m.eval_levels for cs in m.cache_states]
+        rng.shuffle(block)
+        out += block
+    return out
+
+
+def eval_configs(frozen: candidate.Frozen, base: list[Config]) -> list[Config]:
     configs = list(base)
     if frozen.kind == "candidate":
         c = frozen.doc["config"]
         configs.append(Config(c["name"], c["cu"], tuple(c["ddl"])))
-    si = load_rebuilt().held_out(frozen)
-    targets = make_targets(configs)
-    m = s.method
-    return run_protocol(s, targets, si, list(m.eval_levels), m.eval_repetitions,
-                        list(m.cache_states)) | {"frozen": {"kind": frozen.kind,
-                                                            "sha256": frozen.sha256}}
+    return configs
+
+
+def done_eval_cells(rows: list[dict]) -> set[EvalCell]:
+    return {EvalCell(r["slice"], r["repetition"], r["config"]["name"], r["level"],
+                     r["cache_state"])
+            for r in rows if r.get("kind") == "run" and r["status"] == SCORED}
+
+
+def evaluation(s: Session, frozen: candidate.Frozen, targets: dict[str, Target],
+               rebuilt: slices.Rebuilt, done: set[EvalCell],
+               may_start: Callable[[EvalCell], bool] = lambda c: True) -> dict:
+    """Held-out evaluation of the frozen candidate (or, after a refusal, the
+    baselines alone) on the full protocol, on the held-out slice and, for the
+    profiled-versus-held-out gap, the profiling slice (epic rule 3). Resumable:
+    cells already scored in the record are skipped, and the job stops starting
+    cells when `may_start` says its time is up (R15)."""
+    if not isinstance(frozen, candidate.Frozen) or not frozen.verified:
+        raise candidate.NotFrozenError("evaluation needs a verified frozen record")
+    s.frozen = {"kind": frozen.kind, "sha256": frozen.sha256,
+                "id": frozen.doc.get("refusal_id") or frozen.doc["config"]["name"]}
+    held = rebuilt.held_out(frozen)
+    prof = rebuilt.profiling()
+    si = {held.name: held, prof.name: prof}
+    plan = eval_schedule(sorted(targets), s.method, [held.name, prof.name])
+    skipped = [c for c in plan if c.cache_state == POST_RESTART
+               and not targets[c.config].can_restart]
+    ran, paused = [], False
+    for c in plan:
+        if c in done or c in skipped:
+            continue
+        if not may_start(c):
+            paused = True
+            break
+        run_cell(s, c.cell, targets[c.config], si[c.slice])
+        ran.append(asdict(c))
+    remaining = [c for c in plan if c not in done and c not in skipped
+                 and asdict(c) not in ran]
+    return {"cells_planned": len(plan), "cells_run_this_job": len(ran), "order": ran,
+            "cells_remaining": len(remaining), "paused": paused,
+            "skipped": [asdict(c) | {"why": "platform cannot restart"} for c in skipped],
+            "rejected_runs": sum(r["status"] == REJECTED for r in s.rows),
+            "frozen": s.frozen}
 
 
 # ----------------------------------------------------------------- pooling
@@ -626,20 +719,23 @@ def _pool_series(per_rep: list[list[tuple[float, str]]], m: Method) -> dict:
     return out
 
 
-def pool(rows: list[dict], raw_root: Path, m: Method, verify_raw: bool = True) -> list[dict]:
-    """Per (configuration, level, cache state): observations pooled across
-    the scored repetitions. Rejected rows never enter (criteria method)."""
+def pool(rows: list[dict], raw_root: Path | list[Path], m: Method,
+         verify_raw: bool = True) -> list[dict]:
+    """Per (slice, configuration, level, cache state): observations pooled
+    across the scored repetitions. Rejected rows never enter (criteria
+    method). `raw_root` may be several directories; each run's logs are read
+    from the first that holds them."""
     cells: dict[tuple, list[dict]] = defaultdict(list)
     for r in rows:
         if r.get("kind") == "run" and r["status"] == SCORED:
-            cells[(r["config"]["name"], r["level"], r["cache_state"])].append(r)
+            cells[(r["slice"], r["config"]["name"], r["level"], r["cache_state"])].append(r)
     out = []
-    for (cfg, level, cs), reps in sorted(cells.items()):
+    for (sl, cfg, level, cs), reps in sorted(cells.items()):
         shape_reps: dict[str, list] = defaultdict(list)
         overall_reps, fails, obs = [], defaultdict(int), defaultdict(int)
         ok_total = cost = 0.0
         for r in reps:
-            run_dir = raw_root / r["raw"]["dir"]
+            run_dir = find_run_dir(raw_root, r["raw"]["dir"])
             if verify_raw and raw_hashes(run_dir) != r["raw"]["files"]:
                 raise ValueError(f"raw logs of {r['run_id']} do not match the record")
             measured, _ = read_raw(run_dir)
@@ -668,7 +764,7 @@ def pool(rows: list[dict], raw_root: Path, m: Method, verify_raw: bool = True) -
         qps = [r["run"]["successful_qps"] for r in reps]
         first = reps[0]
         out.append({
-            "config": cfg, "cu": first["config"]["cu"],
+            "slice": sl, "config": cfg, "cu": first["config"]["cu"],
             "shared_compute": first["config"]["shared_compute"], "level": level,
             "diagnostic_only": first["diagnostic_only"], "cache_state": cs,
             "platform": first["platform"], "repetitions": len(reps),

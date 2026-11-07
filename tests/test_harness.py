@@ -165,7 +165,8 @@ def _write_run(root: Path, run_id: str, latencies: list[float]) -> dict:
 
 
 def _pooled_row(raw, status=record.SCORED, probe=5.0):
-    return {"kind": "run", "status": status, "config": {"name": "naive", "cu": 2,
+    return {"kind": "run", "status": status, "slice": "profiling",
+            "config": {"name": "naive", "cu": 2,
                                                         "shared_compute": False},
             "level": 8, "cache_state": "warm", "diagnostic_only": False, "platform": "neon",
             "run_id": raw["dir"], "aborted": False, "raw": raw, "probe": {"p50_ms": probe},
@@ -269,23 +270,49 @@ def test_evaluation_refuses_an_edited_or_foreign_freeze(tmp_path):
         candidate.freeze({"kind": "refusal"}, p, pin)
 
 
-def test_evaluation_with_a_refusal_runs_baselines_on_held_out(tmp_path, monkeypatch):
+def test_evaluation_with_a_refusal_runs_baselines_on_both_slices(tmp_path, monkeypatch):
     p, pin = tmp_path / "frozen.json", tmp_path / "frozen.sha256"
-    candidate.freeze({"kind": "refusal", "criteria_sha256": SHA}, p, pin)
+    candidate.freeze({"kind": "refusal", "criteria_sha256": SHA, "refusal_id": "refusal-x"},
+                     p, pin)
     frozen = harness.require_frozen(SHA, path=p, pin_path=pin)
-    seen = {}
+    ran = []
 
-    def fake_protocol(s, targets, si, levels, reps, cache_states):
-        seen.update(targets=sorted(targets), slice=si.name, levels=levels, reps=reps)
-        return {}
+    def fake_cell(s, cell, target, si):
+        ran.append((si.name, cell.config, cell.level, cell.cache_state, cell.repetition))
 
-    monkeypatch.setattr(harness, "run_protocol", fake_protocol)
+    monkeypatch.setattr(harness, "run_cell", fake_cell)
     s, _ = harness.open_session("evaluation", tmp_path / "raw", tmp_path / "r.jsonl")
     base = [harness.Config("default", 2), harness.Config("naive", 2, ("CREATE INDEX x",))]
-    harness.evaluation(s, frozen, lambda cfgs: {c.name: object() for c in cfgs},
-                       _rebuilt, base)
-    assert seen == {"targets": ["default", "naive"], "slice": "held_out",
-                    "levels": [1, 8, 32], "reps": 5}
+    targets = {c.name: type("T", (), {"can_restart": True})()
+               for c in harness.eval_configs(frozen, base)}
+    out = harness.evaluation(s, frozen, targets, _rebuilt(), set())
+    # 2 slices x 2 baselines x 3 levels x 2 cache states x 5 repetitions
+    assert out["cells_planned"] == len(ran) == 120 and out["cells_remaining"] == 0
+    assert {r[0] for r in ran} == {"held_out", "profiling"}
+    assert {r[1] for r in ran} == {"default", "naive"}
+    assert s.frozen == {"kind": "refusal", "sha256": frozen.sha256, "id": "refusal-x"}
+
+
+def test_evaluation_resumes_and_pauses(tmp_path, monkeypatch):
+    p, pin = tmp_path / "frozen.json", tmp_path / "frozen.sha256"
+    candidate.freeze({"kind": "candidate", "criteria_sha256": SHA,
+                      "config": {"name": "x-1cu-I2", "cu": 1, "ddl": ["CREATE INDEX y"]}}, p, pin)
+    frozen = harness.require_frozen(SHA, path=p, pin_path=pin)
+    ran = []
+    monkeypatch.setattr(harness, "run_cell", lambda s, c, t, si: ran.append(c))
+    s, _ = harness.open_session("evaluation", tmp_path / "raw", tmp_path / "r.jsonl")
+    base = [harness.Config("default", 2), harness.Config("naive", 2)]
+    cfgs = harness.eval_configs(frozen, base)
+    assert [c.name for c in cfgs] == ["default", "naive", "x-1cu-I2"]
+    targets = {c.name: type("T", (), {"can_restart": True})() for c in cfgs}
+    plan = harness.eval_schedule(sorted(targets), s.method, ["held_out", "profiling"])
+    done = set(plan[:100])
+    budget = iter(range(30))
+    out = harness.evaluation(s, frozen, targets, _rebuilt(), done,
+                             may_start=lambda c: next(budget, None) is not None)
+    assert len(plan) == 180 and len(ran) == 30 and out["paused"]
+    assert out["cells_remaining"] == 50
+    assert ran[0] == plan[100].cell
 
 
 def test_development_reads_criteria_only_through_load_verified(tmp_path, monkeypatch):

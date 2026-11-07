@@ -202,11 +202,9 @@ def run_baselines(out: Path, database: str, role: str, levels: list[int] | None 
 
 
 def run_evaluation() -> dict:
-    """The evaluation gate on Neon. It reads the criteria hash and refuses
-    before opening the record or creating a branch unless a frozen candidate
-    or refusal record verifies. Phase 4 (RC1-632) owns candidate branches and
-    wires the held-out run itself through harness.evaluation."""
+    """The evaluation gate. It reads the criteria hash and refuses before
+    opening a record or creating a branch unless a frozen candidate or
+    refusal record verifies. The held-out run itself is `pocbench eval-run`
+    (pocbench.phase4, RC1-632)."""
     frozen = harness.require_frozen(harness.criteria_sha256(criteria.load_verified()))
-    raise NotImplementedError(
-        f"frozen {frozen.kind} {frozen.sha256[:12]} verified; the held-out run on Neon is "
-        "wired in Phase 4 (RC1-632)")
+    return {"kind": frozen.kind, "sha256": frozen.sha256}

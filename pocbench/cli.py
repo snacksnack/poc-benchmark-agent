@@ -5,6 +5,7 @@ import json
 import os
 import re
 import sys
+import time
 from pathlib import Path
 
 import psycopg
@@ -16,6 +17,7 @@ from pocbench import (
     corpus,
     cost,
     criteria,
+    fixtures,
     gate,
     harness,
     loadgen,
@@ -23,6 +25,7 @@ from pocbench import (
     phase1_report,
     phase3,
     phase3_report,
+    phase4,
     record,
     slices,
     spike,
@@ -167,10 +170,12 @@ def _cmd_harness_baselines(args) -> int:
 
 def _cmd_harness_eval(_args) -> int:
     try:
-        phase3.run_evaluation()
+        frozen = phase3.run_evaluation()
     except candidate.NotFrozenError as e:
         print(f"refused: {e}", file=sys.stderr)
         return 1
+    print(f"frozen {frozen['kind']} {frozen['sha256'][:12]} verified; `pocbench eval-run` "
+          "runs the held-out evaluation")
     return 0
 
 
@@ -231,6 +236,65 @@ def _cmd_cleanup_branches(args) -> int:
             gone.append(name)
     print(f"deleted {len(gone)} branches: {gone}")
     return 0
+
+
+def _deadline(args) -> float:
+    return time.time() + args.minutes * 60
+
+
+def _cmd_loop_run(args) -> int:
+    try:
+        result = phase4.run_loop_job(args.database, args.role, _deadline(args))
+    except harness.NetworkRejected as e:
+        print(f"network rejected: {e}", file=sys.stderr)
+        return 2
+    print(json.dumps({k: result.get(k) for k in ("state", "frozen", "preflight")}, indent=2,
+                     default=str))
+    return 0 if "delete_failures" not in result else 1
+
+
+def _cmd_eval_run(args) -> int:
+    try:
+        result = phase4.run_eval_job(args.database, args.role, _deadline(args))
+    except candidate.NotFrozenError as e:
+        print(f"refused: {e}", file=sys.stderr)
+        return 1
+    except harness.NetworkRejected as e:
+        print(f"network rejected: {e}", file=sys.stderr)
+        return 2
+    print(json.dumps({k: result.get(k) for k in ("state", "cells_run", "cells_remaining")},
+                     indent=2))
+    return 0 if "delete_failures" not in result else 1
+
+
+def _cmd_eval_report(_args) -> int:
+    print(json.dumps(phase4.eval_report(), indent=2))
+    return 0
+
+
+def _cmd_phase4_next(_args) -> int:
+    print(phase4.next_task())
+    return 0
+
+
+def _cmd_loop_fixture(args) -> int:
+    """Run the loop over a fixture workload (no Neon, no model) and print its
+    output and whether it matches the fixture's expectation."""
+    fx = fixtures.load(args.name)
+    out = Path(args.out) / f"{args.name}-loop-log.jsonl"
+    out.unlink(missing_ok=True)
+    _, decision, runner = fixtures.run_fixture(fx, criteria.load_verified(),
+                                               config.config_space().data, out)
+    exp = fx["expected"]
+    got = {"kind": decision["kind"], "experiments": runner.ran,
+           **({"class": decision["class"], "shapes": decision["shapes"]}
+              if decision["kind"] == "refusal" else {"bundle": decision["config"]["name"]})}
+    ok = decision["kind"] == exp["kind"] and (
+        decision.get("class") == exp.get("class") if exp["kind"] == "refusal"
+        else decision["config"]["name"] == "x-" + exp["bundle"].replace(".", "_"))
+    print(json.dumps({"fixture": args.name, "expected": exp, "got": got, "match": ok,
+                      "loop_log": str(out)}, indent=2))
+    return 0 if ok else 1
 
 
 def _cmd_verify_record(args) -> int:
@@ -335,6 +399,19 @@ def main(argv: list[str] | None = None) -> int:
     vr = sub.add_parser("verify-record", help="check a results record's hash chain")
     vr.add_argument("path")
 
+    lr = sub.add_parser("loop-run", help="Phase 4: run the adaptive loop until stop or deadline")
+    lr.add_argument("--minutes", type=float, default=320, help="job time available")
+    lr.set_defaults(**neon_args)
+    er = sub.add_parser("eval-run", help="Phase 4: held-out evaluation, resumable; refuses "
+                                         "without a frozen candidate or refusal")
+    er.add_argument("--minutes", type=float, default=320, help="job time available")
+    er.set_defaults(**neon_args)
+    sub.add_parser("eval-report", help="Phase 4: pool every evaluation run and apply criteria")
+    sub.add_parser("phase4-next", help="print the next Phase 4 task from committed state")
+    lf = sub.add_parser("loop-fixture", help="run the loop over a fixture workload, offline")
+    lf.add_argument("name", choices=["qualifying", "refusal-criteria-unmet"])
+    lf.add_argument("--out", default="runs/fixtures")
+
     args = p.parse_args(argv)
     if args.cmd in ("spike-load", "run", "harness-try") and args.dsn is None:
         p.error("--dsn or DATABASE_URL is required")
@@ -346,7 +423,10 @@ def main(argv: list[str] | None = None) -> int:
                 "criteria-freeze": _cmd_criteria_freeze, "verify-criteria": _cmd_verify_criteria,
                 "harness-baselines": _cmd_harness_baselines, "harness-eval": _cmd_harness_eval,
                 "harness-try": _cmd_harness_try, "harness-report": _cmd_harness_report,
-                "verify-record": _cmd_verify_record, "cleanup-branches": _cmd_cleanup_branches}
+                "verify-record": _cmd_verify_record, "cleanup-branches": _cmd_cleanup_branches,
+                "loop-run": _cmd_loop_run, "eval-run": _cmd_eval_run,
+                "eval-report": _cmd_eval_report, "phase4-next": _cmd_phase4_next,
+                "loop-fixture": _cmd_loop_fixture}
     return handlers[args.cmd](args)
 
 
