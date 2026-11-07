@@ -32,7 +32,9 @@ OK, TIMEOUT, CLIENT_TIMEOUT, CONN_ERROR, ERROR = (
 )
 TIMEOUT_OUTCOMES = {TIMEOUT, CLIENT_TIMEOUT}
 ERROR_OUTCOMES = {CONN_ERROR, ERROR}
-FIELDS = ["phase", "shape", "start_ms", "latency_ms", "outcome", "sqlstate"]
+# `instance` is the index into the run's instance list, so a tail can be
+# checked for how many distinct instances it was drawn from (ADR 0018).
+FIELDS = ["phase", "shape", "instance", "start_ms", "latency_ms", "outcome", "sqlstate"]
 ABORT_MIN_SAMPLES = 200
 EXIT_ABORTED = 3
 EXIT_CONNECT_FAILED = 4
@@ -42,6 +44,9 @@ CACHE_EVIDENCE_SQL = {
         "SELECT blks_hit, blks_read, stats_reset FROM pg_stat_database "
         "WHERE datname = current_database()"
     ),
+    # A changed start time means the compute restarted (or suspended and
+    # woke) inside the run: its statistics and cache state are void (R6).
+    "server_start": "SELECT pg_postmaster_start_time() AS started_at",
     # Neon's local file cache; absent on stock Postgres, recorded as null.
     "neon_stat_file_cache": "SELECT * FROM neon_stat_file_cache",
 }
@@ -138,7 +143,9 @@ async def _session(spec: RunSpec, idx: int, instances: list[Instance], start_at:
         writer.writerow(FIELDS)
         while (now := time.time()) < end_at:
             phase = "warmup" if now < measure_at else "measure"
-            inst = rng.choice(instances)
+            # randrange draws exactly as choice() did, so runs stay reproducible.
+            idx = rng.randrange(len(instances))
+            inst = instances[idx]
             t0 = time.perf_counter()
             outcome, sqlstate, reconnect = OK, "", False
             try:
@@ -152,7 +159,7 @@ async def _session(spec: RunSpec, idx: int, instances: list[Instance], start_at:
             except psycopg.Error as e:
                 outcome, sqlstate = ERROR, e.sqlstate or ""
             latency_ms = (time.perf_counter() - t0) * 1000
-            writer.writerow([phase, inst.shape, round((now - measure_at) * 1000, 3),
+            writer.writerow([phase, inst.shape, idx, round((now - measure_at) * 1000, 3),
                              round(latency_ms, 3), outcome, sqlstate])
             if phase == "measure":
                 measured += 1
@@ -193,7 +200,7 @@ async def _probe(spec: RunSpec, start_at: float, out: Path) -> int:
                 await asyncio.wait_for(conn.execute(spec.probe_query), timeout=5)
             except (psycopg.Error, TimeoutError):
                 outcome = ERROR
-            writer.writerow(["measure", "probe", round((now - measure_at) * 1000, 3),
+            writer.writerow(["measure", "probe", "", round((now - measure_at) * 1000, 3),
                              round((time.perf_counter() - t0) * 1000, 3), outcome, ""])
             await asyncio.sleep(max(0.0, spec.probe_interval_ms / 1000 - (time.time() - now)))
     await _close_quietly(conn)
@@ -208,7 +215,7 @@ def _probe_entry(spec, start_at, out):
     sys.exit(asyncio.run(_probe(spec, start_at, out)))
 
 
-def _snapshot(dsn: str, queries: dict[str, str]) -> dict:
+def snapshot(dsn: str, queries: dict[str, str]) -> dict:
     snap: dict = {}
     with psycopg.connect(dsn, autocommit=True, connect_timeout=15) as conn:
         for name, sql in queries.items():
@@ -231,8 +238,8 @@ def run(spec: RunSpec, instances: list[Instance], out_dir: Path) -> dict:
     if not instances:
         raise ValueError("no query instances to run")
     out_dir.mkdir(parents=True, exist_ok=True)
-    server = _snapshot(spec.dsn, SERVER_FACTS_SQL)
-    cache_before = _snapshot(spec.dsn, CACHE_EVIDENCE_SQL)
+    server = snapshot(spec.dsn, SERVER_FACTS_SQL)
+    cache_before = snapshot(spec.dsn, CACHE_EVIDENCE_SQL)
     ctx = multiprocessing.get_context("spawn")
     start_at = time.time() + 3 + 0.1 * spec.sessions
     procs = [
@@ -246,7 +253,7 @@ def run(spec: RunSpec, instances: list[Instance], out_dir: Path) -> dict:
     for p in procs:
         p.join()
     codes = [p.exitcode for p in procs]
-    cache_after = _snapshot(spec.dsn, CACHE_EVIDENCE_SQL)
+    cache_after = snapshot(spec.dsn, CACHE_EVIDENCE_SQL)
     summary = summarize_dir(out_dir, spec)
     summary.update(
         exit_codes=codes,

@@ -3,13 +3,31 @@
 import argparse
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
 import psycopg
 from dotenv import load_dotenv
 
-from pocbench import config, corpus, cost, criteria, gate, loadgen, phase1, phase1_report, spike
+from pocbench import (
+    candidate,
+    config,
+    corpus,
+    cost,
+    criteria,
+    gate,
+    harness,
+    loadgen,
+    phase1,
+    phase1_report,
+    phase3,
+    phase3_report,
+    record,
+    slices,
+    spike,
+)
+from pocbench.neon import Neon, Variant
 
 
 def _cmd_fingerprint(_args) -> int:
@@ -135,6 +153,98 @@ def _cmd_verify_criteria(_args) -> int:
     return 0
 
 
+def _cmd_harness_baselines(args) -> int:
+    levels = [int(x) for x in args.levels.split(",")] if args.levels else None
+    try:
+        result = phase3.run_baselines(Path(args.out), args.database, args.role, levels)
+    except harness.NetworkRejected as e:
+        print(f"network rejected: {e}", file=sys.stderr)
+        return 2
+    print(json.dumps({k: result.get(k) for k in ("preflight", "pooled_cells")}, indent=2,
+                     default=str))
+    return 0 if "delete_failures" not in result else 1
+
+
+def _cmd_harness_eval(_args) -> int:
+    try:
+        phase3.run_evaluation()
+    except candidate.NotFrozenError as e:
+        print(f"refused: {e}", file=sys.stderr)
+        return 1
+    return 0
+
+
+def _cmd_harness_try(args) -> int:
+    """Development aid: one short run on the profiling slice, printed and
+    written to a scratch directory. It never opens the record, and the
+    record would refuse its rows anyway (shortened window)."""
+    lm = config.load_model()
+    if args.measure >= lm.data["timing"]["measure_seconds"]:
+        print("harness-try is for short looks; scored runs go through the entry points",
+              file=sys.stderr)
+        return 2
+    doc = criteria.load_verified()
+    with psycopg.connect(args.dsn, autocommit=True, connect_timeout=30) as conn:
+        rebuilt = slices.rebuild(conn)
+    si = rebuilt.profiling()
+    slices.guard_profiling(si, rebuilt)
+    spec = loadgen.RunSpec.from_load_model(
+        lm.data, lm.sha256, dsn=args.dsn, label="dev-aid", sessions=args.sessions,
+        cache_state="warm", warmup_s=args.warmup, measure_s=args.measure)
+    out = Path(args.out)
+    summary = loadgen.run(spec, list(si.instances), out)
+    rows, probe = harness.read_raw(out)
+    verdict = harness.probe_verdict(
+        [float(r["latency_ms"]) for r in probe if r["outcome"] == loadgen.OK],
+        sum(r["outcome"] != loadgen.OK for r in probe),
+        int(args.measure * 1000 / lm.data["probe"]["interval_ms"]),
+        doc["method"]["latency_basis"]["run_valid_if"])
+    run = harness.summarize_run(rows, verdict["p50_ms"], args.measure)
+    print(json.dumps({"probe": verdict, "overall": run["overall"],
+                      "aborted": summary["aborted"]}, indent=2, default=str))
+    return 0
+
+
+def _cmd_harness_report(args) -> int:
+    run_dir = Path(args.run_dir)
+    if args.results:
+        phase3_report.publish(run_dir, Path(args.results))
+    text = phase3_report.render(run_dir, args.run_url)
+    if args.write:
+        Path(args.write).write_text(text)
+    else:
+        print(text)
+    return 0
+
+
+def _cmd_cleanup_branches(args) -> int:
+    """Safety net after a cancelled job: delete branches named with a run
+    prefix. The corpus and default branches never match a prefix."""
+    if not re.fullmatch(r"p\d+-", args.prefix):
+        print("prefix must look like p3-", file=sys.stderr)
+        return 2
+    neon = Neon()
+    gone = []
+    for name, bid in neon.branch_names().items():
+        if name.startswith(args.prefix):
+            neon.delete_variant(Variant(bid, "", 0, name))
+            gone.append(name)
+    print(f"deleted {len(gone)} branches: {gone}")
+    return 0
+
+
+def _cmd_verify_record(args) -> int:
+    try:
+        rows = record.verify(Path(args.path))
+    except record.RecordError as e:
+        print(e, file=sys.stderr)
+        return 1
+    runs = [r for r in rows if r.get("kind") == "run"]
+    print(f"record OK: {len(runs)} runs ({sum(r['status'] == record.SCORED for r in runs)} "
+          f"scored), chain intact")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     load_dotenv()
     p = argparse.ArgumentParser(prog="pocbench")
@@ -197,15 +307,46 @@ def main(argv: list[str] | None = None) -> int:
     cf.add_argument("--write", default="docs/criteria.md")
     sub.add_parser("verify-criteria", help="fail if the criteria or a pinned input changed")
 
+    hb = sub.add_parser("harness-baselines",
+                        help="Phase 3: both baselines through the development entry point")
+    hb.add_argument("--out", default="runs/phase3")
+    hb.add_argument("--levels", help="comma-separated load-model levels (default: protocol.dev)")
+    hb.set_defaults(**neon_args)
+
+    sub.add_parser("harness-eval",
+                   help="evaluation entry point: refuses without a frozen candidate or refusal")
+
+    ht = sub.add_parser("harness-try", help="dev aid: one short profiling-slice run, no record")
+    ht.add_argument("--dsn", default=os.environ.get("DATABASE_URL"))
+    ht.add_argument("--sessions", type=int, default=8)
+    ht.add_argument("--warmup", type=float, default=5)
+    ht.add_argument("--measure", type=float, default=30)
+    ht.add_argument("--out", default="runs/scratch")
+
+    hr = sub.add_parser("harness-report", help="verify, pool and render a Phase 3 run")
+    hr.add_argument("--run-dir", default="runs/phase3")
+    hr.add_argument("--results", help="also copy record, job and pooled cells here")
+    hr.add_argument("--run-url")
+    hr.add_argument("--write")
+
+    cb = sub.add_parser("cleanup-branches", help="delete leftover run branches by prefix")
+    cb.add_argument("--prefix", required=True)
+
+    vr = sub.add_parser("verify-record", help="check a results record's hash chain")
+    vr.add_argument("path")
+
     args = p.parse_args(argv)
-    if args.cmd in ("spike-load", "run") and args.dsn is None:
+    if args.cmd in ("spike-load", "run", "harness-try") and args.dsn is None:
         p.error("--dsn or DATABASE_URL is required")
     handlers = {"fingerprint": _cmd_fingerprint, "cost": _cmd_cost,
                 "spike-load": _cmd_spike_load, "run": _cmd_run, "gate": _cmd_gate,
                 "gate-report": _cmd_gate_report, "corpus-load": _cmd_corpus_load,
                 "profile": _cmd_profile, "tier-probe": _cmd_tier_probe,
                 "profile-report": _cmd_profile_report,
-                "criteria-freeze": _cmd_criteria_freeze, "verify-criteria": _cmd_verify_criteria}
+                "criteria-freeze": _cmd_criteria_freeze, "verify-criteria": _cmd_verify_criteria,
+                "harness-baselines": _cmd_harness_baselines, "harness-eval": _cmd_harness_eval,
+                "harness-try": _cmd_harness_try, "harness-report": _cmd_harness_report,
+                "verify-record": _cmd_verify_record, "cleanup-branches": _cmd_cleanup_branches}
     return handlers[args.cmd](args)
 
 

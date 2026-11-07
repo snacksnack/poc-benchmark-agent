@@ -13,7 +13,7 @@ on:
       task:
         description: "What to run"
         type: choice
-        options: [noise-gate, corpus-load, profile, tier-probe]
+        options: [noise-gate, corpus-load, profile, tier-probe, harness-baselines]
         default: noise-gate
 
 concurrency:
@@ -30,7 +30,9 @@ jobs:
       (startsWith(github.event.label.name, 'benchmark: ') &&
        github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
-    timeout-minutes: 240
+    # GitHub caps a hosted job at 6 h. harness-baselines is ~3.5 h; its step
+    # has its own limit so the report, cleanup and upload steps still run.
+    timeout-minutes: 350
     steps:
       - name: Resolve task
         env:
@@ -89,6 +91,43 @@ jobs:
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
           NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
         run: uv run pocbench tier-probe --out runs/phase1
+
+      # Phase 3 (RC1-631): both baselines through the development entry
+      # point, every load-model level, both cache states, interleaved. The
+      # job stops itself (exit 2) if the runner's network fails the probe
+      # rule (R9); that is a result, not a flake.
+      - name: Harness baselines
+        if: env.TASK == 'harness-baselines'
+        timeout-minutes: 320
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+        run: uv run pocbench harness-baselines --out runs/phase3 --levels 1,8,32
+
+      - name: Harness evaluation gate (must refuse)
+        if: env.TASK == 'harness-baselines'
+        run: |
+          if uv run pocbench harness-eval; then
+            echo "evaluation ran without a frozen candidate" >&2
+            exit 1
+          fi
+
+      - name: Harness report
+        if: always() && env.TASK == 'harness-baselines'
+        run: |
+          uv run pocbench verify-record runs/phase3/record.jsonl
+          uv run pocbench harness-report --run-dir runs/phase3 --results runs/phase3/results \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --write runs/phase3/results/phase3-baselines.md
+
+      # A cancelled or timed-out step skips Python's finally block; this
+      # deletes any branch the run left behind so no compute keeps billing.
+      - name: Clean up run branches
+        if: always() && env.TASK == 'harness-baselines'
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+        run: uv run pocbench cleanup-branches --prefix p3-
 
       # Raw per-query logs and result JSON; summaries are committed by hand
       # after review.

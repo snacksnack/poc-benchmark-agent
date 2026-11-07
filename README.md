@@ -9,8 +9,9 @@ the same declared load. Success criteria are written and hash-pinned before
 any experiment runs, the recommendation is scored on a held-out slice it never
 saw, and the results document reports losses and refusals as well as wins.
 
-Status: **Phase 2** (RC1-630): success criteria frozen and pinned
-(`docs/criteria.md`). Phase 1 (RC1-629) built the corpus, query log,
+Status: **Phase 3** (RC1-631): the benchmark harness, exercised against
+both baselines (ADR 0020, ADR 0021). Phase 2 (RC1-630) froze and pinned the
+success criteria (`docs/criteria.md`). Phase 1 (RC1-629) built the corpus, query log,
 profiler and held-out split (`docs/phase1-profile.md`,
 `docs/phase1-findings.md`). Phase 0 (RC1-628) committed the decisions, risk
 log, load model and cost model, and passed the noise gate
@@ -37,6 +38,10 @@ log, load model and cost model, and passed the noise gate
 | `results/phase1/` | Query log, split manifest, profile and tier probe. |
 | `config/goal.toml` | The buyer's stated goal: the one human input to the criteria. |
 | `criteria/` | The frozen criteria and their pin; `pocbench verify-criteria` checks both. |
+| `pocbench/harness.py` | Phase 3 harness: network gate, cache-state procedures, interleaved schedule, net latency, pooling, entry points. |
+| `pocbench/record.py` | Append-only, hash-chained results record; refuses rows a scored run could not produce. |
+| `pocbench/slices.py`, `pocbench/candidate.py` | Slice rebuild with the leak guard; the frozen candidate or refusal the evaluation entry point requires. |
+| `pocbench/phase3.py` | Phase 3 on Neon: baseline branches, filler, development protocol, cost lines, cleanup. |
 
 ## Running
 
@@ -54,8 +59,17 @@ uv run pocbench profile --dsn "$LOCAL_DSN" --measure 20
 uv run pocbench profile-report --results runs/phase1
 ```
 
-On Neon, `corpus-load`, `profile` and `tier-probe` run from the benchmark
-workflow: add the `benchmark: <task>` label to a PR.
+On Neon, `corpus-load`, `profile`, `tier-probe` and `harness-baselines` run
+from the benchmark workflow: add the `benchmark: <task>` label to a PR.
+
+```bash
+# Phase 3 harness
+uv run pocbench harness-eval                     # refuses: no frozen candidate yet
+uv run pocbench verify-record runs/phase3/record.jsonl
+uv run pocbench harness-report --run-dir runs/phase3 --results results/phase3 \
+  --write docs/phase3-baselines.md
+uv run pocbench harness-try --dsn "$CORPUS_DSN" --measure 30   # dev aid; never writes the record
+```
 
 Scored runs execute from a GitHub-hosted runner (`.github/workflows/benchmark.yml`),
 not a laptop. See ADR 0014.
