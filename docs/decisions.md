@@ -135,7 +135,9 @@ pageserver-bound compute is. The gate also runs the default variant once at
 the same level: that is the one end-to-end variant-versus-default comparison
 the Phase 0 exit asks for.
 
-Results: `docs/noise-gate.md`.
+Results: `docs/noise-gate.md` (**GO**: p99 spread 1.2%, p95 15.1%) and
+`docs/phase0-findings.md`, which carries two changes forward: Phase 2 criteria
+are per shape, and the shared-compute exclusion (ADR 0015) is reopened.
 
 ## Cost
 

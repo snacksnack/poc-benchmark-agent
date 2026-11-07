@@ -10,7 +10,7 @@ any experiment runs, the recommendation is scored on a held-out slice it never
 saw, and the results document reports losses and refusals as well as wins.
 
 Status: **Phase 0** (RC1-628). Decisions, risk log, load model and cost model
-are committed; the noise gate is next. Epic: RC1-595.
+are committed; the noise gate passed (`docs/noise-gate.md`). Epic: RC1-595.
 
 ## Layout
 
