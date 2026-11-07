@@ -1,0 +1,43 @@
+{
+  "tables": {
+    "accounts": {
+      "rows": 2000,
+      "heap_bytes": 155648,
+      "index_bytes": 65536,
+      "total_bytes": 221184,
+      "heap_bytes_per_row": 77.8
+    },
+    "campaigns": {
+      "rows": 20000,
+      "heap_bytes": 1089536,
+      "index_bytes": 466944,
+      "total_bytes": 1556480,
+      "heap_bytes_per_row": 54.5
+    },
+    "contacts": {
+      "rows": 6000000,
+      "heap_bytes": 614850560,
+      "index_bytes": 134791168,
+      "total_bytes": 749641728,
+      "heap_bytes_per_row": 102.5
+    },
+    "events": {
+      "rows": 49979101,
+      "heap_bytes": 9100066816,
+      "index_bytes": 1122631680,
+      "total_bytes": 10222698496,
+      "heap_bytes_per_row": 182.1
+    }
+  },
+  "database_bytes": 10982350848,
+  "spec": {
+    "accounts": 2000,
+    "contacts": 6000000,
+    "events_target": 50000000,
+    "campaigns": 20000
+  },
+  "events_generated_ids": 56071393,
+  "churn_keep_fraction": 0.89172,
+  "load_seconds": 193.1,
+  "branch": "corpus"
+}

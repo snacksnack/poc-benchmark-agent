@@ -118,7 +118,7 @@ def estimate(load_model: dict, space: dict, case: str) -> list[Line]:
     ds = space["dataset"]
     months = ASSUMPTIONS["build_months"]
     storage = space["cost"]["storage_gb_month_usd"]
-    root_gb = ds["target_gb"]
+    root_gb = dataset_gb(ds)
     lines.append(Line("Root branch storage", 0, root_gb * storage * months,
                       f"{root_gb} GB x ${storage}/GB-month x {months:g} months"))
     restore = space["cost"]["instant_restore_gb_month_usd"]
@@ -127,8 +127,9 @@ def estimate(load_model: dict, space: dict, case: str) -> list[Line]:
                       f"{ASSUMPTIONS['history_window_days']}-day window"))
     index_gb = sum(sizing.candidate_bytes(c, ds) for c in space["index"]) / 1e9
     index_months = months if case == "worst" else months / 2
+    bound = "measured" if all("measured_bytes" in c for c in space["index"]) else "upper bound"
     lines.append(Line("Index storage on child branches", 0, index_gb * storage * index_months,
-                      f"all 8 candidates ({index_gb:.1f} GB upper bound) live for "
+                      f"all 8 candidates ({index_gb:.1f} GB {bound}) live for "
                       f"{index_months:g} month(s)"))
     lines.append(Line("Model spend, Phase 4 loop", 0, budget["max_model_spend_usd"],
                       "budget cap"))
@@ -144,7 +145,7 @@ def engagement(load_model: dict, space: dict, scenario: dict, case: str) -> list
         raise ValueError(case)
     rate = space["cost"]["cu_hour_usd"]
     k, gb = scenario["tier_scale"], scenario["dataset_gb"]
-    data_ratio = gb / space["dataset"]["target_gb"]
+    data_ratio = gb / dataset_gb(space["dataset"])
     tiers = [t * k for t in space["tiers"]["compute_units"]]
     default_cu = space["tiers"]["default_cu"] * k
     candidate_cu = max(tiers) if case == "worst" else sum(tiers) / len(tiers)
@@ -178,7 +179,7 @@ def engagement(load_model: dict, space: dict, scenario: dict, case: str) -> list
     lines.append(Line("Instant-restore history", 0, gb * restore * months,
                       "upper bound, as in the build estimate"))
     idx_share = sum(sizing.candidate_bytes(c, space["dataset"]) for c in space["index"]) / (
-        space["dataset"]["target_gb"] * 1e9)
+        dataset_gb(space["dataset"]) * 1e9)
     idx_months = months if case == "worst" else months / 2
     lines.append(Line("Index storage on child branches", 0, idx_share * gb * storage * idx_months,
                       f"candidates at {idx_share:.0%} of data size"))
@@ -196,8 +197,13 @@ def engagement_run_hours(load_model: dict, space: dict) -> float:
     return loop + (3 + ASSUMPTIONS["ablations"]) * eval_h
 
 
+def dataset_gb(ds: dict) -> float:
+    """The measured size once Phase 1 has loaded the corpus, else the target."""
+    return ds.get("measured_gb", ds["target_gb"])
+
+
 def monthly_after(space: dict) -> float:
-    return space["dataset"]["target_gb"] * space["cost"]["storage_gb_month_usd"]
+    return dataset_gb(space["dataset"]) * space["cost"]["storage_gb_month_usd"]
 
 
 def render(load_model: dict, space: dict, load_model_sha: str, space_sha: str) -> str:

@@ -1,0 +1,330 @@
+{
+  "started_at": "20261107T030117Z",
+  "sessions": 8,
+  "tiers": {
+    "0.25": {
+      "settings": {
+        "effective_cache_size": "104832 8kB",
+        "maintenance_work_mem": "65536 kB",
+        "max_connections": "112",
+        "max_parallel_workers": "8",
+        "max_parallel_workers_per_gather": "2",
+        "max_worker_processes": "13",
+        "neon.file_cache_backend": "fs",
+        "neon.file_cache_buffering": "buffered",
+        "neon.file_cache_chunk_size": "16 8kB",
+        "neon.file_cache_path": "/neonvm/cache/pg_cache",
+        "neon.file_cache_prewarm_batch": "128",
+        "neon.file_cache_prewarm_limit": "2147483647",
+        "neon.file_cache_prewarm_mb_per_second": "-1",
+        "neon.file_cache_size_limit": "819MB MB",
+        "neon.flat_file_cache_encryption": "off",
+        "neon.max_file_cache_size": "819 MB",
+        "shared_buffers": "16384 8kB",
+        "work_mem": "4096 kB"
+      },
+      "alone": [
+        {
+          "execution_ms": 852.208,
+          "workers_planned": 2,
+          "workers_launched": 2
+        },
+        {
+          "execution_ms": 196.612,
+          "workers_planned": 2,
+          "workers_launched": 2
+        },
+        {
+          "execution_ms": 221.097,
+          "workers_planned": 2,
+          "workers_launched": 2
+        }
+      ],
+      "concurrent": {
+        "median_ms": 841.393,
+        "workers_planned": [
+          2
+        ],
+        "workers_launched": [
+          2,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          2,
+          0,
+          2,
+          2,
+          2,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "0.5": {
+      "settings": {
+        "effective_cache_size": "209664 8kB",
+        "maintenance_work_mem": "65536 kB",
+        "max_connections": "225",
+        "max_parallel_workers": "8",
+        "max_parallel_workers_per_gather": "2",
+        "max_worker_processes": "13",
+        "neon.file_cache_backend": "fs",
+        "neon.file_cache_buffering": "buffered",
+        "neon.file_cache_chunk_size": "16 8kB",
+        "neon.file_cache_path": "/neonvm/cache/pg_cache",
+        "neon.file_cache_prewarm_batch": "128",
+        "neon.file_cache_prewarm_limit": "2147483647",
+        "neon.file_cache_prewarm_mb_per_second": "-1",
+        "neon.file_cache_size_limit": "1638MB MB",
+        "neon.flat_file_cache_encryption": "off",
+        "neon.max_file_cache_size": "1638 MB",
+        "shared_buffers": "16384 8kB",
+        "work_mem": "4096 kB"
+      },
+      "alone": [
+        {
+          "execution_ms": 857.912,
+          "workers_planned": 2,
+          "workers_launched": 2
+        },
+        {
+          "execution_ms": 197.252,
+          "workers_planned": 2,
+          "workers_launched": 2
+        },
+        {
+          "execution_ms": 232.276,
+          "workers_planned": 2,
+          "workers_launched": 2
+        }
+      ],
+      "concurrent": {
+        "median_ms": 1042.2395000000001,
+        "workers_planned": [
+          2
+        ],
+        "workers_launched": [
+          0,
+          0,
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "1": {
+      "settings": {
+        "effective_cache_size": "419328 8kB",
+        "maintenance_work_mem": "68759 kB",
+        "max_connections": "450",
+        "max_parallel_workers": "8",
+        "max_parallel_workers_per_gather": "2",
+        "max_worker_processes": "15",
+        "neon.file_cache_backend": "fs",
+        "neon.file_cache_buffering": "buffered",
+        "neon.file_cache_chunk_size": "16 8kB",
+        "neon.file_cache_path": "/neonvm/cache/pg_cache",
+        "neon.file_cache_prewarm_batch": "128",
+        "neon.file_cache_prewarm_limit": "2147483647",
+        "neon.file_cache_prewarm_mb_per_second": "-1",
+        "neon.file_cache_size_limit": "3276MB MB",
+        "neon.flat_file_cache_encryption": "off",
+        "neon.max_file_cache_size": "3276 MB",
+        "shared_buffers": "16384 8kB",
+        "work_mem": "4096 kB"
+      },
+      "alone": [
+        {
+          "execution_ms": 1107.081,
+          "workers_planned": 2,
+          "workers_launched": 2
+        },
+        {
+          "execution_ms": 190.556,
+          "workers_planned": 2,
+          "workers_launched": 2
+        },
+        {
+          "execution_ms": 205.07,
+          "workers_planned": 2,
+          "workers_launched": 2
+        }
+      ],
+      "concurrent": {
+        "median_ms": 846.2650000000001,
+        "workers_planned": [
+          2
+        ],
+        "workers_launched": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          0,
+          2,
+          2,
+          2,
+          0
+        ]
+      }
+    },
+    "2": {
+      "settings": {
+        "effective_cache_size": "838784 8kB",
+        "maintenance_work_mem": "137518 kB",
+        "max_connections": "901",
+        "max_parallel_workers": "8",
+        "max_parallel_workers_per_gather": "2",
+        "max_worker_processes": "17",
+        "neon.file_cache_backend": "fs",
+        "neon.file_cache_buffering": "buffered",
+        "neon.file_cache_chunk_size": "16 8kB",
+        "neon.file_cache_path": "/neonvm/cache/pg_cache",
+        "neon.file_cache_prewarm_batch": "128",
+        "neon.file_cache_prewarm_limit": "2147483647",
+        "neon.file_cache_prewarm_mb_per_second": "-1",
+        "neon.file_cache_size_limit": "6553MB MB",
+        "neon.flat_file_cache_encryption": "off",
+        "neon.max_file_cache_size": "6553 MB",
+        "shared_buffers": "29440 8kB",
+        "work_mem": "4096 kB"
+      },
+      "alone": [
+        {
+          "execution_ms": 1010.232,
+          "workers_planned": 2,
+          "workers_launched": 2
+        },
+        {
+          "execution_ms": 133.228,
+          "workers_planned": 2,
+          "workers_launched": 2
+        },
+        {
+          "execution_ms": 137.861,
+          "workers_planned": 2,
+          "workers_launched": 2
+        }
+      ],
+      "concurrent": {
+        "median_ms": 546.4014999999999,
+        "workers_planned": [
+          2
+        ],
+        "workers_launched": [
+          2,
+          0,
+          0,
+          0,
+          2,
+          0,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          0,
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    "4": {
+      "settings": {
+        "effective_cache_size": "1677696 8kB",
+        "maintenance_work_mem": "275036 kB",
+        "max_connections": "1802",
+        "max_parallel_workers": "8",
+        "max_parallel_workers_per_gather": "2",
+        "max_worker_processes": "21",
+        "neon.file_cache_backend": "fs",
+        "neon.file_cache_buffering": "buffered",
+        "neon.file_cache_chunk_size": "16 8kB",
+        "neon.file_cache_path": "/neonvm/cache/pg_cache",
+        "neon.file_cache_prewarm_batch": "128",
+        "neon.file_cache_prewarm_limit": "2147483647",
+        "neon.file_cache_prewarm_mb_per_second": "-1",
+        "neon.file_cache_size_limit": "13107MB MB",
+        "neon.flat_file_cache_encryption": "off",
+        "neon.max_file_cache_size": "13107 MB",
+        "shared_buffers": "58368 8kB",
+        "work_mem": "4096 kB"
+      },
+      "alone": [
+        {
+          "execution_ms": 1079.796,
+          "workers_planned": 2,
+          "workers_launched": 2
+        },
+        {
+          "execution_ms": 71.595,
+          "workers_planned": 2,
+          "workers_launched": 2
+        },
+        {
+          "execution_ms": 76.853,
+          "workers_planned": 2,
+          "workers_launched": 2
+        }
+      ],
+      "concurrent": {
+        "median_ms": 280.468,
+        "workers_planned": [
+          2
+        ],
+        "workers_launched": [
+          0,
+          2,
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "branches_deleted_inline": [
+    "p1-tier-0_25-20261107T030117Z",
+    "p1-tier-0_5-20261107T030117Z",
+    "p1-tier-1-20261107T030117Z",
+    "p1-tier-2-20261107T030117Z",
+    "p1-tier-4-20261107T030117Z"
+  ],
+  "branches_created": [],
+  "branches_deleted": []
+}

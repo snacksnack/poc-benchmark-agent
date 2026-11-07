@@ -45,6 +45,8 @@ def brin_bytes(heap_bytes: int) -> int:
 
 
 def candidate_bytes(candidate: dict, dataset: dict) -> int:
+    if "measured_bytes" in candidate:  # Phase 1 measured it on the corpus
+        return candidate["measured_bytes"]
     table = candidate["table"]
     rows = dataset["rows"][table]
     if candidate.get("kind") == "brin":

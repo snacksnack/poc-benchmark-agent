@@ -69,3 +69,10 @@ percentiles = [50, 95, 99]
 also = ["max", "sample_count", "error_count", "timeout_count"]
 # A p99 from fewer samples than this is reported but flagged as unstable.
 min_samples_for_p99 = 10000
+# A tail estimate is supported when at least tail_beyond observations, from at
+# least tail_distinct_beyond distinct query instances, lie beyond the
+# percentile: p95 needs 2,000 observations from 200 instances, p99 needs
+# 10,000 from 1,000. Below either floor the percentile is still reported,
+# flagged unsupported, never dropped (RC1-629).
+tail_beyond = 100
+tail_distinct_beyond = 10

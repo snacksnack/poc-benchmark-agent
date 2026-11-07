@@ -17,6 +17,10 @@ import httpx
 API = "https://console.neon.tech/api/v2"
 OP_POLL_SECONDS = 2.0
 OP_TIMEOUT_SECONDS = 600.0
+# Terminal operation states. Neon marks an operation it found unnecessary
+# (start a compute that is already starting) as skipped, not finished.
+OP_DONE = {"finished", "skipped"}
+OP_FAILED = {"failed", "error", "cancelled"}
 
 
 @dataclass(frozen=True)
@@ -58,9 +62,9 @@ class Neon:
                 raise NeonError(f"operations still pending after {OP_TIMEOUT_SECONDS}s: {pending}")
             for op_id in list(pending):
                 status = self._req("GET", f"/operations/{op_id}")["operation"]["status"]
-                if status == "finished":
+                if status in OP_DONE:
                     pending.discard(op_id)
-                elif status in ("failed", "error", "cancelled"):
+                elif status in OP_FAILED:
                     raise NeonError(f"operation {op_id} {status}")
             if pending:
                 time.sleep(OP_POLL_SECONDS)
@@ -70,6 +74,26 @@ class Neon:
             if b.get("default"):
                 return b["id"]
         raise NeonError("project has no default branch")
+
+    def branch_id(self, name: str) -> str | None:
+        for b in self._req("GET", "/branches")["branches"]:
+            if b["name"] == name:
+                return b["id"]
+        return None
+
+    def endpoint_id(self, branch_id: str) -> str:
+        for e in self._req("GET", f"/branches/{branch_id}/endpoints")["endpoints"]:
+            if e["type"] == "read_write":
+                return e["id"]
+        raise NeonError(f"branch {branch_id} has no read-write compute")
+
+    def resize(self, endpoint_id: str, cu: float) -> None:
+        """Fixed size (min = max), then restart so the new size is in effect
+        and the cache starts empty."""
+        data = self._req("PATCH", f"/endpoints/{endpoint_id}", json={"endpoint": {
+            "autoscaling_limit_min_cu": cu, "autoscaling_limit_max_cu": cu}})
+        self.wait(data.get("operations", []))
+        self.restart(endpoint_id)
 
     def create_variant(self, name: str, cu: float, parent_id: str | None = None) -> Variant:
         body = {

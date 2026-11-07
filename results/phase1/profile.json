@@ -1,0 +1,682 @@
+{
+  "headline": {
+    "log_rows_profiled": 140154,
+    "log_rows_total": 200000,
+    "shapes": 9,
+    "dataset_rows": 56001101,
+    "dataset_bytes": 10982350848,
+    "dominant_shapes": [
+      "s07",
+      "s02",
+      "s05",
+      "s03",
+      "s09"
+    ],
+    "dominant_time_share": 0.8739
+  },
+  "capture": {
+    "observations": 9299,
+    "throughput_qps": 7.7,
+    "probe": {
+      "sample_count": 1198,
+      "ok_count": 1198,
+      "error_count": 0,
+      "timeout_count": 0,
+      "p50_ms": 65.815,
+      "p95_ms": 68.678,
+      "p99_ms": 71.726,
+      "max_ms": 140.149,
+      "p99_stable": true
+    },
+    "aborted": false,
+    "stats_validity": {
+      "valid": true,
+      "checks": {
+        "server_not_restarted": true,
+        "pgss_not_reset_during_run": true,
+        "db_stats_not_reset_during_run": true,
+        "reset_predates_run": true
+      },
+      "before": {
+        "postmaster_start": "2026-11-07 03:44:20.493513+00:00",
+        "pgss_reset": "2026-11-07 03:46:59.670256+00:00",
+        "db_stats_reset": "None",
+        "now": "2026-11-07 03:46:59.945923+00:00"
+      },
+      "after": {
+        "postmaster_start": "2026-11-07 03:44:20.493513+00:00",
+        "pgss_reset": "2026-11-07 03:46:59.670256+00:00",
+        "db_stats_reset": "None",
+        "now": "2026-11-07 04:08:09.603951+00:00"
+      }
+    },
+    "server": {
+      "version": [
+        {
+          "version": "PostgreSQL 18.6 (ac70818) on aarch64-unknown-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit"
+        }
+      ],
+      "shared_buffers": [
+        {
+          "shared_buffers": "230MB"
+        }
+      ],
+      "effective_cache_size": [
+        {
+          "effective_cache_size": "6553MB"
+        }
+      ],
+      "max_connections": [
+        {
+          "max_connections": "901"
+        }
+      ]
+    },
+    "cache_evidence": {
+      "procedure": "warm",
+      "before": {
+        "pg_stat_database": [
+          {
+            "blks_hit": 82550,
+            "blks_read": 5424714,
+            "stats_reset": null
+          }
+        ],
+        "neon_stat_file_cache": [
+          {
+            "file_cache_misses": 29325,
+            "file_cache_hits": 331,
+            "file_cache_used": 48552,
+            "file_cache_writes": 774656,
+            "file_cache_hit_ratio": "1.12"
+          }
+        ]
+      },
+      "after": {
+        "pg_stat_database": [
+          {
+            "blks_hit": 26365145,
+            "blks_read": 119761910,
+            "stats_reset": null
+          }
+        ],
+        "neon_stat_file_cache": [
+          {
+            "file_cache_misses": 6368654,
+            "file_cache_hits": 107995136,
+            "file_cache_used": 48552,
+            "file_cache_writes": 14544188,
+            "file_cache_hit_ratio": "94.43"
+          }
+        ]
+      }
+    }
+  },
+  "tail_floor_observations": {
+    "p95": 2000,
+    "p99": 10000
+  },
+  "shapes": [
+    {
+      "shape": "s07",
+      "label": "events by occurred_at; group by campaign_id, event_type; order by n desc",
+      "template": "select campaign_id, event_type, count(*) as n from events where occurred_at >= $1 and occurred_at < $2 group by campaign_id, event_type order by n desc limit $3",
+      "log_count": 7009,
+      "log_share": 0.05,
+      "capture": {
+        "sample_count": 470,
+        "ok_count": 44,
+        "error_count": 0,
+        "timeout_count": 426,
+        "p50_ms": 966.955,
+        "p95_ms": 4522.351,
+        "p99_ms": 5030.117,
+        "max_ms": 5030.117
+      },
+      "tail_supported": {
+        "p95": false,
+        "p99": false
+      },
+      "total_ms": 2208994.2,
+      "time_share": 0.232,
+      "pg_stat_statements": {
+        "calls": 45,
+        "total_exec_time": 76060.906,
+        "rows": 2250,
+        "shared_blks_hit": 14945,
+        "shared_blks_read": 135406,
+        "entries": 1,
+        "mean_exec_time": 1690.242
+      },
+      "plan": {
+        "samples": 8,
+        "timeouts": 0,
+        "median_ms": 871.1395,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "median_rows_removed": 0.0,
+        "max_workers_launched": 0,
+        "spills": 0
+      },
+      "selectivity": {
+        "samples": 8,
+        "median": 0.002712145668242088,
+        "max": 0.003073664382580418,
+        "median_q_error": 1.03,
+        "max_q_error": 1.06
+      }
+    },
+    {
+      "shape": "s02",
+      "label": "contacts by lower(email)",
+      "template": "select id, account_id, status from contacts where lower(email) = lower($1)",
+      "log_count": 21069,
+      "log_share": 0.1503,
+      "capture": {
+        "sample_count": 1421,
+        "ok_count": 1419,
+        "error_count": 0,
+        "timeout_count": 2,
+        "p50_ms": 1404.884,
+        "p95_ms": 3229.507,
+        "p99_ms": 4380.511,
+        "max_ms": 5033.474
+      },
+      "tail_supported": {
+        "p95": false,
+        "p99": false
+      },
+      "total_ms": 2165708.0,
+      "time_share": 0.2274,
+      "pg_stat_statements": {
+        "calls": 1488,
+        "total_exec_time": 2167891.767,
+        "rows": 1412,
+        "shared_blks_hit": 20876492,
+        "shared_blks_read": 90768148,
+        "entries": 1,
+        "mean_exec_time": 1456.917
+      },
+      "plan": {
+        "samples": 8,
+        "timeouts": 0,
+        "median_ms": 491.8055,
+        "scans": [
+          "Seq Scan:contacts"
+        ],
+        "median_rows_removed": 6000000.0,
+        "max_workers_launched": 2,
+        "spills": 0
+      },
+      "selectivity": {
+        "samples": 8,
+        "median": 1.666680833453751e-07,
+        "max": 1.666680833453751e-07,
+        "median_q_error": 30000.0,
+        "max_q_error": 30000.0
+      }
+    },
+    {
+      "shape": "s05",
+      "label": "events by campaign_id; group by event_type",
+      "template": "select event_type, count(*) from events where campaign_id = $1 group by event_type",
+      "log_count": 8394,
+      "log_share": 0.0599,
+      "capture": {
+        "sample_count": 598,
+        "ok_count": 399,
+        "error_count": 0,
+        "timeout_count": 199,
+        "p50_ms": 1099.662,
+        "p95_ms": 4431.711,
+        "p99_ms": 4928.412,
+        "max_ms": 5035.385
+      },
+      "tail_supported": {
+        "p95": false,
+        "p99": false
+      },
+      "total_ms": 1607832.6,
+      "time_share": 0.1688,
+      "pg_stat_statements": {
+        "calls": 410,
+        "total_exec_time": 603370.734,
+        "rows": 2458,
+        "shared_blks_hit": 21323,
+        "shared_blks_read": 1239168,
+        "entries": 1,
+        "mean_exec_time": 1471.636
+      },
+      "plan": {
+        "samples": 8,
+        "timeouts": 1,
+        "median_ms": 82.219,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "median_rows_removed": 0,
+        "max_workers_launched": 0,
+        "spills": 0
+      },
+      "selectivity": {
+        "samples": 8,
+        "median": 6.08850456723878e-05,
+        "max": 0.011616998768613458,
+        "median_q_error": 2.73,
+        "max_q_error": 7.03
+      }
+    },
+    {
+      "shape": "s03",
+      "label": "events by account_id; order by occurred_at desc",
+      "template": "select id, contact_id, event_type, occurred_at from events where account_id = $1 order by occurred_at desc limit $2 offset $3",
+      "log_count": 14117,
+      "log_share": 0.1007,
+      "capture": {
+        "sample_count": 895,
+        "ok_count": 626,
+        "error_count": 0,
+        "timeout_count": 269,
+        "p50_ms": 154.699,
+        "p95_ms": 1876.492,
+        "p99_ms": 4089.118,
+        "max_ms": 4915.126
+      },
+      "tail_supported": {
+        "p95": false,
+        "p99": false
+      },
+      "total_ms": 1603793.0,
+      "time_share": 0.1684,
+      "pg_stat_statements": {
+        "calls": 658,
+        "total_exec_time": 238082.786,
+        "rows": 32900,
+        "shared_blks_hit": 1214195,
+        "shared_blks_read": 2928185,
+        "entries": 1,
+        "mean_exec_time": 361.828
+      },
+      "plan": {
+        "samples": 8,
+        "timeouts": 0,
+        "median_ms": 12.084999999999999,
+        "scans": [
+          "Index Scan:naive_events_occurred_at"
+        ],
+        "median_rows_removed": 107051.5,
+        "max_workers_launched": 2,
+        "spills": 0
+      },
+      "selectivity": {
+        "samples": 8,
+        "median": 0.002268253068582292,
+        "max": 0.08877149704302362,
+        "median_q_error": 1.105,
+        "max_q_error": 3.18
+      }
+    },
+    {
+      "shape": "s09",
+      "label": "events by campaign_id; order by contact_id, occurred_at desc",
+      "template": "select distinct on (contact_id) contact_id, occurred_at, event_type from events where campaign_id = $1 order by contact_id, occurred_at desc limit $2",
+      "log_count": 4174,
+      "log_share": 0.0298,
+      "capture": {
+        "sample_count": 267,
+        "ok_count": 172,
+        "error_count": 0,
+        "timeout_count": 95,
+        "p50_ms": 1192.237,
+        "p95_ms": 4043.083,
+        "p99_ms": 4765.492,
+        "max_ms": 4954.849
+      },
+      "tail_supported": {
+        "p95": false,
+        "p99": false
+      },
+      "total_ms": 736182.2,
+      "time_share": 0.0773,
+      "pg_stat_statements": {
+        "calls": 181,
+        "total_exec_time": 258593.23,
+        "rows": 36107,
+        "shared_blks_hit": 8572,
+        "shared_blks_read": 546574,
+        "entries": 1,
+        "mean_exec_time": 1428.692
+      },
+      "plan": {
+        "samples": 8,
+        "timeouts": 1,
+        "median_ms": 311.787,
+        "scans": [
+          "Bitmap Heap Scan:events",
+          "Bitmap Index Scan:naive_events_campaign_id"
+        ],
+        "median_rows_removed": 0,
+        "max_workers_launched": 0,
+        "spills": 0
+      },
+      "selectivity": {
+        "samples": 8,
+        "median": 8.001291411234926e-05,
+        "max": 0.005512387575753162,
+        "median_q_error": 1.3199999999999998,
+        "max_q_error": 3.26
+      }
+    },
+    {
+      "shape": "s01",
+      "label": "events by contact_id; order by occurred_at desc",
+      "template": "select id, event_type, occurred_at from events where contact_id = $1 order by occurred_at desc limit $2",
+      "log_count": 55944,
+      "log_share": 0.3992,
+      "capture": {
+        "sample_count": 3623,
+        "ok_count": 3623,
+        "error_count": 0,
+        "timeout_count": 0,
+        "p50_ms": 100.317,
+        "p95_ms": 299.271,
+        "p99_ms": 567.373,
+        "max_ms": 3506.778
+      },
+      "tail_supported": {
+        "p95": true,
+        "p99": false
+      },
+      "total_ms": 484809.0,
+      "time_share": 0.0509,
+      "pg_stat_statements": {
+        "calls": 3795,
+        "total_exec_time": 257352.697,
+        "rows": 18797,
+        "shared_blks_hit": 16068,
+        "shared_blks_read": 445723,
+        "entries": 2,
+        "mean_exec_time": 67.814
+      },
+      "plan": {
+        "samples": 8,
+        "timeouts": 0,
+        "median_ms": 5.3185,
+        "scans": [
+          "Index Scan:naive_events_contact_id"
+        ],
+        "median_rows_removed": 0.0,
+        "max_workers_launched": 0,
+        "spills": 0
+      },
+      "selectivity": {
+        "samples": 8,
+        "median": 8.203374540150837e-07,
+        "max": 7.623135853164558e-06,
+        "median_q_error": 3.19,
+        "max_q_error": 14.11
+      }
+    },
+    {
+      "shape": "s08",
+      "label": "contacts by country, region, status; order by id",
+      "template": "select id, email from contacts where country = $1 and region = $2 and status = $3 order by id limit $4",
+      "log_count": 6980,
+      "log_share": 0.0498,
+      "capture": {
+        "sample_count": 493,
+        "ok_count": 414,
+        "error_count": 0,
+        "timeout_count": 79,
+        "p50_ms": 67.164,
+        "p95_ms": 78.665,
+        "p99_ms": 132.022,
+        "max_ms": 135.305
+      },
+      "tail_supported": {
+        "p95": false,
+        "p99": false
+      },
+      "total_ms": 423926.0,
+      "time_share": 0.0445,
+      "pg_stat_statements": {
+        "calls": 432,
+        "total_exec_time": 1098.536,
+        "rows": 43200,
+        "shared_blks_hit": 13908,
+        "shared_blks_read": 6007,
+        "entries": 1,
+        "mean_exec_time": 2.543
+      },
+      "plan": {
+        "samples": 8,
+        "timeouts": 1,
+        "median_ms": 0.743,
+        "scans": [
+          "Index Scan:contacts_pkey"
+        ],
+        "median_rows_removed": 2675,
+        "max_workers_launched": 0,
+        "spills": 0
+      },
+      "selectivity": {
+        "samples": 8,
+        "median": 0.03483137940005823,
+        "max": 0.03497513062194362,
+        "median_q_error": 4.995,
+        "max_q_error": 40042.0
+      }
+    },
+    {
+      "shape": "s04",
+      "label": "contacts by account_id, status; order by id",
+      "template": "select id, email, score from contacts where account_id = $1 and status = $2 order by id limit $3 offset $4",
+      "log_count": 14020,
+      "log_share": 0.1,
+      "capture": {
+        "sample_count": 953,
+        "ok_count": 952,
+        "error_count": 0,
+        "timeout_count": 1,
+        "p50_ms": 132.947,
+        "p95_ms": 406.33,
+        "p99_ms": 814.292,
+        "max_ms": 1881.68
+      },
+      "tail_supported": {
+        "p95": false,
+        "p99": false
+      },
+      "total_ms": 170642.9,
+      "time_share": 0.0179,
+      "pg_stat_statements": {
+        "calls": 1005,
+        "total_exec_time": 109088.944,
+        "rows": 50250,
+        "shared_blks_hit": 240862,
+        "shared_blks_read": 1568808,
+        "entries": 1,
+        "mean_exec_time": 108.546
+      },
+      "plan": {
+        "samples": 8,
+        "timeouts": 0,
+        "median_ms": 18.326,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id",
+          "Index Scan:contacts_pkey"
+        ],
+        "median_rows_removed": 1202.5,
+        "max_workers_launched": 0,
+        "spills": 0
+      },
+      "selectivity": {
+        "samples": 8,
+        "median": 0.00046150392278334365,
+        "max": 0.010123419382398084,
+        "median_q_error": 1.495,
+        "max_q_error": 2.42
+      }
+    },
+    {
+      "shape": "s06",
+      "label": "contacts by account_id, email_status; order by id",
+      "template": "select id, email from contacts where account_id = $1 and email_status = $2 order by id limit $3",
+      "log_count": 8447,
+      "log_share": 0.0603,
+      "capture": {
+        "sample_count": 579,
+        "ok_count": 579,
+        "error_count": 0,
+        "timeout_count": 0,
+        "p50_ms": 93.208,
+        "p95_ms": 1023.975,
+        "p99_ms": 1491.17,
+        "max_ms": 2337.196
+      },
+      "tail_supported": {
+        "p95": false,
+        "p99": false
+      },
+      "total_ms": 121092.9,
+      "time_share": 0.0127,
+      "pg_stat_statements": {
+        "calls": 602,
+        "total_exec_time": 86267.419,
+        "rows": 26218,
+        "shared_blks_hit": 202076,
+        "shared_blks_read": 1548463,
+        "entries": 1,
+        "mean_exec_time": 143.301
+      },
+      "plan": {
+        "samples": 8,
+        "timeouts": 0,
+        "median_ms": 9.1425,
+        "scans": [
+          "Bitmap Heap Scan:contacts",
+          "Bitmap Index Scan:naive_contacts_account_id",
+          "Bitmap Index Scan:naive_contacts_email_status"
+        ],
+        "median_rows_removed": 0.0,
+        "max_workers_launched": 0,
+        "spills": 0
+      },
+      "selectivity": {
+        "samples": 8,
+        "median": 3.666697833598252e-06,
+        "max": 7.000059500505754e-06,
+        "median_q_error": 1.405,
+        "max_q_error": 3.89
+      }
+    }
+  ],
+  "dataset": {
+    "tables": {
+      "accounts": {
+        "rows": 2000,
+        "heap_bytes": 155648,
+        "index_bytes": 65536,
+        "total_bytes": 221184,
+        "heap_bytes_per_row": 77.8
+      },
+      "campaigns": {
+        "rows": 20000,
+        "heap_bytes": 1089536,
+        "index_bytes": 466944,
+        "total_bytes": 1556480,
+        "heap_bytes_per_row": 54.5
+      },
+      "contacts": {
+        "rows": 6000000,
+        "heap_bytes": 614850560,
+        "index_bytes": 134791168,
+        "total_bytes": 749641728,
+        "heap_bytes_per_row": 102.5
+      },
+      "events": {
+        "rows": 49979101,
+        "heap_bytes": 9100066816,
+        "index_bytes": 1122631680,
+        "total_bytes": 10222698496,
+        "heap_bytes_per_row": 182.1
+      }
+    },
+    "database_bytes": 10982350848
+  },
+  "naive_ddl": [
+    "CREATE INDEX IF NOT EXISTS naive_contacts_account_id ON contacts (account_id)",
+    "CREATE INDEX IF NOT EXISTS naive_contacts_country ON contacts (country)",
+    "CREATE INDEX IF NOT EXISTS naive_contacts_email ON contacts (email)",
+    "CREATE INDEX IF NOT EXISTS naive_contacts_email_status ON contacts (email_status)",
+    "CREATE INDEX IF NOT EXISTS naive_contacts_region ON contacts (region)",
+    "CREATE INDEX IF NOT EXISTS naive_contacts_status ON contacts (status)",
+    "CREATE INDEX IF NOT EXISTS naive_events_account_id ON events (account_id)",
+    "CREATE INDEX IF NOT EXISTS naive_events_campaign_id ON events (campaign_id)",
+    "CREATE INDEX IF NOT EXISTS naive_events_contact_id ON events (contact_id)",
+    "CREATE INDEX IF NOT EXISTS naive_events_occurred_at ON events (occurred_at)"
+  ],
+  "naive_build_seconds": {
+    "CREATE INDEX IF NOT EXISTS naive_contacts_account_id ON contacts (account_id)": 1.6,
+    "CREATE INDEX IF NOT EXISTS naive_contacts_country ON contacts (country)": 1.7,
+    "CREATE INDEX IF NOT EXISTS naive_contacts_email ON contacts (email)": 2.0,
+    "CREATE INDEX IF NOT EXISTS naive_contacts_email_status ON contacts (email_status)": 1.6,
+    "CREATE INDEX IF NOT EXISTS naive_contacts_region ON contacts (region)": 2.1,
+    "CREATE INDEX IF NOT EXISTS naive_contacts_status ON contacts (status)": 1.6,
+    "CREATE INDEX IF NOT EXISTS naive_events_account_id ON events (account_id)": 44.7,
+    "CREATE INDEX IF NOT EXISTS naive_events_campaign_id ON events (campaign_id)": 12.0,
+    "CREATE INDEX IF NOT EXISTS naive_events_contact_id ON events (contact_id)": 11.4,
+    "CREATE INDEX IF NOT EXISTS naive_events_occurred_at ON events (occurred_at)": 9.2
+  },
+  "candidate_build_seconds": {
+    "CREATE INDEX IF NOT EXISTS cand_i1 ON events (contact_id, occurred_at DESC)": 198.0,
+    "CREATE INDEX IF NOT EXISTS cand_i2 ON events (account_id, occurred_at)": 15.9,
+    "CREATE INDEX IF NOT EXISTS cand_i3 ON events (campaign_id, event_type)": 13.9,
+    "CREATE INDEX IF NOT EXISTS cand_i4 ON events USING brin (occurred_at)": 3.0,
+    "CREATE INDEX IF NOT EXISTS cand_i5 ON contacts (account_id, status)": 4.4,
+    "CREATE INDEX IF NOT EXISTS cand_i6 ON contacts (email_status) WHERE email_status = 'bounced'": 0.3,
+    "CREATE INDEX IF NOT EXISTS cand_i7 ON contacts (lower(email))": 2.1,
+    "CREATE INDEX IF NOT EXISTS cand_i8 ON contacts (country, region)": 3.5
+  },
+  "index_bytes": {
+    "accounts_pkey": 65536,
+    "campaigns_pkey": 466944,
+    "cand_i1": 1576214528,
+    "cand_i2": 1576484864,
+    "cand_i3": 354713600,
+    "cand_i4": 311296,
+    "cand_i5": 43458560,
+    "cand_i6": 229376,
+    "cand_i7": 298442752,
+    "cand_i8": 41607168,
+    "contacts_pkey": 134791168,
+    "events_pkey": 1122631680,
+    "naive_contacts_account_id": 42442752,
+    "naive_contacts_country": 41598976,
+    "naive_contacts_email": 298442752,
+    "naive_contacts_email_status": 41598976,
+    "naive_contacts_region": 41607168,
+    "naive_contacts_status": 41820160,
+    "naive_events_account_id": 347275264,
+    "naive_events_campaign_id": 352821248,
+    "naive_events_contact_id": 484319232,
+    "naive_events_occurred_at": 1122631680
+  },
+  "capture_config": {
+    "config": "naive",
+    "cu": 2,
+    "build_cu": 4,
+    "sessions": 8,
+    "warmup_seconds": 60,
+    "measure_seconds": 1200,
+    "explain_samples": 8,
+    "explain_timeout_ms": 30000,
+    "count_samples": 8,
+    "count_timeout_ms": 60000
+  },
+  "load_model_sha256": "5a93d123dac4c3d626403ac09a7f91a4a0f51e86389e7a6a1c6ea7612b3ec73f",
+  "config_space_sha256": "49e33b171ef7965325adeb4a729eccf73295ca9a795e70b93a41d13d06b9e139"
+}
