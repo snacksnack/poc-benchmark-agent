@@ -22,11 +22,13 @@ sources of truth are `config/load-model.toml` and `config/config-space.toml`.
 
 ## Configuration space (ADR 0003, ADR 0015)
 
-**Compute tiers:** 1, 2, 4 CU fixed size. Default tier for both baselines:
-2 CU. 0.25 and 0.5 CU are shared compute and are excluded (ADR 0015).
+**Compute tiers:** 0.25, 0.5, 1, 2, 4 CU fixed size. Default tier for both
+baselines: 2 CU. 0.25 and 0.5 CU are shared compute; first excluded, then
+kept after the noise gate measured them steady, and labeled shared in every
+result (ADR 0015).
 
 **Dataset** (Phase 1 builds it): about 10.5 GB, 6M contacts and 50M events,
-against 3 / 6 / 12 GB of compute cache. Sized by ratio to cache, not in
+against 0.75 / 1.5 / 3 / 6 / 12 GB of compute cache. Sized by ratio to cache, not in
 absolute GB.
 
 **Index candidates**, with estimated storage. Estimates are upper bounds from
@@ -137,15 +139,15 @@ the Phase 0 exit asks for.
 
 Results: `docs/noise-gate.md` (**GO**: p99 spread 1.2%, p95 15.1%) and
 `docs/phase0-findings.md`, which carries two changes forward: Phase 2 criteria
-are per shape, and the shared-compute exclusion (ADR 0015) is reopened.
+are per shape, and 0.25 and 0.5 CU are back in the tier list (ADR 0015).
 
 ## Cost
 
 `docs/cost-estimate.md`, generated from the two config files by
-`pocbench cost` (a test fails if it goes stale). At Phase 0: about **$35
+`pocbench cost` (a test fails if it goes stale). At Phase 0: about **$32
 expected, $40 worst case** for the build, assuming about two weeks of calendar
 time (the binding constraint is 35-40 hours of benchmark runs, not build
 work), and about $3.70 a month to keep the dataset afterward. The epic's
-provisional $100-130 was high: compute for the whole matrix is 160-200
-CU-hours (about $17-21); the model budgets, storage and history make up the
+provisional $100-130 was high: compute for the whole matrix is 130-200
+CU-hours (about $14-21); the model budgets, storage and history make up the
 rest.

@@ -56,8 +56,8 @@ against 2,711-2,735 ms.
 One 18-minute sample cannot show that neighbor noise never happens, but it
 does remove the evidence for the exclusion. It also shows why excluding small
 tiers is costly: "the smaller, cheaper tier is as fast on your tail" is
-exactly the kind of answer this agent exists to give. ADR 0015 is reopened
-(see its amendment).
+exactly the kind of answer this agent exists to give. **Decision:** 0.25 and
+0.5 CU are back in the tier list, labeled shared (ADR 0015).
 
 **Open question for Phase 1:** why the funnel scan is slower on 1 CU than on
 0.25 CU. Candidate explanations, none verified: parallel workers per query

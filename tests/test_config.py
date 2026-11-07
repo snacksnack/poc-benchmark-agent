@@ -37,9 +37,11 @@ def test_validator_rejects_a_load_model_the_harness_cannot_honor(mutate):
         config.validate_load_model(lm)
 
 
-def test_config_space_excludes_shared_compute_and_keeps_baselines_on_the_default_tier():
+def test_shared_tiers_are_labeled_and_baselines_sit_on_the_default_tier():
     space = config.config_space().data
-    assert min(space["tiers"]["compute_units"]) >= 1
+    tiers = space["tiers"]
+    assert set(tiers["shared_compute_units"]) <= set(tiers["compute_units"])
+    assert tiers["default_cu"] not in tiers["shared_compute_units"]
     assert space["tiers"]["default_cu"] in space["tiers"]["compute_units"]
     assert space["baselines"]["default"]["cu"] == space["tiers"]["default_cu"]
     assert space["baselines"]["naive"]["cu"] == space["tiers"]["default_cu"]

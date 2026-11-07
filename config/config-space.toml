@@ -8,15 +8,17 @@ region = "aws-us-east-1"
 
 [tiers]
 # Fixed size (autoscaling min = max). 0.25 and 0.5 CU are shared compute on
-# Neon and add a noise source the experiment cannot control; excluded (ADR 0015).
-compute_units = [1, 2, 4]
+# Neon; kept in scope after the Phase 0 gate measured them steady, and labeled
+# as shared in every result (ADR 0015).
+compute_units = [0.25, 0.5, 1, 2, 4]
+shared_compute_units = [0.25, 0.5]
 # The tier the "prospect" runs today. Both baselines run here.
 default_cu = 2
 
 [dataset]
 # Phase 1 targets. The size is set by its ratio to compute cache, not in
-# absolute GB: ~10.5 GB against 3 / 6 / 12 GB of compute cache at 1 / 2 / 4 CU
-# spans "working set does not fit" to "fits". The ratio is a design parameter,
+# absolute GB: ~10.5 GB against 0.75 / 1.5 / 3 / 6 / 12 GB of compute cache at
+# 0.25 / 0.5 / 1 / 2 / 4 CU spans "14x the cache" to "fits". The ratio is a design parameter,
 # not a claim that results transfer across scales.
 rows = { accounts = 2_000, campaigns = 20_000, contacts = 6_000_000, events = 50_000_000 }
 # Estimated heap bytes per row including the 24-byte tuple header and line
