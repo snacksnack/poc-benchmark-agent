@@ -9,8 +9,10 @@ the same declared load. Success criteria are written and hash-pinned before
 any experiment runs, the recommendation is scored on a held-out slice it never
 saw, and the results document reports losses and refusals as well as wins.
 
-Status: **Phase 1** (RC1-629): corpus, query log, profiler and held-out split
-(`docs/phase1-profile.md`, `docs/phase1-findings.md`). Phase 0 (RC1-628) committed the decisions, risk
+Status: **Phase 2** (RC1-630): success criteria frozen and pinned
+(`docs/criteria.md`). Phase 1 (RC1-629) built the corpus, query log,
+profiler and held-out split (`docs/phase1-profile.md`,
+`docs/phase1-findings.md`). Phase 0 (RC1-628) committed the decisions, risk
 log, load model and cost model, and passed the noise gate
 (`docs/noise-gate.md`). Epic: RC1-595.
 
@@ -33,6 +35,8 @@ log, load model and cost model, and passed the noise gate
 | `pocbench/shapes.py`, `pocbench/profile.py` | Profiler: shapes from the SQL alone, capture, plans, selectivity. |
 | `pocbench/split.py` | Account-level held-out split. |
 | `results/phase1/` | Query log, split manifest, profile and tier probe. |
+| `config/goal.toml` | The buyer's stated goal: the one human input to the criteria. |
+| `criteria/` | The frozen criteria and their pin; `pocbench verify-criteria` checks both. |
 
 ## Running
 

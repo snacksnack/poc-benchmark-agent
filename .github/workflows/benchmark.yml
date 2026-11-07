@@ -55,6 +55,11 @@ jobs:
           echo "runner_os=$RUNNER_OS arch=$RUNNER_ARCH image=$ImageOS/$ImageVersion cpus=$(nproc)"
           uv run pocbench fingerprint
 
+      # Every task runs against the frozen criteria; a changed criteria file
+      # or pinned input stops the job before it spends compute (ADR 0019).
+      - name: Verify criteria pin
+        run: uv run pocbench verify-criteria
+
       - name: Noise gate
         if: env.TASK == 'noise-gate'
         env:

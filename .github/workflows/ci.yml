@@ -53,6 +53,12 @@ jobs:
           DD_ENV: ci
         run: uv run pytest --ddtrace --cov
 
+      # Phase 2 pin: fails if the frozen criteria or any input they embed by
+      # hash (load model, config space, goal, split manifest, profile,
+      # nastiness list) changed after the freeze (ADR 0019).
+      - name: Verify criteria pin
+        run: uv run pocbench verify-criteria
+
       # The pinned files' fingerprints, printed so every CI log records which
       # load model and config space the code was tested against.
       - name: Fingerprint pinned config

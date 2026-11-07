@@ -9,7 +9,7 @@ from pathlib import Path
 import psycopg
 from dotenv import load_dotenv
 
-from pocbench import config, corpus, cost, gate, loadgen, phase1, phase1_report, spike
+from pocbench import config, corpus, cost, criteria, gate, loadgen, phase1, phase1_report, spike
 
 
 def _cmd_fingerprint(_args) -> int:
@@ -115,6 +115,26 @@ def _cmd_profile_report(args) -> int:
     return 0
 
 
+def _cmd_criteria_freeze(args) -> int:
+    doc = criteria.build()
+    sha = criteria.freeze(doc)
+    Path(args.write).write_text(criteria.render(doc, sha))
+    print(f"criteria frozen: {len(doc['criteria'])} criteria, sha256 {sha}")
+    return 0
+
+
+def _cmd_verify_criteria(_args) -> int:
+    try:
+        doc = criteria.load_verified()
+    except criteria.CriteriaPinError as e:
+        print(e, file=sys.stderr)
+        return 1
+    sha = criteria.sha256_file(criteria.CRITERIA_PATH)
+    print(f"criteria pin OK: {len(doc['criteria'])} criteria, sha256 {sha}, "
+          f"{len(doc['pins'])} pinned inputs unchanged")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     load_dotenv()
     p = argparse.ArgumentParser(prog="pocbench")
@@ -173,6 +193,10 @@ def main(argv: list[str] | None = None) -> int:
     rp.add_argument("--run-url")
     rp.add_argument("--write")
 
+    cf = sub.add_parser("criteria-freeze", help="Phase 2: generate and pin the success criteria")
+    cf.add_argument("--write", default="docs/criteria.md")
+    sub.add_parser("verify-criteria", help="fail if the criteria or a pinned input changed")
+
     args = p.parse_args(argv)
     if args.cmd in ("spike-load", "run") and args.dsn is None:
         p.error("--dsn or DATABASE_URL is required")
@@ -180,7 +204,8 @@ def main(argv: list[str] | None = None) -> int:
                 "spike-load": _cmd_spike_load, "run": _cmd_run, "gate": _cmd_gate,
                 "gate-report": _cmd_gate_report, "corpus-load": _cmd_corpus_load,
                 "profile": _cmd_profile, "tier-probe": _cmd_tier_probe,
-                "profile-report": _cmd_profile_report}
+                "profile-report": _cmd_profile_report,
+                "criteria-freeze": _cmd_criteria_freeze, "verify-criteria": _cmd_verify_criteria}
     return handlers[args.cmd](args)
 
 

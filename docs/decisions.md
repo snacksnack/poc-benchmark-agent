@@ -172,3 +172,15 @@ Results: `docs/phase1-profile.md` and `docs/phase1-findings.md`, which carry
 two changes forward: Phase 3 gates scored jobs on the network probe (R9),
 and Phase 2 criteria handle baselines that fail outright (R13).
 
+## Phase 2 (RC1-630)
+
+The buyer's goal (`config/goal.toml`) plus the Phase 1 profile generate
+`criteria/criteria.json`: 80 criteria (latency ceilings on the four goal
+shapes, no regression against today on the other five, per-shape error
+ceilings, throughput and cost bounds) at 8 and 32 sessions and both cache
+states, with the uncertainty method written into the file. Frozen once,
+sha256 `da51e19e9bcae98581003a0e86ed776e20860b032f0ca158ad850d43c2c7d616`,
+embedding the hashes of the load model, config space, goal, split manifest,
+profile and nastiness list. CI and every benchmark job verify the pin
+(ADR 0019). Rendering: `docs/criteria.md`.
+

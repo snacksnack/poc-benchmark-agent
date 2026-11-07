@@ -106,3 +106,22 @@ def noise_gate(runs: Sequence[Summary], threshold: float, error_ceiling: float) 
     if noisy:
         reasons.append(f"runs {noisy} broke the error ceiling")
     return GateVerdict(not reasons, s95, s99, threshold, tuple(reasons))
+
+
+def quantile_ci_ranks(n: int, p: float, z: float = 1.96) -> tuple[int, int]:
+    """Distribution-free confidence interval for the p-th percentile of n
+    sorted samples, as 1-based ranks (normal approximation to the binomial).
+    The interval is [sorted[lo - 1], sorted[hi - 1]]."""
+    if n < 1 or not 0 < p < 100:
+        raise ValueError(f"need n >= 1 and 0 < p < 100: n={n}, p={p}")
+    q = p / 100
+    half = z * math.sqrt(n * q * (1 - q))
+    lo = max(1, math.floor(n * q - half))
+    hi = min(n, math.ceil(n * q + half) + 1)
+    return lo, hi
+
+
+def quantile_ci(sorted_values: Sequence[float], p: float, z: float = 1.96
+                ) -> tuple[float, float]:
+    lo, hi = quantile_ci_ranks(len(sorted_values), p, z)
+    return sorted_values[lo - 1], sorted_values[hi - 1]
