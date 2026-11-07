@@ -146,7 +146,7 @@ are per shape, and 0.25 and 0.5 CU are back in the tier list (ADR 0015).
 `docs/cost-estimate.md`, generated from the two config files by
 `pocbench cost` (a test fails if it goes stale). At Phase 0: about **$32
 expected, $40 worst case** for the build, assuming about two weeks of calendar
-time (the binding constraint is 35-40 hours of benchmark runs, not build
+time (the binding constraint is about 62 hours of benchmark runs, not build
 work), and about $3.70 a month to keep the dataset afterward. The epic's
 provisional $100-130 was high: compute for the whole matrix is 130-200
 CU-hours (about $14-21); the model budgets, storage and history make up the

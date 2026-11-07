@@ -51,4 +51,43 @@ After the build: about $3.67/month to keep the root branch (compute scales to ze
 - `phase6_model_spend_usd` = 5.0
 - `history_window_days` = 1
 
+## Per client engagement
+
+What one engagement costs once the tool exists: load and profile the client's data, run the adaptive loop, evaluate on held-out, ablate. Build-only work (harness shakedown, evals, measuring every index up front) is excluded. The larger scenario multiplies every tier and the loop's compute budget by `tier_scale`, which keeps the demo's dataset-to-cache ratio.
+
+| Scenario | Data | Tiers (CU) | Expected | Worst case |
+| --- | ---: | --- | ---: | ---: |
+| Demo scale | 10.5 GB | 0.25, 0.5, 1, 2, 4 | $25.79 | $33.53 |
+| 100 GB prospect | 100 GB | 1, 2, 4, 8, 16 | $99.29 | $127.93 |
+
+### Demo scale, expected case
+
+| Item | CU-hours | USD | Basis |
+| --- | ---: | ---: | --- |
+| Load and profile the client's data | 10.0 | 1.06 | load scales with data (10.5 GB), profile with the default tier (2 CU) |
+| Adaptive loop (profiling slice) | 78.0 | 8.27 | up to 20 experiments, candidate at 1.55 CU, budget 120 CU-h |
+| Held-out evaluation | 20.6 | 2.18 | frozen candidate + 2 baselines, eval protocol |
+| Ablations | 11.5 | 1.22 | 2 at the candidate tier |
+| Dataset storage |  | 1.69 | 10.5 GB for 2 weeks |
+| Instant-restore history |  | 0.97 | upper bound, as in the build estimate |
+| Index storage on child branches |  | 0.40 | candidates at 47% of data size |
+| Model spend, adaptive loop |  | 10.00 | budget cap |
+| **Total** | **120.2** | **25.79** | |
+
+### 100 GB prospect, expected case
+
+| Item | CU-hours | USD | Basis |
+| --- | ---: | ---: | --- |
+| Load and profile the client's data | 84.2 | 8.92 | load scales with data (100 GB), profile with the default tier (8 CU) |
+| Adaptive loop (profiling slice) | 355.0 | 37.63 | up to 20 experiments, candidate at 6.20 CU, budget 480 CU-h |
+| Held-out evaluation | 82.4 | 8.74 | frozen candidate + 2 baselines, eval protocol |
+| Ablations | 46.0 | 4.88 | 2 at the candidate tier |
+| Dataset storage |  | 16.11 | 100 GB for 2 weeks |
+| Instant-restore history |  | 9.21 | upper bound, as in the build estimate |
+| Index storage on child branches |  | 3.81 | candidates at 47% of data size |
+| Model spend, adaptive loop |  | 10.00 | budget cap |
+| **Total** | **567.6** | **99.29** | |
+
+Elapsed time is the larger cost: about 58 hours of measured runs per engagement, run in sequence so they do not disturb each other. Not priced: engineer time to agree the criteria with the buyer and present the results. Neon Scale bills compute at $0.222/CU-hour, about double the compute lines.
+
 Not priced: the GitHub-hosted runner that generates load (free for a public repo) and egress (well inside the 500 GB/project Launch allowance; result sets are bounded by LIMIT).

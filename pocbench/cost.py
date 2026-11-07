@@ -1,9 +1,14 @@
-"""Build-cost estimate from the full experiment matrix.
+"""Cost estimates from the full experiment matrix: the one-time build, and
+one client engagement.
 
 Everything is derived from config/config-space.toml and config/load-model.toml
 plus the ASSUMPTIONS below, so a changed protocol re-prices itself. Two cases:
 "expected" puts Phase 4 candidates at the mean tier, "worst" puts every
 candidate at the largest tier and spends every budget to the cap.
+
+An engagement reuses the matrix but drops build-only work (harness shakedown,
+evals, measuring every candidate index up front) and scales with the client:
+storage and load time with dataset size, CU-hours with the tier ladder.
 """
 
 from dataclasses import dataclass
@@ -13,7 +18,7 @@ from pocbench import sizing
 # Work the matrix does not describe. Each is a guess until the phase that
 # owns it measures it; the estimate is re-run at each phase exit.
 ASSUMPTIONS = {
-    "build_months": 0.5,  # ~35-40 h of benchmark runs spread over about two weeks
+    "build_months": 0.5,  # ~62 h of benchmark runs (6 h per job) over about two weeks
     "phase1_load_cu_hours": 8.0,  # generate ~10.5 GB on 4 CU, ~2 h
     "phase1_index_measure_cu_hours": 4.0,  # build all 8 candidates once on 4 CU
     "phase1_profile_cu_hours": 2.0,  # capture the workload profile, 1 h at 2 CU
@@ -24,6 +29,16 @@ ASSUMPTIONS = {
     "phase6_model_spend_usd": 5.0,
     "history_window_days": 1,
 }
+
+# Client scenarios. tier_scale multiplies every tier, the default tier and the
+# Phase 4 compute budget, which keeps the dataset-to-cache ratio of the demo
+# (ADR 0015): 100 GB against 1-16 CU has the same cache physics as 10.5 GB
+# against 0.25-4 CU. Launch allows fixed sizes up to 16 CU.
+ENGAGEMENTS = [
+    {"name": "Demo scale", "dataset_gb": 10.5, "tier_scale": 1, "weeks": 2},
+    {"name": "100 GB prospect", "dataset_gb": 100.0, "tier_scale": 4, "weeks": 2},
+]
+WEEKS_PER_MONTH = 4.345
 
 
 @dataclass(frozen=True)
@@ -122,6 +137,65 @@ def estimate(load_model: dict, space: dict, case: str) -> list[Line]:
     return lines
 
 
+def engagement(load_model: dict, space: dict, scenario: dict, case: str) -> list[Line]:
+    """One client engagement: load and profile their data, run the adaptive
+    loop, evaluate on held-out, ablate. No build-only work."""
+    if case not in ("expected", "worst"):
+        raise ValueError(case)
+    rate = space["cost"]["cu_hour_usd"]
+    k, gb = scenario["tier_scale"], scenario["dataset_gb"]
+    data_ratio = gb / space["dataset"]["target_gb"]
+    tiers = [t * k for t in space["tiers"]["compute_units"]]
+    default_cu = space["tiers"]["default_cu"] * k
+    candidate_cu = max(tiers) if case == "worst" else sum(tiers) / len(tiers)
+    dev_h = run_minutes(load_model, space, space["protocol"]["dev"]) / 60
+    eval_h = run_minutes(load_model, space, space["protocol"]["eval"]) / 60
+    budget = space["budgets"]["phase4"]
+    months = scenario["weeks"] / WEEKS_PER_MONTH
+    storage = space["cost"]["storage_gb_month_usd"]
+    lines = []
+
+    def compute(item: str, cu_hours: float, basis: str) -> None:
+        lines.append(Line(item, cu_hours, cu_hours * rate, basis))
+
+    compute("Load and profile the client's data",
+            ASSUMPTIONS["phase1_load_cu_hours"] * data_ratio
+            + ASSUMPTIONS["phase1_profile_cu_hours"] * k,
+            f"load scales with data ({gb:g} GB), profile with the default tier ({default_cu:g} CU)")
+    index_h = ASSUMPTIONS["index_build_hours_per_experiment"] * data_ratio / k
+    per_exp = candidate_cu * (dev_h + index_h) + default_cu * dev_h
+    loop = min(budget["max_experiments"] * per_exp, budget["max_compute_cu_hours"] * k)
+    compute("Adaptive loop (profiling slice)", loop,
+            f"up to {budget['max_experiments']} experiments, candidate at {candidate_cu:.2f} CU, "
+            f"budget {budget['max_compute_cu_hours'] * k:g} CU-h")
+    compute("Held-out evaluation", (candidate_cu + 2 * default_cu) * eval_h,
+            "frozen candidate + 2 baselines, eval protocol")
+    compute("Ablations", ASSUMPTIONS["ablations"] * candidate_cu * eval_h,
+            f"{ASSUMPTIONS['ablations']} at the candidate tier")
+    lines.append(Line("Dataset storage", 0, gb * storage * months,
+                      f"{gb:g} GB for {scenario['weeks']} weeks"))
+    restore = space["cost"]["instant_restore_gb_month_usd"]
+    lines.append(Line("Instant-restore history", 0, gb * restore * months,
+                      "upper bound, as in the build estimate"))
+    idx_share = sum(sizing.candidate_bytes(c, space["dataset"]) for c in space["index"]) / (
+        space["dataset"]["target_gb"] * 1e9)
+    idx_months = months if case == "worst" else months / 2
+    lines.append(Line("Index storage on child branches", 0, idx_share * gb * storage * idx_months,
+                      f"candidates at {idx_share:.0%} of data size"))
+    lines.append(Line("Model spend, adaptive loop", 0, budget["max_model_spend_usd"],
+                      "budget cap"))
+    return lines
+
+
+def engagement_run_hours(load_model: dict, space: dict) -> float:
+    """Wall-clock hours of measured runs in one engagement (loop at the
+    experiment cap, held-out evaluation, ablations)."""
+    dev_h = run_minutes(load_model, space, space["protocol"]["dev"]) / 60
+    eval_h = run_minutes(load_model, space, space["protocol"]["eval"]) / 60
+    loop = space["budgets"]["phase4"]["max_experiments"] * 2 * dev_h  # candidate + baseline
+    return loop + (3 + ASSUMPTIONS["ablations"]) * eval_h
+
+
 def monthly_after(space: dict) -> float:
     return space["dataset"]["target_gb"] * space["cost"]["storage_gb_month_usd"]
 
@@ -164,6 +238,43 @@ def render(load_model: dict, space: dict, load_model_sha: str, space_sha: str) -
         "",
     ]
     out += [f"- `{k}` = {v}" for k, v in ASSUMPTIONS.items()]
+    out += [
+        "",
+        "## Per client engagement",
+        "",
+        "What one engagement costs once the tool exists: load and profile the client's "
+        "data, run the adaptive loop, evaluate on held-out, ablate. Build-only work "
+        "(harness shakedown, evals, measuring every index up front) is excluded. The "
+        "larger scenario multiplies every tier and the loop's compute budget by "
+        "`tier_scale`, which keeps the demo's dataset-to-cache ratio.",
+        "",
+        "| Scenario | Data | Tiers (CU) | Expected | Worst case |",
+        "| --- | ---: | --- | ---: | ---: |",
+    ]
+    for sc in ENGAGEMENTS:
+        tiers = ", ".join(f"{t * sc['tier_scale']:g}" for t in space["tiers"]["compute_units"])
+        exp = sum(x.usd for x in engagement(load_model, space, sc, "expected"))
+        worst = sum(x.usd for x in engagement(load_model, space, sc, "worst"))
+        out.append(f"| {sc['name']} | {sc['dataset_gb']:g} GB | {tiers} | "
+                   f"${exp:.2f} | ${worst:.2f} |")
+    for sc in ENGAGEMENTS:
+        lines = engagement(load_model, space, sc, "expected")
+        out += ["", f"### {sc['name']}, expected case", "",
+                "| Item | CU-hours | USD | Basis |", "| --- | ---: | ---: | --- |"]
+        for x in lines:
+            cu = f"{x.cu_hours:.1f}" if x.cu_hours else ""
+            out.append(f"| {x.item} | {cu} | {x.usd:.2f} | {x.basis} |")
+        total = sum(x.usd for x in lines)
+        out.append(f"| **Total** | **{sum(x.cu_hours for x in lines):.1f}** | "
+                   f"**{total:.2f}** | |")
+    out += [
+        "",
+        f"Elapsed time is the larger cost: about {engagement_run_hours(load_model, space):.0f} "
+        "hours of measured runs per engagement, run in sequence so they do not "
+        "disturb each other. Not priced: engineer time to agree the criteria with the "
+        "buyer and present the results. Neon Scale bills compute at $0.222/CU-hour, "
+        "about double the compute lines.",
+    ]
     out += [
         "",
         "Not priced: the GitHub-hosted runner that generates load (free for a public "
