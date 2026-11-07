@@ -1,0 +1,868 @@
+{
+  "baselines": {
+    "default": {
+      "cu": 2,
+      "indexes": []
+    },
+    "naive": {
+      "cu": 2,
+      "rule": "single-column btree per WHERE column"
+    }
+  },
+  "criteria": [
+    {
+      "cache_state": "warm",
+      "ceiling_ms": 2000.0,
+      "id": "C001",
+      "kind": "latency_ceiling",
+      "level": 8,
+      "note": "p99 requested; the held-out slice has 365 distinct instances, below the p99 floor, so the criterion is p95",
+      "percentile": 95,
+      "shape": "s07",
+      "shape_name": "daily report",
+      "template": "select campaign_id, event_type, count(*) as n from events where occurred_at >= $1 and occurred_at < $2 group by campaign_id, event_type order by n desc limit $3"
+    },
+    {
+      "cache_state": "warm",
+      "ceiling_ms": 100.0,
+      "id": "C002",
+      "kind": "latency_ceiling",
+      "level": 8,
+      "percentile": 99,
+      "shape": "s02",
+      "shape_name": "email lookup",
+      "template": "select id, account_id, status from contacts where lower(email) = lower($1)"
+    },
+    {
+      "cache_state": "warm",
+      "ceiling_ms": 2000.0,
+      "id": "C003",
+      "kind": "latency_ceiling",
+      "level": 8,
+      "percentile": 99,
+      "shape": "s05",
+      "shape_name": "campaign funnel",
+      "template": "select event_type, count(*) from events where campaign_id = $1 group by event_type"
+    },
+    {
+      "cache_state": "warm",
+      "ceiling_ms": 1000.0,
+      "id": "C004",
+      "kind": "latency_ceiling",
+      "level": 8,
+      "percentile": 99,
+      "shape": "s03",
+      "shape_name": "account timeline",
+      "template": "select id, contact_id, event_type, occurred_at from events where account_id = $1 order by occurred_at desc limit $2 offset $3"
+    },
+    {
+      "against": "naive",
+      "cache_state": "warm",
+      "id": "C005",
+      "kind": "no_regression",
+      "level": 8,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s01",
+      "template": "select id, event_type, occurred_at from events where contact_id = $1 order by occurred_at desc limit $2",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "warm",
+      "id": "C006",
+      "kind": "no_regression",
+      "level": 8,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s04",
+      "template": "select id, email, score from contacts where account_id = $1 and status = $2 order by id limit $3 offset $4",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "warm",
+      "id": "C007",
+      "kind": "no_regression",
+      "level": 8,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s06",
+      "template": "select id, email from contacts where account_id = $1 and email_status = $2 order by id limit $3",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "warm",
+      "id": "C008",
+      "kind": "no_regression",
+      "level": 8,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s08",
+      "template": "select id, email from contacts where country = $1 and region = $2 and status = $3 order by id limit $4",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "warm",
+      "id": "C009",
+      "kind": "no_regression",
+      "level": 8,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s09",
+      "template": "select distinct on (contact_id) contact_id, occurred_at, event_type from events where campaign_id = $1 order by contact_id, occurred_at desc limit $2",
+      "tolerance": 0.1
+    },
+    {
+      "cache_state": "warm",
+      "id": "C010",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s01"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C011",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s02"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C012",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s03"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C013",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s04"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C014",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s05"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C015",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s06"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C016",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s07"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C017",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s08"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C018",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s09"
+    },
+    {
+      "against": "naive",
+      "at_least_ratio": 1.0,
+      "cache_state": "warm",
+      "id": "C019",
+      "kind": "throughput_floor",
+      "level": 8
+    },
+    {
+      "against": "naive",
+      "at_most_ratio": 1.0,
+      "cache_state": "warm",
+      "id": "C020",
+      "kind": "cost_ceiling",
+      "level": 8,
+      "metric": "cost per successful query"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "ceiling_ms": 4000.0,
+      "id": "C021",
+      "kind": "latency_ceiling",
+      "level": 8,
+      "note": "p99 requested; the held-out slice has 365 distinct instances, below the p99 floor, so the criterion is p95",
+      "percentile": 95,
+      "shape": "s07",
+      "shape_name": "daily report",
+      "template": "select campaign_id, event_type, count(*) as n from events where occurred_at >= $1 and occurred_at < $2 group by campaign_id, event_type order by n desc limit $3"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "ceiling_ms": 200.0,
+      "id": "C022",
+      "kind": "latency_ceiling",
+      "level": 8,
+      "percentile": 99,
+      "shape": "s02",
+      "shape_name": "email lookup",
+      "template": "select id, account_id, status from contacts where lower(email) = lower($1)"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "ceiling_ms": 4000.0,
+      "id": "C023",
+      "kind": "latency_ceiling",
+      "level": 8,
+      "percentile": 99,
+      "shape": "s05",
+      "shape_name": "campaign funnel",
+      "template": "select event_type, count(*) from events where campaign_id = $1 group by event_type"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "ceiling_ms": 2000.0,
+      "id": "C024",
+      "kind": "latency_ceiling",
+      "level": 8,
+      "percentile": 99,
+      "shape": "s03",
+      "shape_name": "account timeline",
+      "template": "select id, contact_id, event_type, occurred_at from events where account_id = $1 order by occurred_at desc limit $2 offset $3"
+    },
+    {
+      "against": "naive",
+      "cache_state": "post-restart-with-eviction",
+      "id": "C025",
+      "kind": "no_regression",
+      "level": 8,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s01",
+      "template": "select id, event_type, occurred_at from events where contact_id = $1 order by occurred_at desc limit $2",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "post-restart-with-eviction",
+      "id": "C026",
+      "kind": "no_regression",
+      "level": 8,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s04",
+      "template": "select id, email, score from contacts where account_id = $1 and status = $2 order by id limit $3 offset $4",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "post-restart-with-eviction",
+      "id": "C027",
+      "kind": "no_regression",
+      "level": 8,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s06",
+      "template": "select id, email from contacts where account_id = $1 and email_status = $2 order by id limit $3",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "post-restart-with-eviction",
+      "id": "C028",
+      "kind": "no_regression",
+      "level": 8,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s08",
+      "template": "select id, email from contacts where country = $1 and region = $2 and status = $3 order by id limit $4",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "post-restart-with-eviction",
+      "id": "C029",
+      "kind": "no_regression",
+      "level": 8,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s09",
+      "template": "select distinct on (contact_id) contact_id, occurred_at, event_type from events where campaign_id = $1 order by contact_id, occurred_at desc limit $2",
+      "tolerance": 0.1
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C030",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s01"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C031",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s02"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C032",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s03"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C033",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s04"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C034",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s05"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C035",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s06"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C036",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s07"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C037",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s08"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C038",
+      "kind": "error_ceiling",
+      "level": 8,
+      "max_fraction": 0.01,
+      "shape": "s09"
+    },
+    {
+      "against": "naive",
+      "at_least_ratio": 1.0,
+      "cache_state": "post-restart-with-eviction",
+      "id": "C039",
+      "kind": "throughput_floor",
+      "level": 8
+    },
+    {
+      "against": "naive",
+      "at_most_ratio": 1.0,
+      "cache_state": "post-restart-with-eviction",
+      "id": "C040",
+      "kind": "cost_ceiling",
+      "level": 8,
+      "metric": "cost per successful query"
+    },
+    {
+      "cache_state": "warm",
+      "ceiling_ms": 2000.0,
+      "id": "C041",
+      "kind": "latency_ceiling",
+      "level": 32,
+      "note": "p99 requested; the held-out slice has 365 distinct instances, below the p99 floor, so the criterion is p95",
+      "percentile": 95,
+      "shape": "s07",
+      "shape_name": "daily report",
+      "template": "select campaign_id, event_type, count(*) as n from events where occurred_at >= $1 and occurred_at < $2 group by campaign_id, event_type order by n desc limit $3"
+    },
+    {
+      "cache_state": "warm",
+      "ceiling_ms": 100.0,
+      "id": "C042",
+      "kind": "latency_ceiling",
+      "level": 32,
+      "percentile": 99,
+      "shape": "s02",
+      "shape_name": "email lookup",
+      "template": "select id, account_id, status from contacts where lower(email) = lower($1)"
+    },
+    {
+      "cache_state": "warm",
+      "ceiling_ms": 2000.0,
+      "id": "C043",
+      "kind": "latency_ceiling",
+      "level": 32,
+      "percentile": 99,
+      "shape": "s05",
+      "shape_name": "campaign funnel",
+      "template": "select event_type, count(*) from events where campaign_id = $1 group by event_type"
+    },
+    {
+      "cache_state": "warm",
+      "ceiling_ms": 1000.0,
+      "id": "C044",
+      "kind": "latency_ceiling",
+      "level": 32,
+      "percentile": 99,
+      "shape": "s03",
+      "shape_name": "account timeline",
+      "template": "select id, contact_id, event_type, occurred_at from events where account_id = $1 order by occurred_at desc limit $2 offset $3"
+    },
+    {
+      "against": "naive",
+      "cache_state": "warm",
+      "id": "C045",
+      "kind": "no_regression",
+      "level": 32,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s01",
+      "template": "select id, event_type, occurred_at from events where contact_id = $1 order by occurred_at desc limit $2",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "warm",
+      "id": "C046",
+      "kind": "no_regression",
+      "level": 32,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s04",
+      "template": "select id, email, score from contacts where account_id = $1 and status = $2 order by id limit $3 offset $4",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "warm",
+      "id": "C047",
+      "kind": "no_regression",
+      "level": 32,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s06",
+      "template": "select id, email from contacts where account_id = $1 and email_status = $2 order by id limit $3",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "warm",
+      "id": "C048",
+      "kind": "no_regression",
+      "level": 32,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s08",
+      "template": "select id, email from contacts where country = $1 and region = $2 and status = $3 order by id limit $4",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "warm",
+      "id": "C049",
+      "kind": "no_regression",
+      "level": 32,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s09",
+      "template": "select distinct on (contact_id) contact_id, occurred_at, event_type from events where campaign_id = $1 order by contact_id, occurred_at desc limit $2",
+      "tolerance": 0.1
+    },
+    {
+      "cache_state": "warm",
+      "id": "C050",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s01"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C051",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s02"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C052",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s03"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C053",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s04"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C054",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s05"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C055",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s06"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C056",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s07"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C057",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s08"
+    },
+    {
+      "cache_state": "warm",
+      "id": "C058",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s09"
+    },
+    {
+      "against": "naive",
+      "at_least_ratio": 1.0,
+      "cache_state": "warm",
+      "id": "C059",
+      "kind": "throughput_floor",
+      "level": 32
+    },
+    {
+      "against": "naive",
+      "at_most_ratio": 1.0,
+      "cache_state": "warm",
+      "id": "C060",
+      "kind": "cost_ceiling",
+      "level": 32,
+      "metric": "cost per successful query"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "ceiling_ms": 4000.0,
+      "id": "C061",
+      "kind": "latency_ceiling",
+      "level": 32,
+      "note": "p99 requested; the held-out slice has 365 distinct instances, below the p99 floor, so the criterion is p95",
+      "percentile": 95,
+      "shape": "s07",
+      "shape_name": "daily report",
+      "template": "select campaign_id, event_type, count(*) as n from events where occurred_at >= $1 and occurred_at < $2 group by campaign_id, event_type order by n desc limit $3"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "ceiling_ms": 200.0,
+      "id": "C062",
+      "kind": "latency_ceiling",
+      "level": 32,
+      "percentile": 99,
+      "shape": "s02",
+      "shape_name": "email lookup",
+      "template": "select id, account_id, status from contacts where lower(email) = lower($1)"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "ceiling_ms": 4000.0,
+      "id": "C063",
+      "kind": "latency_ceiling",
+      "level": 32,
+      "percentile": 99,
+      "shape": "s05",
+      "shape_name": "campaign funnel",
+      "template": "select event_type, count(*) from events where campaign_id = $1 group by event_type"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "ceiling_ms": 2000.0,
+      "id": "C064",
+      "kind": "latency_ceiling",
+      "level": 32,
+      "percentile": 99,
+      "shape": "s03",
+      "shape_name": "account timeline",
+      "template": "select id, contact_id, event_type, occurred_at from events where account_id = $1 order by occurred_at desc limit $2 offset $3"
+    },
+    {
+      "against": "naive",
+      "cache_state": "post-restart-with-eviction",
+      "id": "C065",
+      "kind": "no_regression",
+      "level": 32,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s01",
+      "template": "select id, event_type, occurred_at from events where contact_id = $1 order by occurred_at desc limit $2",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "post-restart-with-eviction",
+      "id": "C066",
+      "kind": "no_regression",
+      "level": 32,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s04",
+      "template": "select id, email, score from contacts where account_id = $1 and status = $2 order by id limit $3 offset $4",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "post-restart-with-eviction",
+      "id": "C067",
+      "kind": "no_regression",
+      "level": 32,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s06",
+      "template": "select id, email from contacts where account_id = $1 and email_status = $2 order by id limit $3",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "post-restart-with-eviction",
+      "id": "C068",
+      "kind": "no_regression",
+      "level": 32,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s08",
+      "template": "select id, email from contacts where country = $1 and region = $2 and status = $3 order by id limit $4",
+      "tolerance": 0.1
+    },
+    {
+      "against": "naive",
+      "cache_state": "post-restart-with-eviction",
+      "id": "C069",
+      "kind": "no_regression",
+      "level": 32,
+      "percentile": "highest supported on both sides (p99, p95, p50)",
+      "shape": "s09",
+      "template": "select distinct on (contact_id) contact_id, occurred_at, event_type from events where campaign_id = $1 order by contact_id, occurred_at desc limit $2",
+      "tolerance": 0.1
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C070",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s01"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C071",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s02"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C072",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s03"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C073",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s04"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C074",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s05"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C075",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s06"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C076",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s07"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C077",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s08"
+    },
+    {
+      "cache_state": "post-restart-with-eviction",
+      "id": "C078",
+      "kind": "error_ceiling",
+      "level": 32,
+      "max_fraction": 0.01,
+      "shape": "s09"
+    },
+    {
+      "against": "naive",
+      "at_least_ratio": 1.0,
+      "cache_state": "post-restart-with-eviction",
+      "id": "C079",
+      "kind": "throughput_floor",
+      "level": 32
+    },
+    {
+      "against": "naive",
+      "at_most_ratio": 1.0,
+      "cache_state": "post-restart-with-eviction",
+      "id": "C080",
+      "kind": "cost_ceiling",
+      "level": 32,
+      "metric": "cost per successful query"
+    }
+  ],
+  "frozen_at": "2026-11-07",
+  "goal": {
+    "objective": {
+      "at_level": 32,
+      "minimize": "cost_per_successful_query"
+    },
+    "shapes": [
+      "s07",
+      "s02",
+      "s05",
+      "s03"
+    ],
+    "statement": "Hold p99 on the four shapes that dominate time (the daily report, email lookup, campaign funnel and account timeline) at 8 and 32 sessions, with no other shape worse than today, at the lowest-cost tier that does it.",
+    "today": "naive",
+    "use_case": "pre-sales sizing"
+  },
+  "method": {
+    "cache_states": [
+      "warm",
+      "post-restart-with-eviction"
+    ],
+    "interleave_baselines": true,
+    "interval": {
+      "confidence": 0.95,
+      "method": "distribution-free binomial order-statistic interval (normal approximation), pocbench.stats.quantile_ci",
+      "z": 1.96
+    },
+    "latency_basis": {
+      "definition": "client-measured latency of each successful query minus the median probe (SELECT 1) round trip of the same run",
+      "invalid_run": "discarded and re-run; never scored, never averaged in",
+      "name": "net latency",
+      "run_valid_if": {
+        "probe_p50_ms_at_most": 100.0,
+        "probe_p99_minus_p50_ms_at_most": 15.0
+      },
+      "why": "runner-to-Neon round trip varied 3.5-66 ms across jobs (R9)"
+    },
+    "levels": [
+      1,
+      8,
+      32
+    ],
+    "noise_rule": {
+      "baseline_spread_at_least": 0.2,
+      "then": "comparisons against that baseline are inconclusive (not met)"
+    },
+    "order": "randomized within each repetition, seed 630",
+    "pooling": "percentiles are computed on observations pooled across the repetitions of one configuration, level and cache state",
+    "repetitions": 5,
+    "slice": "held_out (the loop never sees it; ADR 0002, R3)",
+    "spread": "every criterion also reports the per-repetition values and their spread, (max - min) / median",
+    "under_sampled": {
+      "rule": "a percentile is supported when the pooled observations and the distinct instances beyond it reach the floors (load model, ADR 0018). An unsupported percentile in a ceiling criterion makes it unsupported (not met). A no-regression comparison uses the highest percentile supported on both sides, falling back p99, p95, p50",
+      "tail_beyond": 100,
+      "tail_distinct_beyond": 10
+    },
+    "verdicts": {
+      "ceiling": "met if the interval's upper bound <= ceiling; failed if its lower bound > ceiling; otherwise inconclusive (not met)",
+      "cost_ceiling": "pooled CU x cu_hour_usd x measured seconds / 3600 / successful queries",
+      "error_ceiling": "pooled (errors + timeouts) / observations",
+      "mix_level": "mix-level numbers are reported, never scored (R12)",
+      "no_regression": "met if candidate upper bound <= (1 + tolerance) x baseline upper bound; failed if candidate lower bound > (1 + tolerance) x baseline upper bound; otherwise inconclusive (not met)",
+      "recommendation": "every criterion met; otherwise the candidate fails and the output may be a refusal (ADR 0011)",
+      "throughput_floor": "median across repetitions of successful queries per second"
+    }
+  },
+  "pins": {
+    "config_space": {
+      "path": "config/config-space.toml",
+      "sha256": "90b422ce74b4715a676ff50ff66ee2ccfb9667434356d25f1944749a742cac2c"
+    },
+    "goal": {
+      "path": "config/goal.toml",
+      "sha256": "e91c1cf5818d1f00bf35930f8749eb3da1742f3400068f5ba58155979b9ebcdd"
+    },
+    "load_model": {
+      "path": "config/load-model.toml",
+      "sha256": "5a93d123dac4c3d626403ac09a7f91a4a0f51e86389e7a6a1c6ea7612b3ec73f"
+    },
+    "nastiness": {
+      "path": "docs/nastiness.md",
+      "sha256": "0986d1033ea99cfa296d2fc052fdf85ff758b107609ade46ce0154e025f23279"
+    },
+    "profile": {
+      "path": "results/phase1/profile.json",
+      "sha256": "08166e5523584cab795a4b4c341581c3569c514855cd9d74e7e347149920043a"
+    },
+    "split_manifest": {
+      "path": "results/phase1/split-manifest.json",
+      "sha256": "f50a7780bdca909ba4df361c95febcfc05a97157707eff8ea94528a98e33204b"
+    }
+  },
+  "profile_reference": {
+    "log_rows_profiled": 140154,
+    "note": "profile latencies are the naive capture's client latency; they describe today, they are not the criteria",
+    "shapes": 9
+  },
+  "schema_version": 1
+}

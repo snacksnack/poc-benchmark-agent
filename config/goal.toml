@@ -1,0 +1,63 @@
+# The customer's stated goal (RC1-630, Phase 2). This is the one human input
+# to the success criteria: pocbench/criteria.py turns it, the Phase 1 profile
+# and the load model into criteria/criteria.json, which is then hash-pinned.
+#
+# Goal, as agreed with the buyer (Reid, 2026-11-07, pre-sales sizing):
+# "Hold p99 on the four shapes that dominate time (the daily report, email
+# lookup, campaign funnel and account timeline) at 8 and 32 sessions, with no
+# other shape worse than today, at the lowest-cost tier that does it."
+#
+# "Today" is the configuration the profile was captured on: the naive
+# baseline at 2 CU (ADR 0016).
+
+schema_version = 1
+use_case = "pre-sales sizing"
+today = "naive"
+
+# Session levels the claim is made at. Level 1 stays diagnostic (load model).
+levels = [8, 32]
+
+# The shapes that matter, by Phase 1 profiler id, with the template's
+# fingerprint so a re-profiled log cannot silently renumber them. Ceilings
+# are on net latency at the warm cache state (criteria method, below). The
+# percentile is the goal's p99 unless the held-out slice cannot support it
+# (ADR 0018), in which case the generator drops to the highest supported one.
+[[shape]]
+id = "s07"
+name = "daily report"
+fingerprint = "ae17dbad1c17"
+ceiling_ms = 2000
+
+[[shape]]
+id = "s02"
+name = "email lookup"
+fingerprint = "55caacd346d9"
+ceiling_ms = 100
+
+[[shape]]
+id = "s05"
+name = "campaign funnel"
+fingerprint = "09b4b14e65de"
+ceiling_ms = 2000
+
+[[shape]]
+id = "s03"
+name = "account timeline"
+fingerprint = "b06b1c83de1a"
+ceiling_ms = 1000
+
+[ceilings]
+# After a restart with eviction the cache is cold; the buyer accepts twice
+# the warm ceiling there.
+post_restart_multiplier = 2.0
+
+[no_regression]
+# Every other shape: no worse than today by more than this, at every level
+# and cache state.
+tolerance = 0.10
+
+[objective]
+# Among candidates that meet every criterion, the recommendation is the one
+# with the lowest cost per successful query at the highest level.
+minimize = "cost_per_successful_query"
+at_level = 32
