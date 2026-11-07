@@ -88,7 +88,7 @@ def write_log(entries: list[workload.LogEntry], log_path: Path, truth_path: Path
 
 # ------------------------------------------------------------------ prepare
 
-def _resolve_accounts(conn: psycopg.Connection, norm: dict[int, shapes.Normalized]
+def resolve_accounts(conn: psycopg.Connection, norm: dict[int, shapes.Normalized]
                       ) -> dict[int, int | None]:
     """Map each log line to its tenant through the dataset (shapes.TENANT_KEYS)."""
     keys: dict[int, tuple[str, object]] = {}
@@ -125,7 +125,7 @@ def prepare(conn: psycopg.Connection, space: dict, log_dir: Path) -> Prepared:
     ids = {t: f"s{i:02d}" for i, (t, _) in
            enumerate(sorted(freq.items(), key=lambda kv: (-kv[1], kv[0])), 1)}
     shape_of = {seq: ids[n.template] for seq, n in norm.items()}
-    account_of = _resolve_accounts(conn, norm)
+    account_of = resolve_accounts(conn, norm)
     sizes = dict(zip(facts.accounts, facts.account_weights, strict=True))
     sp = split.make([split.Item(e.seq, shape_of[e.seq], account_of[e.seq]) for e in entries],
                     sizes, held_frac=s["held_out_fraction"], seed=s["seed"],

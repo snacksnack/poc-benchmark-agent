@@ -75,11 +75,21 @@ class Neon:
                 return b["id"]
         raise NeonError("project has no default branch")
 
+    def branch_names(self) -> dict[str, str]:
+        """name -> id for every branch in the project."""
+        return {b["name"]: b["id"] for b in self._req("GET", "/branches")["branches"]}
+
     def branch_id(self, name: str) -> str | None:
         for b in self._req("GET", "/branches")["branches"]:
             if b["name"] == name:
                 return b["id"]
         return None
+
+    def branch(self, branch_id: str) -> dict:
+        """The branch object, including Neon's own consumption counters
+        (compute_time_seconds, active_time_seconds). They are updated
+        periodically, so a read just before deletion may lag."""
+        return self._req("GET", f"/branches/{branch_id}")["branch"]
 
     def endpoint_id(self, branch_id: str) -> str:
         for e in self._req("GET", f"/branches/{branch_id}/endpoints")["endpoints"]:
