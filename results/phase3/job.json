@@ -1,0 +1,296 @@
+{
+  "started_at": "20261107T155225Z",
+  "entry_point": "development",
+  "configs": {
+    "default": {
+      "cu": 2,
+      "config_sha256": "118ae18d046fa84dcd77f363d42b9c0f72106d8ddad677121d3bbbefa7fa6550",
+      "branch": "p3-default-20261107T155225Z",
+      "index_build_seconds": {},
+      "sizes": {
+        "database_bytes_excluding_filler": 10982350848,
+        "secondary_index_bytes": {},
+        "file_cache_bytes": 6871318528
+      },
+      "filler": {
+        "table": "eviction_filler",
+        "bytes": 9216000000,
+        "target_bytes": 8589148160,
+        "seconds": 33.0
+      }
+    },
+    "naive": {
+      "cu": 2,
+      "config_sha256": "5412f13acdca9bfc970e678b61c7d9fb5750115bb60da2a5d51f9afffa48fc2b",
+      "branch": "p3-naive-20261107T155225Z",
+      "index_build_seconds": {
+        "CREATE INDEX IF NOT EXISTS naive_contacts_account_id ON contacts (account_id)": 3.4,
+        "CREATE INDEX IF NOT EXISTS naive_contacts_country ON contacts (country)": 1.7,
+        "CREATE INDEX IF NOT EXISTS naive_contacts_email ON contacts (email)": 1.9,
+        "CREATE INDEX IF NOT EXISTS naive_contacts_email_status ON contacts (email_status)": 1.5,
+        "CREATE INDEX IF NOT EXISTS naive_contacts_region ON contacts (region)": 2.0,
+        "CREATE INDEX IF NOT EXISTS naive_contacts_status ON contacts (status)": 1.6,
+        "CREATE INDEX IF NOT EXISTS naive_events_account_id ON events (account_id)": 39.1,
+        "CREATE INDEX IF NOT EXISTS naive_events_campaign_id ON events (campaign_id)": 12.1,
+        "CREATE INDEX IF NOT EXISTS naive_events_contact_id ON events (contact_id)": 11.4,
+        "CREATE INDEX IF NOT EXISTS naive_events_occurred_at ON events (occurred_at)": 9.1
+      },
+      "sizes": {
+        "database_bytes_excluding_filler": 13796941824,
+        "secondary_index_bytes": {
+          "naive_contacts_account_id": 42442752,
+          "naive_contacts_country": 41598976,
+          "naive_contacts_email": 298442752,
+          "naive_contacts_email_status": 41598976,
+          "naive_contacts_region": 41607168,
+          "naive_contacts_status": 41820160,
+          "naive_events_account_id": 347275264,
+          "naive_events_campaign_id": 352821248,
+          "naive_events_contact_id": 484319232,
+          "naive_events_occurred_at": 1122631680
+        },
+        "file_cache_bytes": 6871318528
+      },
+      "filler": {
+        "table": "eviction_filler",
+        "bytes": 9216000000,
+        "target_bytes": 8589148160,
+        "seconds": 33.8
+      }
+    }
+  },
+  "criteria_sha256": "da51e19e9bcae98581003a0e86ed776e20860b032f0ca158ad850d43c2c7d616",
+  "runner": {
+    "GITHUB_RUN_ID": "42388461508",
+    "GITHUB_RUN_ATTEMPT": "1",
+    "GITHUB_SHA": "f01e7c58470e70a2656d72c44d84155b4a2111a9",
+    "RUNNER_NAME": "GitHub Actions 1000004697",
+    "RUNNER_OS": "Linux",
+    "RUNNER_ARCH": "X64",
+    "ImageOS": "ubuntu24",
+    "ImageVersion": "20261101.360.1",
+    "python": "3.12.3",
+    "cpus": 4,
+    "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+  },
+  "preflight": {
+    "valid": true,
+    "p50_ms": 18.574211000000673,
+    "p99_ms": 18.941693000002147,
+    "jitter_ms": 0.367,
+    "samples": 300,
+    "expected": 300,
+    "errors": 0,
+    "reasons": [],
+    "seconds": 60
+  },
+  "protocol": {
+    "cells_run": 24,
+    "order": [
+      {
+        "repetition": 1,
+        "config": "naive",
+        "level": 32,
+        "cache_state": "warm"
+      },
+      {
+        "repetition": 1,
+        "config": "naive",
+        "level": 1,
+        "cache_state": "warm"
+      },
+      {
+        "repetition": 1,
+        "config": "default",
+        "level": 8,
+        "cache_state": "post-restart-with-eviction"
+      },
+      {
+        "repetition": 1,
+        "config": "default",
+        "level": 1,
+        "cache_state": "post-restart-with-eviction"
+      },
+      {
+        "repetition": 1,
+        "config": "naive",
+        "level": 1,
+        "cache_state": "post-restart-with-eviction"
+      },
+      {
+        "repetition": 1,
+        "config": "default",
+        "level": 32,
+        "cache_state": "post-restart-with-eviction"
+      },
+      {
+        "repetition": 1,
+        "config": "naive",
+        "level": 8,
+        "cache_state": "warm"
+      },
+      {
+        "repetition": 1,
+        "config": "naive",
+        "level": 32,
+        "cache_state": "post-restart-with-eviction"
+      },
+      {
+        "repetition": 1,
+        "config": "naive",
+        "level": 8,
+        "cache_state": "post-restart-with-eviction"
+      },
+      {
+        "repetition": 1,
+        "config": "default",
+        "level": 8,
+        "cache_state": "warm"
+      },
+      {
+        "repetition": 1,
+        "config": "default",
+        "level": 1,
+        "cache_state": "warm"
+      },
+      {
+        "repetition": 1,
+        "config": "default",
+        "level": 32,
+        "cache_state": "warm"
+      },
+      {
+        "repetition": 2,
+        "config": "naive",
+        "level": 1,
+        "cache_state": "warm"
+      },
+      {
+        "repetition": 2,
+        "config": "default",
+        "level": 32,
+        "cache_state": "post-restart-with-eviction"
+      },
+      {
+        "repetition": 2,
+        "config": "default",
+        "level": 8,
+        "cache_state": "post-restart-with-eviction"
+      },
+      {
+        "repetition": 2,
+        "config": "naive",
+        "level": 32,
+        "cache_state": "post-restart-with-eviction"
+      },
+      {
+        "repetition": 2,
+        "config": "naive",
+        "level": 1,
+        "cache_state": "post-restart-with-eviction"
+      },
+      {
+        "repetition": 2,
+        "config": "naive",
+        "level": 8,
+        "cache_state": "warm"
+      },
+      {
+        "repetition": 2,
+        "config": "naive",
+        "level": 8,
+        "cache_state": "post-restart-with-eviction"
+      },
+      {
+        "repetition": 2,
+        "config": "default",
+        "level": 32,
+        "cache_state": "warm"
+      },
+      {
+        "repetition": 2,
+        "config": "naive",
+        "level": 32,
+        "cache_state": "warm"
+      },
+      {
+        "repetition": 2,
+        "config": "default",
+        "level": 8,
+        "cache_state": "warm"
+      },
+      {
+        "repetition": 2,
+        "config": "default",
+        "level": 1,
+        "cache_state": "warm"
+      },
+      {
+        "repetition": 2,
+        "config": "default",
+        "level": 1,
+        "cache_state": "post-restart-with-eviction"
+      }
+    ],
+    "skipped": [],
+    "rejected_runs": 0
+  },
+  "pooled_cells": 12,
+  "neon_branch_consumption": {
+    "p3-default-20261107T155225Z": {
+      "compute_time_seconds": 13168,
+      "active_time_seconds": 6492,
+      "written_data_bytes": 0,
+      "data_transfer_bytes": 20497736
+    },
+    "p3-naive-20261107T155225Z": {
+      "compute_time_seconds": 12888,
+      "active_time_seconds": 6348,
+      "written_data_bytes": 0,
+      "data_transfer_bytes": 29844238
+    }
+  },
+  "cu_hours_held": {
+    "p3-default-20261107T155225Z": 5.0606,
+    "p3-naive-20261107T155225Z": 4.9927
+  },
+  "branches_created": [
+    "p3-default-20261107T155225Z",
+    "p3-naive-20261107T155225Z"
+  ],
+  "branches_deleted": [
+    "p3-naive-20261107T155225Z",
+    "p3-default-20261107T155225Z"
+  ],
+  "cost": {
+    "benchmark_execution": {
+      "cu_hours_held": {
+        "p3-default-20261107T155225Z": 5.0606,
+        "p3-naive-20261107T155225Z": 4.9927
+      },
+      "usd": 1.0656,
+      "neon_reported_compute_time_seconds": {
+        "p3-default-20261107T155225Z": 13168,
+        "p3-naive-20261107T155225Z": 12888
+      },
+      "note": "compute held by this job (fixed size, scale-to-zero off); Neon's own counters are beside it and may lag"
+    },
+    "configs": {
+      "default": {
+        "index_build_usd": 0.0,
+        "index_build_seconds": 0,
+        "index_storage_usd_per_month": 0.0,
+        "projected_operating_usd_per_month": 158.6,
+        "projected_basis": "2 CU always on x 730 h + 10.98 GB storage (indexes included, filler excluded)"
+      },
+      "naive": {
+        "index_build_usd": 0.0099,
+        "index_build_seconds": 83.8,
+        "index_storage_usd_per_month": 0.9851,
+        "projected_operating_usd_per_month": 159.59,
+        "projected_basis": "2 CU always on x 730 h + 13.80 GB storage (indexes included, filler excluded)"
+      }
+    }
+  },
+  "finished_at": "20261107T182254Z"
+}

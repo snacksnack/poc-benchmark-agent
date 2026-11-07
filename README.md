@@ -10,7 +10,8 @@ any experiment runs, the recommendation is scored on a held-out slice it never
 saw, and the results document reports losses and refusals as well as wins.
 
 Status: **Phase 3** (RC1-631): the benchmark harness, exercised against
-both baselines (ADR 0020, ADR 0021). Phase 2 (RC1-630) froze and pinned the
+both baselines, 24 of 24 runs scored (ADR 0020, ADR 0021,
+`docs/phase3-baselines.md`, `docs/phase3-findings.md`). Phase 2 (RC1-630) froze and pinned the
 success criteria (`docs/criteria.md`). Phase 1 (RC1-629) built the corpus, query log,
 profiler and held-out split (`docs/phase1-profile.md`,
 `docs/phase1-findings.md`). Phase 0 (RC1-628) committed the decisions, risk

@@ -184,3 +184,25 @@ embedding the hashes of the load model, config space, goal, split manifest,
 profile and nastiness list. CI and every benchmark job verify the pin
 (ADR 0019). Rendering: `docs/criteria.md`.
 
+
+## Phase 3 (RC1-631)
+
+The harness reads the criteria only through `criteria.load_verified()`,
+gates every job and run on the network probe, writes a hash-chained
+append-only record, and has a development entry point (profiling slice only)
+and an evaluation entry point that refuses without a frozen candidate pin.
+Two decisions:
+
+- **ADR 0020:** network gate (preflight of 300 round trips, then the frozen
+  rule on every run, three attempts per cell), server checks, the record and
+  what it accepts, the two entry points, seeded interleaving, and pooling
+  from scored rows with verified raw logs.
+- **ADR 0021:** post-restart eviction scans a per-branch filler table sized
+  at 1.25 times the live file-cache limit; startup latency is recorded on
+  every post-restart run instead of adding a third cache state.
+
+Both baselines ran across 3 levels and both cache states, 24 of 24 runs
+scored (`docs/phase3-baselines.md`). `docs/phase3-findings.md` carries three
+things forward to Phase 4: the baselines fail on errors and tail support
+(R13), post-restart reads as warm (R14), and evaluation needs more than one
+job (R15).
