@@ -17,6 +17,10 @@ import httpx
 API = "https://console.neon.tech/api/v2"
 OP_POLL_SECONDS = 2.0
 OP_TIMEOUT_SECONDS = 600.0
+# Terminal operation states. Neon marks an operation it found unnecessary
+# (start a compute that is already starting) as skipped, not finished.
+OP_DONE = {"finished", "skipped"}
+OP_FAILED = {"failed", "error", "cancelled"}
 
 
 @dataclass(frozen=True)
@@ -58,9 +62,9 @@ class Neon:
                 raise NeonError(f"operations still pending after {OP_TIMEOUT_SECONDS}s: {pending}")
             for op_id in list(pending):
                 status = self._req("GET", f"/operations/{op_id}")["operation"]["status"]
-                if status == "finished":
+                if status in OP_DONE:
                     pending.discard(op_id)
-                elif status in ("failed", "error", "cancelled"):
+                elif status in OP_FAILED:
                     raise NeonError(f"operation {op_id} {status}")
             if pending:
                 time.sleep(OP_POLL_SECONDS)

@@ -9,9 +9,9 @@ from pathlib import Path
 from pocbench import shapes
 
 GIB = 1024 ** 3
-# Neon: 4 GB of RAM per CU; the local file cache can use up to 75% of it.
-# Used only when the tier probe has not recorded the real limit.
-NOMINAL_CACHE_BYTES_PER_CU = 0.75 * 4 * GIB
+# Neon: 4 GB of RAM per CU. The tier probe measured the local file cache
+# limit at 819 MB per 0.25 CU (80%). Used only when no probe is recorded.
+NOMINAL_CACHE_BYTES_PER_CU = 0.8 * 4 * GIB
 
 
 def _load(path: Path) -> dict | None:
@@ -29,7 +29,7 @@ def _gb(b: int) -> str:
 
 
 def _cache_bytes(setting: str | None) -> int | None:
-    """neon.file_cache_size_limit, e.g. '3072 MB' or '805306368 B'."""
+    """neon.max_file_cache_size as the tier probe records it, e.g. '819 MB'."""
     if not setting:
         return None
     value, _, unit = setting.partition(" ")
@@ -85,9 +85,9 @@ def render(results: Path, run_url: str | None = None) -> str:
               "| ---: | ---: | ---: | --- |"]
     for cu in (0.25, 0.5, 1, 2, 4):
         setting = (tier or {}).get("tiers", {}).get(str(cu), {}).get("settings", {})
-        measured = _cache_bytes(setting.get("neon.file_cache_size_limit"))
+        measured = _cache_bytes(setting.get("neon.max_file_cache_size"))
         cache = measured or NOMINAL_CACHE_BYTES_PER_CU * cu
-        src = "neon.file_cache_size_limit" if measured else "nominal (75% of 4 GB per CU)"
+        src = "neon.max_file_cache_size" if measured else "nominal (80% of 4 GB per CU)"
         lines.append(f"| {cu} | {_gb(cache)} | {db / cache:.1f}x | {src} |")
 
     v = cap["stats_validity"]
