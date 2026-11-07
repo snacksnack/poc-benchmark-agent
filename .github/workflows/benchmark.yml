@@ -36,7 +36,8 @@ jobs:
         env:
           LABEL: ${{ github.event.label.name }}
           INPUT: ${{ inputs.task }}
-        run: echo "TASK=${INPUT:-${LABEL#benchmark: }}" >> "$GITHUB_ENV"
+        run: |
+          echo "TASK=${INPUT:-${LABEL#benchmark: }}" >> "$GITHUB_ENV"
 
       - uses: actions/checkout@v4
 
