@@ -349,3 +349,14 @@ def test_static_context_is_profiling_only_and_names_the_space():
 def test_next_task_is_the_loop_until_a_freeze(monkeypatch, tmp_path):
     monkeypatch.setattr(candidate, "FROZEN_PATH", tmp_path / "none.json")
     assert phase4.next_task() == "loop"
+
+
+def test_phase4_loop_config_wires_may_start_and_projection(tmp_path):
+    s, doc = harness.open_session("development", tmp_path / "raw", tmp_path / "r.jsonl")
+
+    def gate(b, est):
+        return False
+
+    cfg = phase4.loop_config(s, doc, {}, gate)
+    assert cfg.may_start is gate and cfg.support_scale == 2.5
+    assert cfg.budgets == loop.Budgets(20, 120.0, 10.0)

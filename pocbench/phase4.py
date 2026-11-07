@@ -296,8 +296,10 @@ def _header(s: harness.Session, budgets: loop.Budgets) -> dict:
 def loop_config(s: harness.Session, doc: dict, static: dict,
                 may_start=lambda b, est: True) -> loop.LoopConfig:
     sp = s.space
-    return loop.LoopConfig(doc, sp, s.lm["errors"]["error_ceiling_fraction"], static,
-                           loop.Budgets.from_space(sp), may_start,
+    return loop.LoopConfig(doc=doc, space=sp,
+                           error_ceiling=s.lm["errors"]["error_ceiling_fraction"],
+                           static_context=static, budgets=loop.Budgets.from_space(sp),
+                           may_start=may_start,
                            support_scale=sp["protocol"]["eval"]["repetitions"]
                            / sp["protocol"]["dev"]["repetitions"])
 
