@@ -217,11 +217,19 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add results/phase4 candidates 2>/dev/null || true
-          if git diff --cached --quiet; then echo "no state change"; exit 0; fi
-          git commit -m "RC1-632: phase4 $NEXT job ${{ github.run_id }} (rc ${STEP_RC:-none})"
-          git pull --rebase origin "${{ github.ref_name }}"
-          git push origin "HEAD:${{ github.ref_name }}"
+          # Stage only paths that exist: one missing pathspec makes git add
+          # stage nothing, which once dropped a whole job's loop log.
+          paths=()
+          for p in results/phase4 candidates; do [ -e "$p" ] && paths+=("$p"); done
+          [ ${#paths[@]} -gt 0 ] && git add -- "${paths[@]}"
+          if git diff --cached --quiet; then
+            echo "no state change"
+          else
+            git commit -m "RC1-632: phase4 $NEXT job ${{ github.run_id }} (rc ${STEP_RC:-none})"
+            git pull --rebase origin "${{ github.ref_name }}"
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi
+          echo "STATE_COMMITTED=1" >> "$GITHUB_ENV"
 
       # Raw per-query logs and result JSON. Phase 4 evaluation artifacts are
       # fetched back by the final pooling, so they keep a fixed name.
@@ -245,6 +253,9 @@ jobs:
           if [ "$after" = "done" ]; then echo "phase 4 complete"; exit 0; fi
           if [ "${STEP_RC:-x}" != "0" ] && [ "${STEP_RC:-x}" != "2" ]; then
             echo "not chaining after a failed step; a human looks first" >&2; exit 0
+          fi
+          if [ "${STATE_COMMITTED:-0}" != "1" ]; then
+            echo "state was not committed; not chaining" >&2; exit 0
           fi
           if [ "$CHAIN_SWITCH" = "off" ]; then echo "chain switched off"; exit 0; fi
           if [ "${CHAIN_LEFT:-0}" -le 0 ]; then echo "chain budget spent" >&2; exit 0; fi
