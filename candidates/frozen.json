@@ -1,0 +1,474 @@
+{
+  "basis": "prediction (profiling slice, development protocol)",
+  "best_tested": {
+    "bundle": "4cu-I1+I2+I3+I4+I5+I6+I7+I8",
+    "label": "best tested candidate; fails to qualify",
+    "unmet": [
+      {
+        "bound_ms": 2000.0,
+        "cache_state": "warm",
+        "id": "C003",
+        "kind": "latency_ceiling",
+        "level": 8,
+        "percentile": 99,
+        "shape": "s05",
+        "support": null,
+        "value_ms": 172.706,
+        "verdict": "unsupported",
+        "why": "p99 tail not supported (20 obs, 18 distinct beyond)"
+      },
+      {
+        "bound_ms": 1000.0,
+        "cache_state": "warm",
+        "id": "C004",
+        "kind": "latency_ceiling",
+        "level": 8,
+        "percentile": 99,
+        "shape": "s03",
+        "support": null,
+        "value_ms": 121.75900000000001,
+        "verdict": "unsupported",
+        "why": "p99 tail not supported (33 obs, 28 distinct beyond)"
+      },
+      {
+        "bound_ms": 441.141,
+        "cache_state": "warm",
+        "id": "C006",
+        "kind": "no_regression",
+        "level": 8,
+        "percentile": 95,
+        "shape": "s04",
+        "support": "projected",
+        "value_ms": 844.236,
+        "verdict": "failed"
+      },
+      {
+        "bound_ms": 31.879,
+        "cache_state": "warm",
+        "id": "C007",
+        "kind": "no_regression",
+        "level": 8,
+        "percentile": 50,
+        "shape": "s06",
+        "support": "measured",
+        "value_ms": 8.912999999999997,
+        "verdict": "inconclusive",
+        "why": "baseline spread 46.0% >= 20% (noise rule)"
+      },
+      {
+        "bound_ms": 4.03,
+        "cache_state": "warm",
+        "id": "C008",
+        "kind": "no_regression",
+        "level": 8,
+        "percentile": 50,
+        "shape": "s08",
+        "support": "measured",
+        "value_ms": 6.815000000000001,
+        "verdict": "inconclusive",
+        "why": "baseline spread 442.0% >= 20% (noise rule)"
+      },
+      {
+        "bound_ms": 1740.316,
+        "cache_state": "warm",
+        "id": "C009",
+        "kind": "no_regression",
+        "level": 8,
+        "percentile": 50,
+        "shape": "s09",
+        "support": "projected",
+        "value_ms": 70.245,
+        "verdict": "inconclusive",
+        "why": "baseline spread 60.6% >= 20% (noise rule)"
+      },
+      {
+        "bound": 0.01,
+        "cache_state": "warm",
+        "id": "C017",
+        "kind": "error_ceiling",
+        "level": 8,
+        "shape": "s08",
+        "value": 0.055417,
+        "verdict": "failed"
+      },
+      {
+        "bound": 0.01,
+        "cache_state": "warm",
+        "id": "C018",
+        "kind": "error_ceiling",
+        "level": 8,
+        "shape": "s09",
+        "value": 0.215264,
+        "verdict": "failed"
+      },
+      {
+        "bound_ms": 4000.0,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C023",
+        "kind": "latency_ceiling",
+        "level": 8,
+        "percentile": 99,
+        "shape": "s05",
+        "support": null,
+        "value_ms": 163.977,
+        "verdict": "unsupported",
+        "why": "p99 tail not supported (17 obs, 10 distinct beyond)"
+      },
+      {
+        "bound_ms": 2000.0,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C024",
+        "kind": "latency_ceiling",
+        "level": 8,
+        "percentile": 99,
+        "shape": "s03",
+        "support": null,
+        "value_ms": 246.748,
+        "verdict": "unsupported",
+        "why": "p99 tail not supported (27 obs, 18 distinct beyond)"
+      },
+      {
+        "bound_ms": 570.761,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C026",
+        "kind": "no_regression",
+        "level": 8,
+        "percentile": 95,
+        "shape": "s04",
+        "support": "projected",
+        "value_ms": 883.0909999999999,
+        "verdict": "failed"
+      },
+      {
+        "bound_ms": 32.579,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C027",
+        "kind": "no_regression",
+        "level": 8,
+        "percentile": 50,
+        "shape": "s06",
+        "support": "measured",
+        "value_ms": 0.0,
+        "verdict": "inconclusive",
+        "why": "baseline spread 76.1% >= 20% (noise rule)"
+      },
+      {
+        "bound_ms": 3.974,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C028",
+        "kind": "no_regression",
+        "level": 8,
+        "percentile": 50,
+        "shape": "s08",
+        "support": "measured",
+        "value_ms": 0.0,
+        "verdict": "inconclusive",
+        "why": "baseline spread 372.4% >= 20% (noise rule)"
+      },
+      {
+        "bound_ms": 1052.673,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C029",
+        "kind": "no_regression",
+        "level": 8,
+        "percentile": 50,
+        "shape": "s09",
+        "support": "projected",
+        "value_ms": 156.92200000000003,
+        "verdict": "inconclusive",
+        "why": "baseline spread 20.4% >= 20% (noise rule)"
+      },
+      {
+        "bound": 0.01,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C037",
+        "kind": "error_ceiling",
+        "level": 8,
+        "shape": "s08",
+        "value": 0.043419,
+        "verdict": "failed"
+      },
+      {
+        "bound": 0.01,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C038",
+        "kind": "error_ceiling",
+        "level": 8,
+        "shape": "s09",
+        "value": 0.225995,
+        "verdict": "failed"
+      },
+      {
+        "bound_ms": 2000.0,
+        "cache_state": "warm",
+        "id": "C041",
+        "kind": "latency_ceiling",
+        "level": 32,
+        "percentile": 95,
+        "shape": "s07",
+        "support": "measured",
+        "value_ms": 4155.555,
+        "verdict": "failed"
+      },
+      {
+        "bound_ms": 2000.0,
+        "cache_state": "warm",
+        "id": "C043",
+        "kind": "latency_ceiling",
+        "level": 32,
+        "percentile": 99,
+        "shape": "s05",
+        "support": null,
+        "value_ms": 449.379,
+        "verdict": "unsupported",
+        "why": "p99 tail not supported (32 obs, 29 distinct beyond)"
+      },
+      {
+        "bound_ms": 1279.639,
+        "cache_state": "warm",
+        "id": "C046",
+        "kind": "no_regression",
+        "level": 32,
+        "percentile": 95,
+        "shape": "s04",
+        "support": "measured",
+        "value_ms": 3054.369,
+        "verdict": "inconclusive",
+        "why": "baseline spread 26.4% >= 20% (noise rule)"
+      },
+      {
+        "bound_ms": 50.239,
+        "cache_state": "warm",
+        "id": "C048",
+        "kind": "no_regression",
+        "level": 32,
+        "percentile": 95,
+        "shape": "s08",
+        "support": "projected",
+        "value_ms": 23.680000000000003,
+        "verdict": "inconclusive",
+        "why": "baseline spread 44.7% >= 20% (noise rule)"
+      },
+      {
+        "bound_ms": 3023.48,
+        "cache_state": "warm",
+        "id": "C049",
+        "kind": "no_regression",
+        "level": 32,
+        "percentile": 50,
+        "shape": "s09",
+        "support": "measured",
+        "value_ms": 384.168,
+        "verdict": "inconclusive",
+        "why": "baseline spread 22.9% >= 20% (noise rule)"
+      },
+      {
+        "bound": 0.01,
+        "cache_state": "warm",
+        "id": "C056",
+        "kind": "error_ceiling",
+        "level": 32,
+        "shape": "s07",
+        "value": 0.151719,
+        "verdict": "failed"
+      },
+      {
+        "bound": 0.01,
+        "cache_state": "warm",
+        "id": "C057",
+        "kind": "error_ceiling",
+        "level": 32,
+        "shape": "s08",
+        "value": 0.1961,
+        "verdict": "failed"
+      },
+      {
+        "bound": 0.01,
+        "cache_state": "warm",
+        "id": "C058",
+        "kind": "error_ceiling",
+        "level": 32,
+        "shape": "s09",
+        "value": 0.207861,
+        "verdict": "failed"
+      },
+      {
+        "bound_ms": 4000.0,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C061",
+        "kind": "latency_ceiling",
+        "level": 32,
+        "percentile": 95,
+        "shape": "s07",
+        "support": "projected",
+        "value_ms": 4534.714000000001,
+        "verdict": "failed"
+      },
+      {
+        "bound_ms": 4000.0,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C063",
+        "kind": "latency_ceiling",
+        "level": 32,
+        "percentile": 99,
+        "shape": "s05",
+        "support": null,
+        "value_ms": 464.77200000000005,
+        "verdict": "unsupported",
+        "why": "p99 tail not supported (28 obs, 22 distinct beyond)"
+      },
+      {
+        "bound_ms": 1609.048,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C066",
+        "kind": "no_regression",
+        "level": 32,
+        "percentile": 95,
+        "shape": "s04",
+        "support": "measured",
+        "value_ms": 3241.766,
+        "verdict": "inconclusive",
+        "why": "baseline spread 21.6% >= 20% (noise rule)"
+      },
+      {
+        "bound_ms": 4026.018,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C067",
+        "kind": "no_regression",
+        "level": 32,
+        "percentile": 95,
+        "shape": "s06",
+        "support": "projected",
+        "value_ms": 2299.205,
+        "verdict": "inconclusive",
+        "why": "baseline spread 47.5% >= 20% (noise rule)"
+      },
+      {
+        "bound": 0.01,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C076",
+        "kind": "error_ceiling",
+        "level": 32,
+        "shape": "s07",
+        "value": 0.282178,
+        "verdict": "failed"
+      },
+      {
+        "bound": 0.01,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C077",
+        "kind": "error_ceiling",
+        "level": 32,
+        "shape": "s08",
+        "value": 0.184894,
+        "verdict": "failed"
+      },
+      {
+        "bound": 0.01,
+        "cache_state": "post-restart-with-eviction",
+        "id": "C078",
+        "kind": "error_ceiling",
+        "level": 32,
+        "shape": "s09",
+        "value": 0.236443,
+        "verdict": "failed"
+      }
+    ]
+  },
+  "budgets": {
+    "max_compute_cu_hours": 120.0,
+    "max_experiments": 20,
+    "max_model_spend_usd": 10.0
+  },
+  "class": "CRITERIA UNMET",
+  "config_space_sha256": "90b422ce74b4715a676ff50ff66ee2ccfb9667434356d25f1944749a742cac2c",
+  "criteria_sha256": "da51e19e9bcae98581003a0e86ed776e20860b032f0ca158ad850d43c2c7d616",
+  "dev_record_sha256": "98254b48c955951f980c3e4ed5690cbf7485dd807bcb7f1a9c26a377ca7f4af6",
+  "kind": "refusal",
+  "loop_log_sha256": "28c517a1a8f0ec23748df8cbffa59eef4f07d8d11c590a75431db454d386ebed",
+  "refusal_id": "refusal-4e24a549455d",
+  "shapes": [
+    "s03",
+    "s04",
+    "s05",
+    "s06",
+    "s07",
+    "s08",
+    "s09"
+  ],
+  "spent": {
+    "compute_cu_hours": 19.8194,
+    "experiments": 2,
+    "model_usd": 0.603252
+  },
+  "statement": "no tested candidate within the permitted space and budget met the success criteria",
+  "stop": {
+    "by": "proposer",
+    "reason": "The strongest permitted bundle (4 CU, I1-I8) fails the error ceilings for s07, s08 and s09 by large margins and fails the s07 p95 ceiling at 32 sessions. s08 failures do not change with any index or tier change, including the PK-only default, so no cheaper or different permitted bundle can qualify. Refusal is the honest outcome."
+  },
+  "tested": [
+    {
+      "all_met": false,
+      "bundle": "2cu-I1+I2+I3+I4+I5+I6+I7+I8",
+      "cu": 2.0,
+      "index_ids": [
+        "I1",
+        "I2",
+        "I3",
+        "I4",
+        "I5",
+        "I6",
+        "I7",
+        "I8"
+      ],
+      "predicted_counts": {
+        "failed": 16,
+        "inconclusive": 11,
+        "met": 39,
+        "unsupported": 14
+      },
+      "unmet_shapes": [
+        "s02",
+        "s03",
+        "s04",
+        "s05",
+        "s06",
+        "s07",
+        "s08",
+        "s09"
+      ],
+      "usd_per_ok_query_at_objective": 1.1275489038516769e-06
+    },
+    {
+      "all_met": false,
+      "bundle": "4cu-I1+I2+I3+I4+I5+I6+I7+I8",
+      "cu": 4.0,
+      "index_ids": [
+        "I1",
+        "I2",
+        "I3",
+        "I4",
+        "I5",
+        "I6",
+        "I7",
+        "I8"
+      ],
+      "predicted_counts": {
+        "failed": 14,
+        "inconclusive": 11,
+        "met": 49,
+        "unsupported": 6
+      },
+      "unmet_shapes": [
+        "s03",
+        "s04",
+        "s05",
+        "s06",
+        "s07",
+        "s08",
+        "s09"
+      ],
+      "usd_per_ok_query_at_objective": 1.355208652961031e-06
+    }
+  ]
+}
