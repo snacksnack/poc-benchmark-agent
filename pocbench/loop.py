@@ -28,7 +28,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Protocol
 
-from pocbench import record, space, verdicts
+from pocbench import record, space, telemetry, verdicts
 from pocbench.slices import LeakError
 
 PROFILING = "profiling"
@@ -295,27 +295,37 @@ def run_loop(cfg: LoopConfig, log: LoopLog, proposer: Proposer,
         if stop:
             return _stop(log, stop[0], stop[1], budget=stop[0] in ("experiments", "model"))
 
-        context = build_context(cfg.static_context, log, b, spend, runner.naive_cells())
-        p = proposer.propose(context)
-        entry = {"kind": "proposal", "iteration": it, "hypothesis": p.hypothesis,
-                 "action": p.action, "why": p.why, "expected": p.expected,
-                 "proposal": p.as_space_proposal() if p.action == "experiment" else None,
-                 "stop_reason": p.stop_reason, "model_usd": round(p.model_usd, 6),
-                 "usage": p.usage}
+        # The traced span covers the decision (propose, validate, budget
+        # checks), not the experiment, which runs for hours (ADR 0026).
+        with telemetry.iteration(log.rows[0]["row_sha256"]) as span:
+            context = build_context(cfg.static_context, log, b, spend, runner.naive_cells())
+            p = proposer.propose(context)
+            entry = {"kind": "proposal", "iteration": it, "hypothesis": p.hypothesis,
+                     "action": p.action, "why": p.why, "expected": p.expected,
+                     "proposal": p.as_space_proposal() if p.action == "experiment" else None,
+                     "stop_reason": p.stop_reason, "model_usd": round(p.model_usd, 6),
+                     "usage": p.usage}
+            bundle = est = None
+            if p.action == "stop":
+                entry["validator"] = "not applicable"
+            else:
+                tested = {r["bundle"]["key"] for r in log.of("experiment")}
+                try:
+                    bundle = space.validate(p.as_space_proposal(), cfg.space, tested)
+                except space.InvalidProposal as e:
+                    entry["validator"] = {"valid": False, "reasons": e.reasons}
+                else:
+                    est = runner.estimate_cu_hours(bundle)
+                    entry["validator"] = {"valid": True, "bundle": bundle.key,
+                                          "estimated_cu_hours": round(est, 3)}
+            log.append(entry)
+            span.record(entry)
         if p.action == "stop":
-            log.append(entry | {"validator": "not applicable"})
             return _stop(log, "proposer", p.stop_reason or "proposer stopped", budget=False)
-        tested = {r["bundle"]["key"] for r in log.of("experiment")}
-        try:
-            bundle = space.validate(p.as_space_proposal(), cfg.space, tested)
-        except space.InvalidProposal as e:
-            log.append(entry | {"validator": {"valid": False, "reasons": e.reasons}})
+        if bundle is None:
             invalid_in_a_row += 1
             continue
         invalid_in_a_row = 0
-        est = runner.estimate_cu_hours(bundle)
-        log.append(entry | {"validator": {"valid": True, "bundle": bundle.key,
-                                          "estimated_cu_hours": round(est, 3)}})
         if spend.compute_cu_hours + est > b.max_compute_cu_hours:
             return _stop(log, "compute",
                          f"compute budget cannot cover {bundle.key} (estimated {est:.1f} "

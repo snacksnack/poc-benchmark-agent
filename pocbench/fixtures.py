@@ -132,18 +132,21 @@ def support_scale(sp: dict) -> float:
 
 
 def run_fixture(fx: dict, doc: dict, sp: dict, log_path: Path, budgets: loop.Budgets | None = None,
-                clock=None) -> tuple[dict, dict, FixtureRunner]:
+                clock=None, proposer: loop.Proposer | None = None,
+                static_context: dict | None = None) -> tuple[dict, dict, FixtureRunner]:
     """Drive the real loop over a fixture. Returns (loop result, decision,
-    runner)."""
+    runner). The fixture's script proposes unless a proposer is passed (the
+    eval suite passes the real Claude proposer, RC1-634)."""
     lm = config.load_model().data
     budgets = budgets or loop.Budgets.from_space(sp)
     log = loop.LoopLog(log_path, {"criteria_sha256": "fixture", "config_space_sha256": "fixture",
                                   "fixture": fx["name"]},
                        **({"clock": clock} if clock else {}))
     cfg = loop.LoopConfig(doc, sp, lm["errors"]["error_ceiling_fraction"],
-                          {"fixture": fx["name"]}, budgets, support_scale=support_scale(sp))
+                          static_context or {"fixture": fx["name"]}, budgets,
+                          support_scale=support_scale(sp))
     runner = FixtureRunner(fx)
-    proposer = ScriptedProposer(fx["script"], fx.get("usd_per_call", 0.05))
+    proposer = proposer or ScriptedProposer(fx["script"], fx.get("usd_per_call", 0.05))
     result = loop.run_loop(cfg, log, proposer, runner)
     decision = loop.decide(cfg, log, lambda n: runner.cells_by_name[n], runner.naive_cells(),
                            None)

@@ -23,3 +23,6 @@ site/
 
 # benchmark run output (raw per-query latency logs; summaries are committed under results/)
 runs/
+
+# eval suite loop logs (RC1-634)
+eval-runs/

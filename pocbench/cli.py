@@ -31,6 +31,7 @@ from pocbench import (
     results,
     slices,
     spike,
+    telemetry,
 )
 from pocbench.neon import Neon, Variant
 
@@ -245,11 +246,15 @@ def _deadline(args) -> float:
 
 
 def _cmd_loop_run(args) -> int:
+    traced = telemetry.enable_llmobs()  # decoration; declines without DD_API_KEY
     try:
         result = phase4.run_loop_job(args.database, args.role, _deadline(args))
     except harness.NetworkRejected as e:
         print(f"network rejected: {e}", file=sys.stderr)
         return 2
+    finally:
+        if traced:
+            telemetry.flush()
     print(json.dumps({k: result.get(k) for k in ("state", "frozen", "preflight")}, indent=2,
                      default=str))
     return 0 if "delete_failures" not in result else 1

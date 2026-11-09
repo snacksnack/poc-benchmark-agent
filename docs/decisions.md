@@ -237,3 +237,13 @@ Three decisions:
   (cap 120 s); the wait is recorded as `connect_wait`. The first of the two
   jobs also lost its state (`git add` with a missing `candidates/` path staged
   nothing); about 2.5 CU-h from it is outside the loop's compute count.
+
+## Phase 6 (RC1-634)
+
+- **ADR 0026:** the eval suite drives the real loop with the real Claude
+  proposer over the two Phase 4 fixture workloads (production validator,
+  budgets, verdicts and output rule; only the experiments are modeled). Six
+  cases, three billed (about $0.55 a run). Each loop iteration is a traced
+  LLM Obs span with its spend under ml_app `poc-benchmark-agent`; the
+  experiment runs outside the span. Gauges: refusals by class, interval
+  coverage, verdict agreement. Findings: `docs/phase6-findings.md`.
