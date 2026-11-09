@@ -21,6 +21,7 @@ from pocbench import (
     gate,
     harness,
     loadgen,
+    loop_report,
     phase1,
     phase1_report,
     phase3,
@@ -299,6 +300,11 @@ def _cmd_results_doc(args) -> int:
     return _emit(results.render(results.load_real()), args.write)
 
 
+def _cmd_loop_log_doc(args) -> int:
+    """The loop log as a readable page, after verifying it (RC1-635)."""
+    return _emit(loop_report.render_committed(), args.write)
+
+
 def _cmd_results_fixture(args) -> int:
     """Phase 5: a results document from a fixture with planted bad news."""
     return _emit(results.render(phase5_fixtures.evidence(args.name)), args.write)
@@ -441,6 +447,8 @@ def main(argv: list[str] | None = None) -> int:
     rf = sub.add_parser("results-fixture", help="Phase 5: a results document from a fixture")
     rf.add_argument("name", choices=list(phase5_fixtures.NAMES))
     rf.add_argument("--write", help="write markdown here (docs/fixtures/results-<name>.md)")
+    ll = sub.add_parser("loop-log-doc", help="the loop log as a readable page (verifies it)")
+    ll.add_argument("--write", help="write markdown here (docs/loop-log.md)")
     lf = sub.add_parser("loop-fixture", help="run the loop over a fixture workload, offline")
     lf.add_argument("name", choices=["qualifying", "refusal-criteria-unmet"])
     lf.add_argument("--out", default="runs/fixtures")
@@ -460,7 +468,8 @@ def main(argv: list[str] | None = None) -> int:
                 "loop-run": _cmd_loop_run, "eval-run": _cmd_eval_run,
                 "eval-report": _cmd_eval_report, "phase4-next": _cmd_phase4_next,
                 "loop-fixture": _cmd_loop_fixture, "results-doc": _cmd_results_doc,
-                "results-fixture": _cmd_results_fixture}
+                "results-fixture": _cmd_results_fixture,
+                "loop-log-doc": _cmd_loop_log_doc}
     return handlers[args.cmd](args)
 
 

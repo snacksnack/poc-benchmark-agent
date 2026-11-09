@@ -9,9 +9,14 @@ the same declared load. Success criteria are written and hash-pinned before
 any experiment runs, the recommendation is scored on a held-out slice it never
 saw, and the results document reports losses and refusals as well as wins.
 
-Status: **Phase 6** (RC1-634): an agent-evals suite that runs the real Claude
-proposer through the real loop on modeled workloads, LLM Obs traces per loop
-iteration with spend, and Datadog gauges (ADR 0026, `docs/phase6-findings.md`).
+Status: **Phase 7, complete** (RC1-635). The engagement writeup is the front
+page of the published documents, https://snacksnack.github.io/poc-benchmark-agent/
+(`docs/engagement.md`, ADR 0027): the run's answer was a refusal, CRITERIA
+UNMET, with the three query shapes that are why. The loop log is rendered in
+full as `docs/loop-log.md`. Phase 6 (RC1-634) added an agent-evals suite that
+runs the real Claude proposer through the real loop on modeled workloads, LLM
+Obs traces per loop iteration with spend, and Datadog gauges (ADR 0026,
+`docs/phase6-findings.md`).
 Phase 5 (RC1-633) built the results document, generated from verified
 evidence (`docs/results.md`, ADR 0025, `docs/phase5-findings.md`), with fixture
 documents for a loss, an under-sampled key tail and a refusal
@@ -54,6 +59,9 @@ RC1-595.
 | `docs/results.md`, `docs/fixtures/` | Generated results documents (real run, fixtures). Do not edit by hand. |
 | `evals/` | Phase 6 eval suite: six cases, three billed (`python -m evals`). |
 | `pocbench/telemetry.py` | LLM Obs (one span per loop iteration) and `pocbench.*` gauges. |
+| `docs/engagement.md` | The engagement writeup; every figure re-derived by `tests/test_engagement.py`. |
+| `pocbench/loop_report.py`, `docs/loop-log.md` | The loop log as a readable page, verified against the frozen pin. |
+| `publish/` | The Pages build (`uv run --group site python -m publish`). |
 
 ## Running
 

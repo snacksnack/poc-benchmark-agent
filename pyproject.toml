@@ -27,6 +27,11 @@ packages = ["pocbench"]
 evals = [
     "agent-evals[sql,llmobs] @ git+https://github.com/snacksnack/agent-evals@v0.6.3",
 ]
+# Only the Pages build reads markdown (ADR 0027), so the renderer stays out of
+# the runtime dependencies.
+site = [
+    "markdown-it-py>=3",
+]
 dev = [
     "pytest>=8",
     "pytest-cov>=5",
