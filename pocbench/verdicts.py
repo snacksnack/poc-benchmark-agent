@@ -34,6 +34,21 @@ Interpretations the frozen text leaves open, fixed here and in ADR 0022:
 from collections import Counter
 from dataclasses import dataclass
 
+
+class PlatformJoinError(ValueError):
+    """Cells from two platforms reached one comparison (ADR 0007: the
+    fallback reports each platform separately and never combines them)."""
+
+
+def one_platform(cells: list[dict]) -> str | None:
+    """The single platform these cells were measured on. Raises on a mix."""
+    found = {c.get("platform") for c in cells}
+    if len(found) > 1:
+        raise PlatformJoinError(f"cells from {sorted(map(str, found))} cannot be compared or "
+                                "combined; report each platform separately (ADR 0007)")
+    return next(iter(found), None)
+
+
 MET, FAILED, INCONCLUSIVE, UNSUPPORTED, MISSING = (
     "met", "failed", "inconclusive", "unsupported", "missing")
 LADDER = (99, 95, 50)
@@ -187,6 +202,7 @@ def evaluate(doc: dict, cells: list[dict], candidate: str, *, error_ceiling_frac
     baseline. `basis` labels what the verdicts are: "prediction (profiling
     slice)" in the loop, "held-out" in Phase 5. `support_scale` > 1 only for
     predictions (module docstring)."""
+    one_platform(cells)
     against = doc["goal"]["today"]
     noise_limit = doc["method"]["noise_rule"]["baseline_spread_at_least"]
     us = doc["method"]["under_sampled"]

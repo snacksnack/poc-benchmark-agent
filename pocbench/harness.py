@@ -733,6 +733,7 @@ def pool(rows: list[dict], raw_root: Path | list[Path], m: Method,
     for (sl, cfg, level, cs), reps in sorted(cells.items()):
         shape_reps: dict[str, list] = defaultdict(list)
         overall_reps, fails, obs = [], defaultdict(int), defaultdict(int)
+        timeouts: dict[str, int] = defaultdict(int)
         ok_total = cost = 0.0
         for r in reps:
             run_dir = find_run_dir(raw_root, r["raw"]["dir"])
@@ -748,6 +749,7 @@ def pool(rows: list[dict], raw_root: Path | list[Path], m: Method,
                         (max(0.0, float(q["latency_ms"]) - base), q["instance"]))
                 else:
                     fails[q["shape"]] += 1
+                    timeouts[q["shape"]] += q["outcome"] in loadgen.TIMEOUT_OUTCOMES
             for sid in set(per_shape) | {q["shape"] for q in measured}:
                 shape_reps[sid].append(per_shape.get(sid, []))
             overall_reps.append([(x, f"{sid}:{i}") for sid, v in per_shape.items()
@@ -759,6 +761,7 @@ def pool(rows: list[dict], raw_root: Path | list[Path], m: Method,
             n = obs[sid]
             frac = fails[sid] / n if n else 0.0
             by_shape[sid] = {"observations": n, "failure_fraction": round(frac, 6),
+                             "timeouts": timeouts[sid], "errors": fails[sid] - timeouts[sid],
                              "over_error_ceiling": frac > m.error_ceiling,
                              "net": _pool_series(shape_reps[sid], m)}
         qps = [r["run"]["successful_qps"] for r in reps]

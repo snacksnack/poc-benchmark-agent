@@ -26,7 +26,9 @@ from pocbench import (
     phase3,
     phase3_report,
     phase4,
+    phase5_fixtures,
     record,
+    results,
     slices,
     spike,
 )
@@ -277,6 +279,26 @@ def _cmd_phase4_next(_args) -> int:
     return 0
 
 
+def _emit(md: str, write: str | None) -> int:
+    if write:
+        Path(write).parent.mkdir(parents=True, exist_ok=True)
+        Path(write).write_text(md)
+        print(f"wrote {write}")
+    else:
+        print(md)
+    return 0
+
+
+def _cmd_results_doc(args) -> int:
+    """Phase 5: the results document from the committed Phase 4 run."""
+    return _emit(results.render(results.load_real()), args.write)
+
+
+def _cmd_results_fixture(args) -> int:
+    """Phase 5: a results document from a fixture with planted bad news."""
+    return _emit(results.render(phase5_fixtures.evidence(args.name)), args.write)
+
+
 def _cmd_loop_fixture(args) -> int:
     """Run the loop over a fixture workload (no Neon, no model) and print its
     output and whether it matches the fixture's expectation."""
@@ -408,6 +430,12 @@ def main(argv: list[str] | None = None) -> int:
     er.set_defaults(**neon_args)
     sub.add_parser("eval-report", help="Phase 4: pool every evaluation run and apply criteria")
     sub.add_parser("phase4-next", help="print the next Phase 4 task from committed state")
+    rd = sub.add_parser("results-doc", help="Phase 5: the results document from the committed "
+                        "run (verifies every input)")
+    rd.add_argument("--write", help="write markdown here (docs/results.md)")
+    rf = sub.add_parser("results-fixture", help="Phase 5: a results document from a fixture")
+    rf.add_argument("name", choices=list(phase5_fixtures.NAMES))
+    rf.add_argument("--write", help="write markdown here (docs/fixtures/results-<name>.md)")
     lf = sub.add_parser("loop-fixture", help="run the loop over a fixture workload, offline")
     lf.add_argument("name", choices=["qualifying", "refusal-criteria-unmet"])
     lf.add_argument("--out", default="runs/fixtures")
@@ -426,7 +454,8 @@ def main(argv: list[str] | None = None) -> int:
                 "verify-record": _cmd_verify_record, "cleanup-branches": _cmd_cleanup_branches,
                 "loop-run": _cmd_loop_run, "eval-run": _cmd_eval_run,
                 "eval-report": _cmd_eval_report, "phase4-next": _cmd_phase4_next,
-                "loop-fixture": _cmd_loop_fixture}
+                "loop-fixture": _cmd_loop_fixture, "results-doc": _cmd_results_doc,
+                "results-fixture": _cmd_results_fixture}
     return handlers[args.cmd](args)
 
 

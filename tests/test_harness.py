@@ -189,6 +189,23 @@ def test_pooling_uses_scored_runs_only_and_reports_spread(tmp_path):
     assert cell["cost_per_successful_query_usd"] == pytest.approx(0.02 / 2000)
 
 
+def test_pooling_keeps_timeouts_and_errors_apart(tmp_path):
+    m = harness.Method.from_criteria(DOC, SHA, LM.data)
+    d = tmp_path / "t"
+    d.mkdir()
+    outcomes = ["ok"] * 90 + ["timeout"] * 6 + ["client_timeout"] * 1 + ["error"] * 3
+    with (d / "session-000.csv").open("w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(FIELDS)
+        for n, o in enumerate(outcomes):
+            w.writerow(["measure", "s01", n, n, 10.0, o, "57014" if o == "timeout" else ""])
+    (cell,) = harness.pool([_pooled_row({"dir": "t", "files": harness.raw_hashes(d)})],
+                           tmp_path, m)
+    s = cell["by_shape"]["s01"]
+    assert (s["timeouts"], s["errors"], s["observations"]) == (7, 3, 100)
+    assert s["failure_fraction"] == pytest.approx(0.10)
+
+
 def test_pooling_refuses_raw_logs_that_do_not_match_the_record(tmp_path):
     m = harness.Method.from_criteria(DOC, SHA, LM.data)
     a = _write_run(tmp_path, "a", [10.0] * 100)

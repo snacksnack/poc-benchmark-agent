@@ -9,14 +9,17 @@ the same declared load. Success criteria are written and hash-pinned before
 any experiment runs, the recommendation is scored on a held-out slice it never
 saw, and the results document reports losses and refusals as well as wins.
 
-Status: **Phase 3** (RC1-631): the benchmark harness, exercised against
-both baselines, 24 of 24 runs scored (ADR 0020, ADR 0021,
-`docs/phase3-baselines.md`, `docs/phase3-findings.md`). Phase 2 (RC1-630) froze and pinned the
-success criteria (`docs/criteria.md`). Phase 1 (RC1-629) built the corpus, query log,
-profiler and held-out split (`docs/phase1-profile.md`,
-`docs/phase1-findings.md`). Phase 0 (RC1-628) committed the decisions, risk
-log, load model and cost model, and passed the noise gate
-(`docs/noise-gate.md`). Epic: RC1-595.
+Status: **Phase 5** (RC1-633): the results document, generated from verified
+evidence (`docs/results.md`, ADR 0025, `docs/phase5-findings.md`), with fixture
+documents for a loss, an under-sampled key tail and a refusal
+(`docs/fixtures/`). Phase 4 (RC1-632) ran the adaptive loop and the held-out
+evaluation and froze a refusal, CRITERIA UNMET (ADR 0022-0024,
+`docs/phase4-findings.md`). Phase 3 (RC1-631) built the benchmark harness (ADR
+0020, ADR 0021). Phase 2 (RC1-630) froze and pinned the success criteria
+(`docs/criteria.md`). Phase 1 (RC1-629) built the corpus, query log, profiler
+and held-out split. Phase 0 (RC1-628) committed the decisions, risk log, load
+model and cost model, and passed the noise gate (`docs/noise-gate.md`). Epic:
+RC1-595.
 
 ## Layout
 
@@ -43,6 +46,9 @@ log, load model and cost model, and passed the noise gate
 | `pocbench/record.py` | Append-only, hash-chained results record; refuses rows a scored run could not produce. |
 | `pocbench/slices.py`, `pocbench/candidate.py` | Slice rebuild with the leak guard; the frozen candidate or refusal the evaluation entry point requires. |
 | `pocbench/phase3.py` | Phase 3 on Neon: baseline branches, filler, development protocol, cost lines, cleanup. |
+| `pocbench/loop.py`, `pocbench/phase4.py` | Phase 4: the adaptive loop, the freeze, and the held-out evaluation across jobs. |
+| `pocbench/results.py`, `pocbench/phase5_fixtures.py` | Phase 5: the results document from verified evidence, and fixture evidence with planted bad news. |
+| `docs/results.md`, `docs/fixtures/` | Generated results documents (real run, fixtures). Do not edit by hand. |
 
 ## Running
 
@@ -70,6 +76,12 @@ uv run pocbench verify-record runs/phase3/record.jsonl
 uv run pocbench harness-report --run-dir runs/phase3 --results results/phase3 \
   --write docs/phase3-baselines.md
 uv run pocbench harness-try --dsn "$CORPUS_DSN" --measure 30   # dev aid; never writes the record
+```
+
+```bash
+# Phase 5 results documents (offline; regenerate after any change, tests check freshness)
+uv run pocbench results-doc --write docs/results.md
+uv run pocbench results-fixture losing --write docs/fixtures/results-losing.md
 ```
 
 Scored runs execute from a GitHub-hosted runner (`.github/workflows/benchmark.yml`),
