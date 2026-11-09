@@ -1,0 +1,7 @@
+{
+  "name": "refusal",
+  "phase4_fixture": "refusal-criteria-unmet",
+  "about": "The daily report (s07) stays above its ceiling with every permitted index at every tier, so the loop refuses (CRITERIA UNMET, naming s07) and the evaluation measures only the two baselines. The document must lead with the refusal and label the best tested candidate as failing to qualify everywhere it appears.",
+  "held_out": [],
+  "expected": {"kind": "refusal", "lead": ["refusal", "best_tested"], "class": "CRITERIA UNMET", "shapes_include": ["s07"]}
+}

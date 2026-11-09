@@ -126,8 +126,11 @@ class ExperimentRunner(Protocol):
 class LoopLog:
     """Hash-chained JSON lines, same chain as the results record."""
 
-    def __init__(self, path: Path, header: dict):
+    def __init__(self, path: Path, header: dict,
+                 clock: Callable[[], str] = lambda: datetime.now(UTC).isoformat(
+                     timespec="seconds")):
         self.path = path
+        self.clock = clock  # fixtures pin it so their logs hash the same every run
         if path.exists():
             rows = record.verify(path)
             for k in ("criteria_sha256", "config_space_sha256"):
@@ -141,7 +144,7 @@ class LoopLog:
             self.append({"kind": "header", **header})
 
     def append(self, row: dict) -> dict:
-        row = {"at": datetime.now(UTC).isoformat(timespec="seconds")} | row
+        row = {"at": self.clock()} | row
         sealed = record._seal(row, self._prev)
         with self.path.open("a") as fh:
             fh.write(json.dumps(sealed, sort_keys=True, default=str) + "\n")

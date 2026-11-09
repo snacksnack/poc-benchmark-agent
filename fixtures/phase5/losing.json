@@ -1,0 +1,9 @@
+{
+  "name": "losing",
+  "phase4_fixture": "qualifying",
+  "about": "The qualifying workload's recommendation (1 CU, all eight candidates) holds on the profiling slice, but on held-out accounts its contact page (s04) runs 40 times slower: a loss against today that the profiling slice cannot show. The document must lead with the loss.",
+  "held_out": [
+    {"config": "candidate", "shape": "s04", "latency_factor": 40}
+  ],
+  "expected": {"kind": "candidate", "lead": ["loss", "missed"], "loss_shapes": ["s04"]}
+}

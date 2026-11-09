@@ -1,0 +1,9 @@
+{
+  "name": "under-sampled",
+  "phase4_fixture": "qualifying",
+  "about": "The qualifying workload's recommendation, evaluated on a held-out slice whose email lookups (s02, a goal shape) repeat a few addresses in the tail: at most 8 distinct instances beyond p99, under the floor of 10. The p99 criteria on s02 are unsupported, not met, and the document must lead with the under-sampled key tail.",
+  "held_out": [
+    {"config": "*", "shape": "s02", "percentile": 99, "distinct_cap": 8}
+  ],
+  "expected": {"kind": "candidate", "lead": ["under_sampled", "missed"], "under_sampled_shapes": ["s02"]}
+}
