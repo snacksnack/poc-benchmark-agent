@@ -86,6 +86,6 @@ Neon.
   seven indexes, 0.17% costlier per successful query than the eight the
   script reaches, inside the 20% noise floor and one index build cheaper.
   The output rule ranks by point estimate; the advisory reports it red.
-- This repo's Actions runs do not reach CI Visibility, so the estate's
-  CI-failure monitor cannot see them until the Datadog GitHub App is granted
-  the repository. The entity carries `gap:no-pipeline-events`.
+- This repo's Actions runs did not reach CI Visibility until the per-repo
+  GitHub Actions toggle was turned on (found here, fixed 2026-11-08). The
+  entity carries the CI pipeline fingerprint.

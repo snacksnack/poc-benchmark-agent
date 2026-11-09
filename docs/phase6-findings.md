@@ -55,15 +55,17 @@ freeze.
 The advisory floor is 90%. It stays red until the development interval
 includes variation between jobs (R18).
 
-## 5. This repo is invisible to CI Visibility
+## 5. This repo was invisible to CI Visibility (fixed)
 
 85 Actions runs since 2026-11-06 (the Phase 4 chain, PR CI) produced no
-pipeline events, while the other active estate repos appear. The
-estate's CI-failure monitor (318355169) queries pipeline events, so it cannot
-see a red build here. Test Optimization still works (it is agentless from
-pytest). The likely cause is the Datadog GitHub App's repository selection;
-granting it this repository is an account setting. The entity carries
-`gap:no-pipeline-events` and has no pipeline fingerprints until then.
+pipeline events, while the other active estate repos appear, so the estate's
+CI-failure monitor (318355169) could not see a red build here. Test
+Optimization was unaffected (it is agentless from pytest). The Datadog GitHub
+App already had the repository; the cause was the per-repo toggle under
+Software Delivery, Settings, GitHub Actions, which was off. Turned on
+2026-11-08; the next CI run arrived as pipeline `CI`, fingerprint
+`AQF9JJ56qcV6`, status success, now on the catalog entity. A new repo
+needs that toggle checked as part of its Datadog wiring.
 
 ## 6. Not done here
 
