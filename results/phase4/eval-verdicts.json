@@ -1,0 +1,4501 @@
+{
+  "frozen": {
+    "kind": "refusal",
+    "sha256": "09e832e86edafaa48cf8d684fb83c2f43c9b439660c1f8209596f4e14a6f18a4"
+  },
+  "verdicts": {
+    "held_out": {
+      "default": {
+        "against": "naive",
+        "all_met": false,
+        "basis": "held_out slice, evaluation protocol",
+        "candidate": "default",
+        "counts": {
+          "failed": 41,
+          "inconclusive": 5,
+          "met": 8,
+          "unsupported": 26
+        },
+        "criteria_total": 80,
+        "support_scale": 1.0,
+        "verdicts": [
+          {
+            "cache_state": "warm",
+            "id": "C001",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "shape": "s07",
+            "verdict": "unsupported",
+            "why": "no successful s07 observations"
+          },
+          {
+            "bound_ms": 100.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              2770.41,
+              3753.987
+            ],
+            "id": "C002",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 3070.3,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (4 obs, 4 distinct beyond)"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C003",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "shape": "s05",
+            "verdict": "unsupported",
+            "why": "no successful s05 observations"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C004",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "shape": "s03",
+            "verdict": "unsupported",
+            "why": "no successful s03 observations"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C005",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "shape": "s01",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "baseline_ci95_ms": [
+              55.86900000000001,
+              63.84
+            ],
+            "baseline_ms": 59.714,
+            "bound_ms": 70.224,
+            "cache_state": "warm",
+            "ci95_ms": [
+              45.697,
+              73.92099999999999
+            ],
+            "id": "C006",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 59.84,
+            "verdict": "inconclusive",
+            "why": "interval straddles the bound"
+          },
+          {
+            "baseline_ci95_ms": [
+              18.008000000000003,
+              20.723999999999997
+            ],
+            "baseline_ms": 19.238999999999997,
+            "bound_ms": 22.796,
+            "cache_state": "warm",
+            "ci95_ms": [
+              593.578,
+              723.0459999999999
+            ],
+            "id": "C007",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 648.113,
+            "verdict": "failed"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C008",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 22% of s08: its percentiles are survivors only"
+            ],
+            "shape": "s08",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C009",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 26% of s09: its percentiles are survivors only"
+            ],
+            "shape": "s09",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C010",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1364,
+            "shape": "s01",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C011",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 482,
+            "shape": "s02",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C012",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 312,
+            "shape": "s03",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C013",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 291,
+            "shape": "s04",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C014",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 193,
+            "shape": "s05",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C015",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 243,
+            "shape": "s06",
+            "value": 0.119342,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C016",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 141,
+            "shape": "s07",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C017",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 171,
+            "shape": "s08",
+            "value": 0.192982,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C018",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 104,
+            "shape": "s09",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 7.3267,
+            "bound": 7.3267,
+            "cache_state": "warm",
+            "id": "C019",
+            "kind": "throughput_floor",
+            "level": 8,
+            "shape": null,
+            "value": 0.7467,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 8.045081967213114e-06,
+            "bound": 8.045081967213114e-06,
+            "cache_state": "warm",
+            "id": "C020",
+            "kind": "cost_ceiling",
+            "level": 8,
+            "shape": null,
+            "value": 7.852e-05,
+            "verdict": "failed"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C021",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "shape": "s07",
+            "verdict": "unsupported",
+            "why": "no successful s07 observations"
+          },
+          {
+            "bound_ms": 200.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              3152.6600000000003,
+              3810.998
+            ],
+            "id": "C022",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 3251.803,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (5 obs, 3 distinct beyond)"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C023",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "shape": "s05",
+            "verdict": "unsupported",
+            "why": "no successful s05 observations"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C024",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "shape": "s03",
+            "verdict": "unsupported",
+            "why": "no successful s03 observations"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C025",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "shape": "s01",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "baseline_ci95_ms": [
+              63.131,
+              72.41300000000001
+            ],
+            "baseline_ms": 68.23499999999999,
+            "bound_ms": 79.654,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              48.834,
+              70.3
+            ],
+            "id": "C026",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 57.539,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              20.096999999999998,
+              23.212
+            ],
+            "baseline_ms": 21.500000000000007,
+            "bound_ms": 25.533,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              576.6700000000001,
+              688.95
+            ],
+            "id": "C027",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 627.6510000000001,
+            "verdict": "inconclusive",
+            "why": "baseline spread 37.8% >= 20% (noise rule)"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C028",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 19% of s08: its percentiles are survivors only"
+            ],
+            "shape": "s08",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C029",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 25% of s09: its percentiles are survivors only"
+            ],
+            "shape": "s09",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C030",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1356,
+            "shape": "s01",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C031",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 503,
+            "shape": "s02",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C032",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 302,
+            "shape": "s03",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C033",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 335,
+            "shape": "s04",
+            "value": 0.01194,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C034",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 218,
+            "shape": "s05",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C035",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 248,
+            "shape": "s06",
+            "value": 0.096774,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C036",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 150,
+            "shape": "s07",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C037",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 175,
+            "shape": "s08",
+            "value": 0.2,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C038",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 101,
+            "shape": "s09",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 7.3633,
+            "bound": 7.3633,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C039",
+            "kind": "throughput_floor",
+            "level": 8,
+            "shape": null,
+            "value": 0.8033,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 7.935944659060282e-06,
+            "bound": 7.935944659060282e-06,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C040",
+            "kind": "cost_ceiling",
+            "level": 8,
+            "shape": null,
+            "value": 7.373539232053423e-05,
+            "verdict": "failed"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C041",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "shape": "s07",
+            "verdict": "unsupported",
+            "why": "no successful s07 observations"
+          },
+          {
+            "bound_ms": 100.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              4976.6359999999995,
+              5061.196
+            ],
+            "id": "C042",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 4992.101000000001,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (6 obs, 6 distinct beyond)"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C043",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "shape": "s05",
+            "verdict": "unsupported",
+            "why": "no successful s05 observations"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C044",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "shape": "s03",
+            "verdict": "unsupported",
+            "why": "no successful s03 observations"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C045",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "shape": "s01",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "baseline_ci95_ms": [
+              260.366,
+              282.94000000000005
+            ],
+            "baseline_ms": 272.404,
+            "bound_ms": 311.234,
+            "cache_state": "warm",
+            "ci95_ms": [
+              85.68,
+              112.073
+            ],
+            "id": "C046",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 99.375,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              57.906000000000006,
+              64.254
+            ],
+            "baseline_ms": 60.73100000000001,
+            "bound_ms": 70.679,
+            "cache_state": "warm",
+            "ci95_ms": [
+              2815.741,
+              3000.1710000000003
+            ],
+            "id": "C047",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 2919.274,
+            "verdict": "inconclusive",
+            "why": "baseline spread 20.9% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              3.2040000000000006,
+              4.231999999999999
+            ],
+            "baseline_ms": 3.7070000000000007,
+            "bound_ms": 4.655,
+            "cache_state": "warm",
+            "ci95_ms": [
+              2.6289999999999907,
+              3.4409999999999954
+            ],
+            "id": "C048",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 21% of s08: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s08",
+            "support": "measured",
+            "value_ms": 3.015999999999991,
+            "verdict": "inconclusive",
+            "why": "baseline spread 87.8% >= 20% (noise rule)"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C049",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 66% of s09: its percentiles are survivors only"
+            ],
+            "shape": "s09",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C050",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 4564,
+            "shape": "s01",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C051",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1727,
+            "shape": "s02",
+            "value": 0.638101,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C052",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1206,
+            "shape": "s03",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C053",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1136,
+            "shape": "s04",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C054",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 714,
+            "shape": "s05",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C055",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 743,
+            "shape": "s06",
+            "value": 0.072678,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C056",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 507,
+            "shape": "s07",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C057",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 556,
+            "shape": "s08",
+            "value": 0.190647,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C058",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 336,
+            "shape": "s09",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 13.1767,
+            "bound": 13.1767,
+            "cache_state": "warm",
+            "id": "C059",
+            "kind": "throughput_floor",
+            "level": 32,
+            "shape": null,
+            "value": 1.9433,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 4.443186962426437e-06,
+            "bound": 4.443186962426437e-06,
+            "cache_state": "warm",
+            "id": "C060",
+            "kind": "cost_ceiling",
+            "level": 32,
+            "shape": null,
+            "value": 3.0460344827586207e-05,
+            "verdict": "failed"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C061",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "shape": "s07",
+            "verdict": "unsupported",
+            "why": "no successful s07 observations"
+          },
+          {
+            "bound_ms": 200.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              4969.616,
+              5047.879
+            ],
+            "id": "C062",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 4988.98,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (6 obs, 5 distinct beyond)"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C063",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "shape": "s05",
+            "verdict": "unsupported",
+            "why": "no successful s05 observations"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C064",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "shape": "s03",
+            "verdict": "unsupported",
+            "why": "no successful s03 observations"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C065",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "shape": "s01",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "baseline_ci95_ms": [
+              287.033,
+              317.85699999999997
+            ],
+            "baseline_ms": 300.613,
+            "bound_ms": 349.643,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              88.052,
+              107.63199999999998
+            ],
+            "id": "C066",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 96.983,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              61.35999999999999,
+              69.413
+            ],
+            "baseline_ms": 65.13600000000001,
+            "bound_ms": 76.354,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              2821.135,
+              3022.841
+            ],
+            "id": "C067",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 2942.1710000000003,
+            "verdict": "failed"
+          },
+          {
+            "baseline_ci95_ms": [
+              3.6400000000000006,
+              4.5049999999999955
+            ],
+            "baseline_ms": 4.028999999999996,
+            "bound_ms": 4.955,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              1.7920000000000016,
+              2.696000000000012
+            ],
+            "id": "C068",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 19% of s08: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s08",
+            "support": "measured",
+            "value_ms": 2.192999999999998,
+            "verdict": "inconclusive",
+            "why": "baseline spread 84.1% >= 20% (noise rule)"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C069",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 71% of s09: its percentiles are survivors only"
+            ],
+            "shape": "s09",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C070",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 4654,
+            "shape": "s01",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C071",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1719,
+            "shape": "s02",
+            "value": 0.631181,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C072",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1183,
+            "shape": "s03",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C073",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1199,
+            "shape": "s04",
+            "value": 0.00417,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C074",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 682,
+            "shape": "s05",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C075",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 738,
+            "shape": "s06",
+            "value": 0.090786,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C076",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 510,
+            "shape": "s07",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C077",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 597,
+            "shape": "s08",
+            "value": 0.217755,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C078",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 346,
+            "shape": "s09",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 13.1533,
+            "bound": 13.1533,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C079",
+            "kind": "throughput_floor",
+            "level": 32,
+            "shape": null,
+            "value": 1.9633,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 4.490164184415188e-06,
+            "bound": 4.490164184415188e-06,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C080",
+            "kind": "cost_ceiling",
+            "level": 32,
+            "shape": null,
+            "value": 2.9782535401213755e-05,
+            "verdict": "failed"
+          }
+        ]
+      },
+      "naive": {
+        "against": "naive",
+        "all_met": false,
+        "basis": "held_out slice, evaluation protocol",
+        "candidate": "naive",
+        "counts": {
+          "failed": 22,
+          "inconclusive": 9,
+          "met": 33,
+          "unsupported": 16
+        },
+        "criteria_total": 80,
+        "support_scale": 1.0,
+        "verdicts": [
+          {
+            "bound_ms": 2000.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              4719.273,
+              4963.279
+            ],
+            "id": "C001",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 95,
+            "shape": "s07",
+            "support": null,
+            "value_ms": 4958.982,
+            "verdict": "unsupported",
+            "why": "p95 tail not supported (2 obs, 2 distinct beyond)"
+          },
+          {
+            "bound_ms": 100.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              4225.571,
+              4542.462
+            ],
+            "id": "C002",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 4404.623,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (18 obs, 18 distinct beyond)"
+          },
+          {
+            "bound_ms": 2000.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              4372.669,
+              4988.616
+            ],
+            "id": "C003",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s05",
+            "support": null,
+            "value_ms": 4774.21,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (4 obs, 4 distinct beyond)"
+          },
+          {
+            "bound_ms": 1000.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              3616.365,
+              4815.124
+            ],
+            "id": "C004",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s03",
+            "support": null,
+            "value_ms": 4221.907,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (8 obs, 8 distinct beyond)"
+          },
+          {
+            "baseline_ci95_ms": [
+              151.101,
+              173.77
+            ],
+            "baseline_ms": 162.497,
+            "bound_ms": 191.147,
+            "cache_state": "warm",
+            "ci95_ms": [
+              151.101,
+              173.77
+            ],
+            "id": "C005",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 95,
+            "shape": "s01",
+            "support": "measured",
+            "value_ms": 162.497,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              55.86900000000001,
+              63.84
+            ],
+            "baseline_ms": 59.714,
+            "bound_ms": 70.224,
+            "cache_state": "warm",
+            "ci95_ms": [
+              55.86900000000001,
+              63.84
+            ],
+            "id": "C006",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 59.714,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              18.008000000000003,
+              20.723999999999997
+            ],
+            "baseline_ms": 19.238999999999997,
+            "bound_ms": 22.796,
+            "cache_state": "warm",
+            "ci95_ms": [
+              18.008000000000003,
+              20.723999999999997
+            ],
+            "id": "C007",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 19.238999999999997,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              1.8309999999999995,
+              2.604999999999997
+            ],
+            "baseline_ms": 2.1940000000000026,
+            "bound_ms": 2.865,
+            "cache_state": "warm",
+            "ci95_ms": [
+              1.8309999999999995,
+              2.604999999999997
+            ],
+            "id": "C008",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 22% of s08: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s08",
+            "support": "measured",
+            "value_ms": 2.1940000000000026,
+            "verdict": "inconclusive",
+            "why": "baseline spread 58.8% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              863.457,
+              1400.695
+            ],
+            "baseline_ms": 1153.281,
+            "bound_ms": 1540.764,
+            "cache_state": "warm",
+            "ci95_ms": [
+              863.457,
+              1400.695
+            ],
+            "id": "C009",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 26% of s09: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s09",
+            "support": "measured",
+            "value_ms": 1153.281,
+            "verdict": "inconclusive",
+            "why": "baseline spread 32.2% >= 20% (noise rule)"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C010",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 4784,
+            "shape": "s01",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C011",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1865,
+            "shape": "s02",
+            "value": 0.001609,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C012",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1315,
+            "shape": "s03",
+            "value": 0.353612,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C013",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1450,
+            "shape": "s04",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C014",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 620,
+            "shape": "s05",
+            "value": 0.275806,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C015",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 777,
+            "shape": "s06",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C016",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 491,
+            "shape": "s07",
+            "value": 0.88391,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C017",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 643,
+            "shape": "s08",
+            "value": 0.222395,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C018",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 341,
+            "shape": "s09",
+            "value": 0.26393,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 7.3267,
+            "bound": 7.3267,
+            "cache_state": "warm",
+            "id": "C019",
+            "kind": "throughput_floor",
+            "level": 8,
+            "shape": null,
+            "value": 7.3267,
+            "verdict": "met"
+          },
+          {
+            "baseline": 8.045081967213114e-06,
+            "bound": 8.045081967213114e-06,
+            "cache_state": "warm",
+            "id": "C020",
+            "kind": "cost_ceiling",
+            "level": 8,
+            "shape": null,
+            "value": 8.045081967213114e-06,
+            "verdict": "met"
+          },
+          {
+            "bound_ms": 4000.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              4548.7029999999995,
+              4947.263
+            ],
+            "id": "C021",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 95,
+            "shape": "s07",
+            "support": null,
+            "value_ms": 4774.334,
+            "verdict": "unsupported",
+            "why": "p95 tail not supported (1 obs, 1 distinct beyond)"
+          },
+          {
+            "bound_ms": 200.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              4283.388,
+              4639.324
+            ],
+            "id": "C022",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 4453.789,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (19 obs, 18 distinct beyond)"
+          },
+          {
+            "bound_ms": 4000.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              4725.2789999999995,
+              4914.272
+            ],
+            "id": "C023",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s05",
+            "support": null,
+            "value_ms": 4820.307,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (4 obs, 4 distinct beyond)"
+          },
+          {
+            "bound_ms": 2000.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              3751.406,
+              4978.911999999999
+            ],
+            "id": "C024",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s03",
+            "support": null,
+            "value_ms": 4343.352,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (8 obs, 7 distinct beyond)"
+          },
+          {
+            "baseline_ci95_ms": [
+              158.997,
+              184.172
+            ],
+            "baseline_ms": 169.086,
+            "bound_ms": 202.589,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              158.997,
+              184.172
+            ],
+            "id": "C025",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 95,
+            "shape": "s01",
+            "support": "measured",
+            "value_ms": 169.086,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              63.131,
+              72.41300000000001
+            ],
+            "baseline_ms": 68.23499999999999,
+            "bound_ms": 79.654,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              63.131,
+              72.41300000000001
+            ],
+            "id": "C026",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 68.23499999999999,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              20.096999999999998,
+              23.212
+            ],
+            "baseline_ms": 21.500000000000007,
+            "bound_ms": 25.533,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              20.096999999999998,
+              23.212
+            ],
+            "id": "C027",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 21.500000000000007,
+            "verdict": "inconclusive",
+            "why": "baseline spread 37.8% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              1.4879999999999995,
+              2.6629999999999967
+            ],
+            "baseline_ms": 2.094999999999999,
+            "bound_ms": 2.929,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              1.4879999999999995,
+              2.6629999999999967
+            ],
+            "id": "C028",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 19% of s08: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s08",
+            "support": "measured",
+            "value_ms": 2.094999999999999,
+            "verdict": "inconclusive",
+            "why": "baseline spread 171.9% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              933.718,
+              1452.4669999999999
+            ],
+            "baseline_ms": 1170.126,
+            "bound_ms": 1597.714,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              933.718,
+              1452.4669999999999
+            ],
+            "id": "C029",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 25% of s09: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s09",
+            "support": "measured",
+            "value_ms": 1170.126,
+            "verdict": "inconclusive",
+            "why": "baseline spread 25.5% >= 20% (noise rule)"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C030",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 4865,
+            "shape": "s01",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C031",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1907,
+            "shape": "s02",
+            "value": 0.002622,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C032",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1292,
+            "shape": "s03",
+            "value": 0.351393,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C033",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1442,
+            "shape": "s04",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C034",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 655,
+            "shape": "s05",
+            "value": 0.30687,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C035",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 836,
+            "shape": "s06",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C036",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 507,
+            "shape": "s07",
+            "value": 0.925049,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C037",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 607,
+            "shape": "s08",
+            "value": 0.191104,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C038",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 351,
+            "shape": "s09",
+            "value": 0.245014,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 7.3633,
+            "bound": 7.3633,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C039",
+            "kind": "throughput_floor",
+            "level": 8,
+            "shape": null,
+            "value": 7.3633,
+            "verdict": "met"
+          },
+          {
+            "baseline": 7.935944659060282e-06,
+            "bound": 7.935944659060282e-06,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C040",
+            "kind": "cost_ceiling",
+            "level": 8,
+            "shape": null,
+            "value": 7.935944659060282e-06,
+            "verdict": "met"
+          },
+          {
+            "bound_ms": 2000.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              1911.826,
+              3898.937
+            ],
+            "id": "C041",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 95,
+            "shape": "s07",
+            "support": null,
+            "value_ms": 2365.422,
+            "verdict": "unsupported",
+            "why": "p95 tail not supported (2 obs, 2 distinct beyond)"
+          },
+          {
+            "bound_ms": 100.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              4802.749000000001,
+              4965.4890000000005
+            ],
+            "id": "C042",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 4873.807,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (9 obs, 9 distinct beyond)"
+          },
+          {
+            "bound_ms": 2000.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              4745.425,
+              4967.8949999999995
+            ],
+            "id": "C043",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s05",
+            "support": null,
+            "value_ms": 4797.308999999999,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (4 obs, 3 distinct beyond)"
+          },
+          {
+            "bound_ms": 1000.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              3977.491,
+              4488.63
+            ],
+            "id": "C044",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s03",
+            "support": null,
+            "value_ms": 4220.78,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (18 obs, 16 distinct beyond)"
+          },
+          {
+            "baseline_ci95_ms": [
+              1962.655,
+              2372.0769999999998
+            ],
+            "baseline_ms": 2117.387,
+            "bound_ms": 2609.285,
+            "cache_state": "warm",
+            "ci95_ms": [
+              1962.655,
+              2372.0769999999998
+            ],
+            "id": "C045",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 99,
+            "shape": "s01",
+            "support": "measured",
+            "value_ms": 2117.387,
+            "verdict": "inconclusive",
+            "why": "baseline spread 33.5% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              955.443,
+              1030.625
+            ],
+            "baseline_ms": 988.7800000000001,
+            "bound_ms": 1133.688,
+            "cache_state": "warm",
+            "ci95_ms": [
+              955.443,
+              1030.625
+            ],
+            "id": "C046",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 95,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 988.7800000000001,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              57.906000000000006,
+              64.254
+            ],
+            "baseline_ms": 60.73100000000001,
+            "bound_ms": 70.679,
+            "cache_state": "warm",
+            "ci95_ms": [
+              57.906000000000006,
+              64.254
+            ],
+            "id": "C047",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 60.73100000000001,
+            "verdict": "inconclusive",
+            "why": "baseline spread 20.9% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              3.2040000000000006,
+              4.231999999999999
+            ],
+            "baseline_ms": 3.7070000000000007,
+            "bound_ms": 4.655,
+            "cache_state": "warm",
+            "ci95_ms": [
+              3.2040000000000006,
+              4.231999999999999
+            ],
+            "id": "C048",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 21% of s08: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s08",
+            "support": "measured",
+            "value_ms": 3.7070000000000007,
+            "verdict": "inconclusive",
+            "why": "baseline spread 87.8% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              1991.076,
+              2592.554
+            ],
+            "baseline_ms": 2251.116,
+            "bound_ms": 2851.809,
+            "cache_state": "warm",
+            "ci95_ms": [
+              1991.076,
+              2592.554
+            ],
+            "id": "C049",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 66% of s09: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s09",
+            "support": "measured",
+            "value_ms": 2251.116,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C050",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 10730,
+            "shape": "s01",
+            "value": 0.001025,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C051",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 3981,
+            "shape": "s02",
+            "value": 0.764632,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C052",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 2862,
+            "shape": "s03",
+            "value": 0.361286,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C053",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 2927,
+            "shape": "s04",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C054",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1475,
+            "shape": "s05",
+            "value": 0.670508,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C055",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1643,
+            "shape": "s06",
+            "value": 0.000609,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C056",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1393,
+            "shape": "s07",
+            "value": 0.967696,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C057",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1309,
+            "shape": "s08",
+            "value": 0.210848,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C058",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 768,
+            "shape": "s09",
+            "value": 0.65625,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 13.1767,
+            "bound": 13.1767,
+            "cache_state": "warm",
+            "id": "C059",
+            "kind": "throughput_floor",
+            "level": 32,
+            "shape": null,
+            "value": 13.1767,
+            "verdict": "met"
+          },
+          {
+            "baseline": 4.443186962426437e-06,
+            "bound": 4.443186962426437e-06,
+            "cache_state": "warm",
+            "id": "C060",
+            "kind": "cost_ceiling",
+            "level": 32,
+            "shape": null,
+            "value": 4.443186962426437e-06,
+            "verdict": "met"
+          },
+          {
+            "bound_ms": 4000.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              2201.6859999999997,
+              4410.329000000001
+            ],
+            "id": "C061",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 95,
+            "shape": "s07",
+            "support": null,
+            "value_ms": 4323.647,
+            "verdict": "unsupported",
+            "why": "p95 tail not supported (1 obs, 1 distinct beyond)"
+          },
+          {
+            "bound_ms": 200.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              4887.666,
+              4992.772999999999
+            ],
+            "id": "C062",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 4956.127,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (9 obs, 9 distinct beyond)"
+          },
+          {
+            "bound_ms": 4000.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              4869.951,
+              5000.253000000001
+            ],
+            "id": "C063",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s05",
+            "support": null,
+            "value_ms": 4931.0419999999995,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (4 obs, 4 distinct beyond)"
+          },
+          {
+            "bound_ms": 2000.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              3513.672,
+              4561.991999999999
+            ],
+            "id": "C064",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s03",
+            "support": null,
+            "value_ms": 4053.3439999999996,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (16 obs, 13 distinct beyond)"
+          },
+          {
+            "baseline_ci95_ms": [
+              1842.4289999999999,
+              2222.663
+            ],
+            "baseline_ms": 2017.321,
+            "bound_ms": 2444.929,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              1842.4289999999999,
+              2222.663
+            ],
+            "id": "C065",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 99,
+            "shape": "s01",
+            "support": "measured",
+            "value_ms": 2017.321,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              1190.62,
+              1337.01
+            ],
+            "baseline_ms": 1245.754,
+            "bound_ms": 1470.711,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              1190.62,
+              1337.01
+            ],
+            "id": "C066",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 95,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 1245.754,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              61.35999999999999,
+              69.413
+            ],
+            "baseline_ms": 65.13600000000001,
+            "bound_ms": 76.354,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              61.35999999999999,
+              69.413
+            ],
+            "id": "C067",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 65.13600000000001,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              3.6400000000000006,
+              4.5049999999999955
+            ],
+            "baseline_ms": 4.028999999999996,
+            "bound_ms": 4.955,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              3.6400000000000006,
+              4.5049999999999955
+            ],
+            "id": "C068",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 19% of s08: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s08",
+            "support": "measured",
+            "value_ms": 4.028999999999996,
+            "verdict": "inconclusive",
+            "why": "baseline spread 84.1% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              1963.26,
+              2566.0969999999998
+            ],
+            "baseline_ms": 2249.979,
+            "bound_ms": 2822.707,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              1963.26,
+              2566.0969999999998
+            ],
+            "id": "C069",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 71% of s09: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s09",
+            "support": "measured",
+            "value_ms": 2249.979,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C070",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 10767,
+            "shape": "s01",
+            "value": 0.000186,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C071",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 4001,
+            "shape": "s02",
+            "value": 0.771307,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C072",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 2654,
+            "shape": "s03",
+            "value": 0.380934,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C073",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 2904,
+            "shape": "s04",
+            "value": 0.004821,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C074",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1499,
+            "shape": "s05",
+            "value": 0.705804,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C075",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1645,
+            "shape": "s06",
+            "value": 0.002432,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C076",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1327,
+            "shape": "s07",
+            "value": 0.974378,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C077",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1373,
+            "shape": "s08",
+            "value": 0.190823,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C078",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 792,
+            "shape": "s09",
+            "value": 0.705808,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 13.1533,
+            "bound": 13.1533,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C079",
+            "kind": "throughput_floor",
+            "level": 32,
+            "shape": null,
+            "value": 13.1533,
+            "verdict": "met"
+          },
+          {
+            "baseline": 4.490164184415188e-06,
+            "bound": 4.490164184415188e-06,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C080",
+            "kind": "cost_ceiling",
+            "level": 32,
+            "shape": null,
+            "value": 4.490164184415188e-06,
+            "verdict": "met"
+          }
+        ]
+      }
+    },
+    "profiling": {
+      "default": {
+        "against": "naive",
+        "all_met": false,
+        "basis": "profiling slice, evaluation protocol",
+        "candidate": "default",
+        "counts": {
+          "failed": 41,
+          "inconclusive": 4,
+          "met": 7,
+          "unsupported": 28
+        },
+        "criteria_total": 80,
+        "support_scale": 1.0,
+        "verdicts": [
+          {
+            "cache_state": "warm",
+            "id": "C001",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "shape": "s07",
+            "verdict": "unsupported",
+            "why": "no successful s07 observations"
+          },
+          {
+            "bound_ms": 100.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              2571.073,
+              3010.587
+            ],
+            "id": "C002",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 2678.521,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (5 obs, 5 distinct beyond)"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C003",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "shape": "s05",
+            "verdict": "unsupported",
+            "why": "no successful s05 observations"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C004",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "shape": "s03",
+            "verdict": "unsupported",
+            "why": "no successful s03 observations"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C005",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "shape": "s01",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "baseline_ci95_ms": [
+              66.487,
+              79.703
+            ],
+            "baseline_ms": 72.18,
+            "bound_ms": 87.673,
+            "cache_state": "warm",
+            "ci95_ms": [
+              44.941,
+              65.006
+            ],
+            "id": "C006",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 53.999,
+            "verdict": "inconclusive",
+            "why": "baseline spread 38.0% >= 20% (noise rule)"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C007",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "shape": "s06",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C008",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 15% of s08: its percentiles are survivors only"
+            ],
+            "shape": "s08",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C009",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 35% of s09: its percentiles are survivors only"
+            ],
+            "shape": "s09",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C010",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1336,
+            "shape": "s01",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C011",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 596,
+            "shape": "s02",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C012",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 324,
+            "shape": "s03",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C013",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 357,
+            "shape": "s04",
+            "value": 0.014006,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C014",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 168,
+            "shape": "s05",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C015",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 161,
+            "shape": "s06",
+            "value": 0.093168,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C016",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 198,
+            "shape": "s07",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C017",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 211,
+            "shape": "s08",
+            "value": 0.123223,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C018",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 101,
+            "shape": "s09",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 6.8767,
+            "bound": 6.8767,
+            "cache_state": "warm",
+            "id": "C019",
+            "kind": "throughput_floor",
+            "level": 8,
+            "shape": null,
+            "value": 0.8533,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 8.554619407321325e-06,
+            "bound": 8.554619407321325e-06,
+            "cache_state": "warm",
+            "id": "C020",
+            "kind": "cost_ceiling",
+            "level": 8,
+            "shape": null,
+            "value": 6.906567630961689e-05,
+            "verdict": "failed"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C021",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "shape": "s07",
+            "verdict": "unsupported",
+            "why": "no successful s07 observations"
+          },
+          {
+            "bound_ms": 200.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              2459.194,
+              3784.4
+            ],
+            "id": "C022",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 2588.326,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (5 obs, 5 distinct beyond)"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C023",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "shape": "s05",
+            "verdict": "unsupported",
+            "why": "no successful s05 observations"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C024",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "shape": "s03",
+            "verdict": "unsupported",
+            "why": "no successful s03 observations"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C025",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "shape": "s01",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "baseline_ci95_ms": [
+              66.893,
+              77.648
+            ],
+            "baseline_ms": 71.979,
+            "bound_ms": 85.413,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              43.681000000000004,
+              64.434
+            ],
+            "id": "C026",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 51.32,
+            "verdict": "met"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C027",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "shape": "s06",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C028",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 16% of s08: its percentiles are survivors only"
+            ],
+            "shape": "s08",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C029",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 31% of s09: its percentiles are survivors only"
+            ],
+            "shape": "s09",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C030",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1387,
+            "shape": "s01",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C031",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 535,
+            "shape": "s02",
+            "value": 0.009346,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C032",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 328,
+            "shape": "s03",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C033",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 390,
+            "shape": "s04",
+            "value": 0.010256,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C034",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 154,
+            "shape": "s05",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C035",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 163,
+            "shape": "s06",
+            "value": 0.104294,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C036",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 192,
+            "shape": "s07",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C037",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 184,
+            "shape": "s08",
+            "value": 0.13587,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C038",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 104,
+            "shape": "s09",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 6.9767,
+            "bound": 6.9767,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C039",
+            "kind": "throughput_floor",
+            "level": 8,
+            "shape": null,
+            "value": 0.82,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 8.368226600985221e-06,
+            "bound": 8.368226600985221e-06,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C040",
+            "kind": "cost_ceiling",
+            "level": 8,
+            "shape": null,
+            "value": 7.234643734643735e-05,
+            "verdict": "failed"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C041",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "shape": "s07",
+            "verdict": "unsupported",
+            "why": "no successful s07 observations"
+          },
+          {
+            "bound_ms": 100.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              4987.691,
+              5004.182
+            ],
+            "id": "C042",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 4994.438,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (6 obs, 6 distinct beyond)"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C043",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "shape": "s05",
+            "verdict": "unsupported",
+            "why": "no successful s05 observations"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C044",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "shape": "s03",
+            "verdict": "unsupported",
+            "why": "no successful s03 observations"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C045",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "shape": "s01",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "baseline_ci95_ms": [
+              273.29,
+              298.955
+            ],
+            "baseline_ms": 285.586,
+            "bound_ms": 328.851,
+            "cache_state": "warm",
+            "ci95_ms": [
+              101.65400000000001,
+              118.64100000000002
+            ],
+            "id": "C046",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 111.32300000000001,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              60.375,
+              69.812
+            ],
+            "baseline_ms": 65.358,
+            "bound_ms": 76.793,
+            "cache_state": "warm",
+            "ci95_ms": [
+              2940.4719999999998,
+              3091.73
+            ],
+            "id": "C047",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 3010.579,
+            "verdict": "failed"
+          },
+          {
+            "baseline_ci95_ms": [
+              3.2830000000000013,
+              4.446000000000005
+            ],
+            "baseline_ms": 3.7860000000000014,
+            "bound_ms": 4.891,
+            "cache_state": "warm",
+            "ci95_ms": [
+              2.331000000000003,
+              3.3669999999999973
+            ],
+            "id": "C048",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 15% of s08: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s08",
+            "support": "measured",
+            "value_ms": 2.6850000000000023,
+            "verdict": "inconclusive",
+            "why": "baseline spread 42.3% >= 20% (noise rule)"
+          },
+          {
+            "cache_state": "warm",
+            "id": "C049",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 67% of s09: its percentiles are survivors only"
+            ],
+            "shape": "s09",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C050",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 4343,
+            "shape": "s01",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C051",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1883,
+            "shape": "s02",
+            "value": 0.663834,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C052",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1223,
+            "shape": "s03",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C053",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1302,
+            "shape": "s04",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C054",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 643,
+            "shape": "s05",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C055",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 651,
+            "shape": "s06",
+            "value": 0.043011,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C056",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 638,
+            "shape": "s07",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C057",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 697,
+            "shape": "s08",
+            "value": 0.124821,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C058",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 419,
+            "shape": "s09",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 12.6133,
+            "bound": 12.6133,
+            "cache_state": "warm",
+            "id": "C059",
+            "kind": "throughput_floor",
+            "level": 32,
+            "shape": null,
+            "value": 2.0933,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 4.652638786474244e-06,
+            "bound": 4.652638786474244e-06,
+            "cache_state": "warm",
+            "id": "C060",
+            "kind": "cost_ceiling",
+            "level": 32,
+            "shape": null,
+            "value": 2.7883522727272726e-05,
+            "verdict": "failed"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C061",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "shape": "s07",
+            "verdict": "unsupported",
+            "why": "no successful s07 observations"
+          },
+          {
+            "bound_ms": 200.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              4976.473,
+              5016.965
+            ],
+            "id": "C062",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 4990.2390000000005,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (5 obs, 5 distinct beyond)"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C063",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "shape": "s05",
+            "verdict": "unsupported",
+            "why": "no successful s05 observations"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C064",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "shape": "s03",
+            "verdict": "unsupported",
+            "why": "no successful s03 observations"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C065",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "shape": "s01",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "baseline_ci95_ms": [
+              289.995,
+              318.30600000000004
+            ],
+            "baseline_ms": 307.38300000000004,
+            "bound_ms": 350.137,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              99.55699999999999,
+              120.988
+            ],
+            "id": "C066",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 110.66300000000001,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              61.555,
+              68.69200000000001
+            ],
+            "baseline_ms": 64.661,
+            "bound_ms": 75.561,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              2978.759,
+              3152.308
+            ],
+            "id": "C067",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 1% of s06: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 3053.096,
+            "verdict": "inconclusive",
+            "why": "baseline spread 27.1% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              2.8100000000000023,
+              3.686000000000007
+            ],
+            "baseline_ms": 3.153000000000006,
+            "bound_ms": 4.055,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              2.801000000000002,
+              3.742999999999995
+            ],
+            "id": "C068",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 16% of s08: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s08",
+            "support": "measured",
+            "value_ms": 3.0690000000000026,
+            "verdict": "inconclusive",
+            "why": "baseline spread 130.4% >= 20% (noise rule)"
+          },
+          {
+            "cache_state": "post-restart-with-eviction",
+            "id": "C069",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 71% of s09: its percentiles are survivors only"
+            ],
+            "shape": "s09",
+            "verdict": "unsupported",
+            "why": "no percentile supported on both sides"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C070",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 4473,
+            "shape": "s01",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C071",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1819,
+            "shape": "s02",
+            "value": 0.675096,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C072",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1242,
+            "shape": "s03",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C073",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1380,
+            "shape": "s04",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C074",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 662,
+            "shape": "s05",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C075",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 703,
+            "shape": "s06",
+            "value": 0.059744,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C076",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 588,
+            "shape": "s07",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C077",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 724,
+            "shape": "s08",
+            "value": 0.15884,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C078",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 377,
+            "shape": "s09",
+            "value": 1.0,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 12.7133,
+            "bound": 12.7133,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C079",
+            "kind": "throughput_floor",
+            "level": 32,
+            "shape": null,
+            "value": 2.16,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 4.6423691402144205e-06,
+            "bound": 4.6423691402144205e-06,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C080",
+            "kind": "cost_ceiling",
+            "level": 32,
+            "shape": null,
+            "value": 2.7255476704720764e-05,
+            "verdict": "failed"
+          }
+        ]
+      },
+      "naive": {
+        "against": "naive",
+        "all_met": false,
+        "basis": "profiling slice, evaluation protocol",
+        "candidate": "naive",
+        "counts": {
+          "failed": 23,
+          "inconclusive": 11,
+          "met": 30,
+          "unsupported": 16
+        },
+        "criteria_total": 80,
+        "support_scale": 1.0,
+        "verdicts": [
+          {
+            "bound_ms": 2000.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              4730.494000000001,
+              4909.9130000000005
+            ],
+            "id": "C001",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 95,
+            "shape": "s07",
+            "support": null,
+            "value_ms": 4816.67,
+            "verdict": "unsupported",
+            "why": "p95 tail not supported (3 obs, 3 distinct beyond)"
+          },
+          {
+            "bound_ms": 100.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              4133.384,
+              4540.977
+            ],
+            "id": "C002",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 4278.993,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (18 obs, 18 distinct beyond)"
+          },
+          {
+            "bound_ms": 2000.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              4522.909,
+              4930.819
+            ],
+            "id": "C003",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s05",
+            "support": null,
+            "value_ms": 4724.801,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (5 obs, 5 distinct beyond)"
+          },
+          {
+            "bound_ms": 1000.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              3906.2549999999997,
+              4921.534000000001
+            ],
+            "id": "C004",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s03",
+            "support": null,
+            "value_ms": 4532.768,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (7 obs, 6 distinct beyond)"
+          },
+          {
+            "baseline_ci95_ms": [
+              230.067,
+              274.098
+            ],
+            "baseline_ms": 252.398,
+            "bound_ms": 301.508,
+            "cache_state": "warm",
+            "ci95_ms": [
+              230.067,
+              274.098
+            ],
+            "id": "C005",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 95,
+            "shape": "s01",
+            "support": "measured",
+            "value_ms": 252.398,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              66.487,
+              79.703
+            ],
+            "baseline_ms": 72.18,
+            "bound_ms": 87.673,
+            "cache_state": "warm",
+            "ci95_ms": [
+              66.487,
+              79.703
+            ],
+            "id": "C006",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 72.18,
+            "verdict": "inconclusive",
+            "why": "baseline spread 38.0% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              21.425000000000004,
+              26.841
+            ],
+            "baseline_ms": 24.279000000000003,
+            "bound_ms": 29.525,
+            "cache_state": "warm",
+            "ci95_ms": [
+              21.425000000000004,
+              26.841
+            ],
+            "id": "C007",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 24.279000000000003,
+            "verdict": "inconclusive",
+            "why": "baseline spread 23.0% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              1.179000000000002,
+              1.948999999999998
+            ],
+            "baseline_ms": 1.536999999999999,
+            "bound_ms": 2.144,
+            "cache_state": "warm",
+            "ci95_ms": [
+              1.179000000000002,
+              1.948999999999998
+            ],
+            "id": "C008",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 15% of s08: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s08",
+            "support": "measured",
+            "value_ms": 1.536999999999999,
+            "verdict": "inconclusive",
+            "why": "baseline spread 46.1% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              786.042,
+              1425.4589999999998
+            ],
+            "baseline_ms": 995.965,
+            "bound_ms": 1568.005,
+            "cache_state": "warm",
+            "ci95_ms": [
+              786.042,
+              1425.4589999999998
+            ],
+            "id": "C009",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 35% of s09: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s09",
+            "support": "measured",
+            "value_ms": 995.965,
+            "verdict": "inconclusive",
+            "why": "baseline spread 60.0% >= 20% (noise rule)"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C010",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 4651,
+            "shape": "s01",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C011",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1838,
+            "shape": "s02",
+            "value": 0.000544,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C012",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1068,
+            "shape": "s03",
+            "value": 0.322097,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C013",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1162,
+            "shape": "s04",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C014",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 777,
+            "shape": "s05",
+            "value": 0.346203,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C015",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 678,
+            "shape": "s06",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C016",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 592,
+            "shape": "s07",
+            "value": 0.898649,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C017",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 584,
+            "shape": "s08",
+            "value": 0.14726,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C018",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 320,
+            "shape": "s09",
+            "value": 0.35,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 6.8767,
+            "bound": 6.8767,
+            "cache_state": "warm",
+            "id": "C019",
+            "kind": "throughput_floor",
+            "level": 8,
+            "shape": null,
+            "value": 6.8767,
+            "verdict": "met"
+          },
+          {
+            "baseline": 8.554619407321325e-06,
+            "bound": 8.554619407321325e-06,
+            "cache_state": "warm",
+            "id": "C020",
+            "kind": "cost_ceiling",
+            "level": 8,
+            "shape": null,
+            "value": 8.554619407321325e-06,
+            "verdict": "met"
+          },
+          {
+            "bound_ms": 4000.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              4084.438,
+              4873.659000000001
+            ],
+            "id": "C021",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 95,
+            "shape": "s07",
+            "support": null,
+            "value_ms": 4540.684,
+            "verdict": "unsupported",
+            "why": "p95 tail not supported (3 obs, 3 distinct beyond)"
+          },
+          {
+            "bound_ms": 200.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              3950.304,
+              4443.160000000001
+            ],
+            "id": "C022",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 4155.619000000001,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (18 obs, 18 distinct beyond)"
+          },
+          {
+            "bound_ms": 4000.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              4566.2880000000005,
+              4981.474
+            ],
+            "id": "C023",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s05",
+            "support": null,
+            "value_ms": 4821.348,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (4 obs, 3 distinct beyond)"
+          },
+          {
+            "bound_ms": 2000.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              4297.504000000001,
+              4908.778
+            ],
+            "id": "C024",
+            "kind": "latency_ceiling",
+            "level": 8,
+            "percentile": 99,
+            "shape": "s03",
+            "support": null,
+            "value_ms": 4593.541,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (7 obs, 3 distinct beyond)"
+          },
+          {
+            "baseline_ci95_ms": [
+              233.538,
+              274.754
+            ],
+            "baseline_ms": 253.216,
+            "bound_ms": 302.229,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              233.538,
+              274.754
+            ],
+            "id": "C025",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 95,
+            "shape": "s01",
+            "support": "measured",
+            "value_ms": 253.216,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              66.893,
+              77.648
+            ],
+            "baseline_ms": 71.979,
+            "bound_ms": 85.413,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              66.893,
+              77.648
+            ],
+            "id": "C026",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 71.979,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              19.970000000000002,
+              24.851
+            ],
+            "baseline_ms": 22.507999999999996,
+            "bound_ms": 27.336,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              19.970000000000002,
+              24.851
+            ],
+            "id": "C027",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 22.507999999999996,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              1.198999999999998,
+              1.6720000000000041
+            ],
+            "baseline_ms": 1.448999999999998,
+            "bound_ms": 1.839,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              1.198999999999998,
+              1.6720000000000041
+            ],
+            "id": "C028",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 16% of s08: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s08",
+            "support": "measured",
+            "value_ms": 1.448999999999998,
+            "verdict": "inconclusive",
+            "why": "baseline spread 58.6% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              640.092,
+              946.361
+            ],
+            "baseline_ms": 747.997,
+            "bound_ms": 1040.997,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              640.092,
+              946.361
+            ],
+            "id": "C029",
+            "kind": "no_regression",
+            "level": 8,
+            "notes": [
+              "baseline fails 31% of s09: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s09",
+            "support": "measured",
+            "value_ms": 747.997,
+            "verdict": "inconclusive",
+            "why": "baseline spread 27.3% >= 20% (noise rule)"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C030",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 4779,
+            "shape": "s01",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C031",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1899,
+            "shape": "s02",
+            "value": 0.000527,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C032",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1105,
+            "shape": "s03",
+            "value": 0.323077,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C033",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 1230,
+            "shape": "s04",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C034",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 689,
+            "shape": "s05",
+            "value": 0.342525,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C035",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 668,
+            "shape": "s06",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C036",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 610,
+            "shape": "s07",
+            "value": 0.901639,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C037",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 595,
+            "shape": "s08",
+            "value": 0.157983,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C038",
+            "kind": "error_ceiling",
+            "level": 8,
+            "observations": 318,
+            "shape": "s09",
+            "value": 0.311321,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 6.9767,
+            "bound": 6.9767,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C039",
+            "kind": "throughput_floor",
+            "level": 8,
+            "shape": null,
+            "value": 6.9767,
+            "verdict": "met"
+          },
+          {
+            "baseline": 8.368226600985221e-06,
+            "bound": 8.368226600985221e-06,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C040",
+            "kind": "cost_ceiling",
+            "level": 8,
+            "shape": null,
+            "value": 8.368226600985221e-06,
+            "verdict": "met"
+          },
+          {
+            "bound_ms": 2000.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              2344.514,
+              4959.428999999999
+            ],
+            "id": "C041",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 95,
+            "shape": "s07",
+            "support": null,
+            "value_ms": 3856.929,
+            "verdict": "unsupported",
+            "why": "p95 tail not supported (2 obs, 2 distinct beyond)"
+          },
+          {
+            "bound_ms": 100.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              4879.145,
+              4982.625
+            ],
+            "id": "C042",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 4930.878000000001,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (9 obs, 8 distinct beyond)"
+          },
+          {
+            "bound_ms": 2000.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              4923.176,
+              5030.976
+            ],
+            "id": "C043",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s05",
+            "support": null,
+            "value_ms": 4960.445,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (4 obs, 4 distinct beyond)"
+          },
+          {
+            "bound_ms": 1000.0,
+            "cache_state": "warm",
+            "ci95_ms": [
+              3620.706,
+              4373.591
+            ],
+            "id": "C044",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s03",
+            "support": null,
+            "value_ms": 4070.999,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (16 obs, 9 distinct beyond)"
+          },
+          {
+            "baseline_ci95_ms": [
+              2450.696,
+              2986.8160000000003
+            ],
+            "baseline_ms": 2667.3900000000003,
+            "bound_ms": 3285.498,
+            "cache_state": "warm",
+            "ci95_ms": [
+              2450.696,
+              2986.8160000000003
+            ],
+            "id": "C045",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 99,
+            "shape": "s01",
+            "support": "measured",
+            "value_ms": 2667.3900000000003,
+            "verdict": "inconclusive",
+            "why": "baseline spread 23.5% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              1018.9390000000001,
+              1112.635
+            ],
+            "baseline_ms": 1057.825,
+            "bound_ms": 1223.899,
+            "cache_state": "warm",
+            "ci95_ms": [
+              1018.9390000000001,
+              1112.635
+            ],
+            "id": "C046",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 95,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 1057.825,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              60.375,
+              69.812
+            ],
+            "baseline_ms": 65.358,
+            "bound_ms": 76.793,
+            "cache_state": "warm",
+            "ci95_ms": [
+              60.375,
+              69.812
+            ],
+            "id": "C047",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 65.358,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              3.2830000000000013,
+              4.446000000000005
+            ],
+            "baseline_ms": 3.7860000000000014,
+            "bound_ms": 4.891,
+            "cache_state": "warm",
+            "ci95_ms": [
+              3.2830000000000013,
+              4.446000000000005
+            ],
+            "id": "C048",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 15% of s08: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s08",
+            "support": "measured",
+            "value_ms": 3.7860000000000014,
+            "verdict": "inconclusive",
+            "why": "baseline spread 42.3% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              2201.392,
+              2893.6330000000003
+            ],
+            "baseline_ms": 2493.725,
+            "bound_ms": 3182.996,
+            "cache_state": "warm",
+            "ci95_ms": [
+              2201.392,
+              2893.6330000000003
+            ],
+            "id": "C049",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 67% of s09: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s09",
+            "support": "measured",
+            "value_ms": 2493.725,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C050",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 10250,
+            "shape": "s01",
+            "value": 0.00322,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C051",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 4229,
+            "shape": "s02",
+            "value": 0.785292,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C052",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 2398,
+            "shape": "s03",
+            "value": 0.325271,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C053",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 2591,
+            "shape": "s04",
+            "value": 0.0,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C054",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1466,
+            "shape": "s05",
+            "value": 0.720327,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C055",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1598,
+            "shape": "s06",
+            "value": 0.003129,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C056",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1206,
+            "shape": "s07",
+            "value": 0.961028,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C057",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1561,
+            "shape": "s08",
+            "value": 0.147982,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "warm",
+            "id": "C058",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 816,
+            "shape": "s09",
+            "value": 0.666667,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 12.6133,
+            "bound": 12.6133,
+            "cache_state": "warm",
+            "id": "C059",
+            "kind": "throughput_floor",
+            "level": 32,
+            "shape": null,
+            "value": 12.6133,
+            "verdict": "met"
+          },
+          {
+            "baseline": 4.652638786474244e-06,
+            "bound": 4.652638786474244e-06,
+            "cache_state": "warm",
+            "id": "C060",
+            "kind": "cost_ceiling",
+            "level": 32,
+            "shape": null,
+            "value": 4.652638786474244e-06,
+            "verdict": "met"
+          },
+          {
+            "bound_ms": 4000.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              2076.064,
+              4434.200000000001
+            ],
+            "id": "C061",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 95,
+            "shape": "s07",
+            "support": null,
+            "value_ms": 4288.835,
+            "verdict": "unsupported",
+            "why": "p95 tail not supported (1 obs, 1 distinct beyond)"
+          },
+          {
+            "bound_ms": 200.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              4898.375999999999,
+              4981.3099999999995
+            ],
+            "id": "C062",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s02",
+            "support": null,
+            "value_ms": 4949.818,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (8 obs, 8 distinct beyond)"
+          },
+          {
+            "bound_ms": 4000.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              4914.595,
+              5058.960999999999
+            ],
+            "id": "C063",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s05",
+            "support": null,
+            "value_ms": 4968.706,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (4 obs, 4 distinct beyond)"
+          },
+          {
+            "bound_ms": 2000.0,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              3437.8889999999997,
+              4559.978999999999
+            ],
+            "id": "C064",
+            "kind": "latency_ceiling",
+            "level": 32,
+            "percentile": 99,
+            "shape": "s03",
+            "support": null,
+            "value_ms": 3818.108,
+            "verdict": "unsupported",
+            "why": "p99 tail not supported (16 obs, 15 distinct beyond)"
+          },
+          {
+            "baseline_ci95_ms": [
+              2341.132,
+              2743.21
+            ],
+            "baseline_ms": 2516.981,
+            "bound_ms": 3017.531,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              2341.132,
+              2743.21
+            ],
+            "id": "C065",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 99,
+            "shape": "s01",
+            "support": "measured",
+            "value_ms": 2516.981,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              1192.211,
+              1374.52
+            ],
+            "baseline_ms": 1270.517,
+            "bound_ms": 1511.972,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              1192.211,
+              1374.52
+            ],
+            "id": "C066",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [],
+            "percentile": 95,
+            "shape": "s04",
+            "support": "measured",
+            "value_ms": 1270.517,
+            "verdict": "met"
+          },
+          {
+            "baseline_ci95_ms": [
+              61.555,
+              68.69200000000001
+            ],
+            "baseline_ms": 64.661,
+            "bound_ms": 75.561,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              61.555,
+              68.69200000000001
+            ],
+            "id": "C067",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 1% of s06: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s06",
+            "support": "measured",
+            "value_ms": 64.661,
+            "verdict": "inconclusive",
+            "why": "baseline spread 27.1% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              2.8100000000000023,
+              3.686000000000007
+            ],
+            "baseline_ms": 3.153000000000006,
+            "bound_ms": 4.055,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              2.8100000000000023,
+              3.686000000000007
+            ],
+            "id": "C068",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 16% of s08: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s08",
+            "support": "measured",
+            "value_ms": 3.153000000000006,
+            "verdict": "inconclusive",
+            "why": "baseline spread 130.4% >= 20% (noise rule)"
+          },
+          {
+            "baseline_ci95_ms": [
+              1988.9350000000002,
+              2815.882
+            ],
+            "baseline_ms": 2376.3469999999998,
+            "bound_ms": 3097.47,
+            "cache_state": "post-restart-with-eviction",
+            "ci95_ms": [
+              1988.9350000000002,
+              2815.882
+            ],
+            "id": "C069",
+            "kind": "no_regression",
+            "level": 32,
+            "notes": [
+              "baseline fails 71% of s09: its percentiles are survivors only"
+            ],
+            "percentile": 50,
+            "shape": "s09",
+            "support": "measured",
+            "value_ms": 2376.3469999999998,
+            "verdict": "inconclusive",
+            "why": "baseline spread 22.9% >= 20% (noise rule)"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C070",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 10209,
+            "shape": "s01",
+            "value": 0.002155,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C071",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 4085,
+            "shape": "s02",
+            "value": 0.78164,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C072",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 2585,
+            "shape": "s03",
+            "value": 0.354739,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C073",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 2729,
+            "shape": "s04",
+            "value": 0.004764,
+            "verdict": "met"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C074",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1462,
+            "shape": "s05",
+            "value": 0.716142,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C075",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1622,
+            "shape": "s06",
+            "value": 0.012947,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C076",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1242,
+            "shape": "s07",
+            "value": 0.979066,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C077",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 1543,
+            "shape": "s08",
+            "value": 0.161374,
+            "verdict": "failed"
+          },
+          {
+            "bound": 0.01,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C078",
+            "kind": "error_ceiling",
+            "level": 32,
+            "observations": 785,
+            "shape": "s09",
+            "value": 0.70828,
+            "verdict": "failed"
+          },
+          {
+            "baseline": 12.7133,
+            "bound": 12.7133,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C079",
+            "kind": "throughput_floor",
+            "level": 32,
+            "shape": null,
+            "value": 12.7133,
+            "verdict": "met"
+          },
+          {
+            "baseline": 4.6423691402144205e-06,
+            "bound": 4.6423691402144205e-06,
+            "cache_state": "post-restart-with-eviction",
+            "id": "C080",
+            "kind": "cost_ceiling",
+            "level": 32,
+            "shape": null,
+            "value": 4.6423691402144205e-06,
+            "verdict": "met"
+          }
+        ]
+      }
+    }
+  }
+}

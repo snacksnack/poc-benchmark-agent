@@ -21,7 +21,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 SCORED, REJECTED = "scored", "rejected"
-ENTRY_SLICE = {"development": "profiling", "evaluation": "held_out"}
+# Development runs see the profiling slice only. Evaluation runs the full
+# protocol on both slices (the profiled-versus-held-out gap, epic rule 3),
+# and only after a freeze: every evaluation row carries the frozen pin.
+ENTRY_SLICES = {"development": ("profiling",), "evaluation": ("held_out", "profiling")}
 GENESIS = "0" * 64
 
 
@@ -104,11 +107,15 @@ class Record:
         if row.get("status") not in (SCORED, REJECTED):
             problems.append(f"status {row.get('status')!r}")
         entry = row.get("entry_point")
-        if entry not in ENTRY_SLICE:
+        if entry not in ENTRY_SLICES:
             problems.append(f"entry point {entry!r}")
-        elif row.get("slice") != ENTRY_SLICE[entry]:
-            problems.append(f"{entry} rows are on the {ENTRY_SLICE[entry]} slice, "
-                            f"not {row.get('slice')!r}")
+        elif row.get("slice") not in ENTRY_SLICES[entry]:
+            problems.append(f"{entry} rows are on the {' or '.join(ENTRY_SLICES[entry])} "
+                            f"slice, not {row.get('slice')!r}")
+        if entry == "evaluation" and not (row.get("frozen") or {}).get("sha256"):
+            problems.append("evaluation rows carry the frozen candidate or refusal pin")
+        if entry == "development" and row.get("frozen"):
+            problems.append("development rows never carry a frozen pin")
         cs = row.get("cache_state")
         spec = row.get("spec", {})
         if cs not in self._warmup:
