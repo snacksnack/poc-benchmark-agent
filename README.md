@@ -9,7 +9,10 @@ the same declared load. Success criteria are written and hash-pinned before
 any experiment runs, the recommendation is scored on a held-out slice it never
 saw, and the results document reports losses and refusals as well as wins.
 
-Status: **Phase 5** (RC1-633): the results document, generated from verified
+Status: **Phase 6** (RC1-634): an agent-evals suite that runs the real Claude
+proposer through the real loop on modeled workloads, LLM Obs traces per loop
+iteration with spend, and Datadog gauges (ADR 0026, `docs/phase6-findings.md`).
+Phase 5 (RC1-633) built the results document, generated from verified
 evidence (`docs/results.md`, ADR 0025, `docs/phase5-findings.md`), with fixture
 documents for a loss, an under-sampled key tail and a refusal
 (`docs/fixtures/`). Phase 4 (RC1-632) ran the adaptive loop and the held-out
@@ -49,6 +52,8 @@ RC1-595.
 | `pocbench/loop.py`, `pocbench/phase4.py` | Phase 4: the adaptive loop, the freeze, and the held-out evaluation across jobs. |
 | `pocbench/results.py`, `pocbench/phase5_fixtures.py` | Phase 5: the results document from verified evidence, and fixture evidence with planted bad news. |
 | `docs/results.md`, `docs/fixtures/` | Generated results documents (real run, fixtures). Do not edit by hand. |
+| `evals/` | Phase 6 eval suite: six cases, three billed (`python -m evals`). |
+| `pocbench/telemetry.py` | LLM Obs (one span per loop iteration) and `pocbench.*` gauges. |
 
 ## Running
 
@@ -82,6 +87,10 @@ uv run pocbench harness-try --dsn "$CORPUS_DSN" --measure 30   # dev aid; never 
 # Phase 5 results documents (offline; regenerate after any change, tests check freshness)
 uv run pocbench results-doc --write docs/results.md
 uv run pocbench results-fixture losing --write docs/fixtures/results-losing.md
+# Phase 6 eval suite: BILLED (about $0.55; needs ANTHROPIC_API_KEY exported).
+# EVAL_DATABASE_URL records to the shared store; DD_API_KEY traces the run.
+uv run --group evals python -m evals --post-datadog
+uv run --group evals python -m evals --case report-honesty   # a free case
 ```
 
 Scored runs execute from a GitHub-hosted runner (`.github/workflows/benchmark.yml`),

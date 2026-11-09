@@ -95,11 +95,22 @@ def build(p5: dict, name: str) -> Evidence:
     """Evidence from a Phase 5 fixture document (tests build controls inline)."""
     fx = fixtures.load(p5["phase4_fixture"])
     doc = criteria.load_verified()
-    crit_sha = harness.criteria_sha256(doc)
     sp = config.config_space().data
     with tempfile.TemporaryDirectory() as tmp:
         _, decision, runner = fixtures.run_fixture(fx, doc, sp, Path(tmp) / "log.jsonl",
                                                    clock=lambda: "fixture")
+    return from_decision(p5, name, fx, decision, runner)
+
+
+def from_decision(p5: dict, name: str, fx: dict, decision: dict,
+                  runner: fixtures.FixtureRunner) -> Evidence:
+    """Evidence for a loop that already ran over a fixture workload: the
+    evaluation its freeze unlocks, with the Phase 5 plants on held-out. The
+    eval suite calls this with the decision a real proposer reached."""
+    doc = criteria.load_verified()
+    crit_sha = harness.criteria_sha256(doc)
+    sp = config.config_space().data
+    decision = dict(decision)
     # The fixture loop ran under the real frozen criteria; its log header just
     # says "fixture". Pin the decision to the criteria it was made under.
     decision["criteria_sha256"] = crit_sha

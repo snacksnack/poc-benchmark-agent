@@ -173,6 +173,10 @@ jobs:
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
           NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # LLM Obs for the loop's proposer (ADR 0026); decoration only.
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+          DD_SITE: datadoghq.com
+          DD_ENV: prod
         run: |
           uv run pocbench loop-run --minutes 315
           rc=$?; echo "STEP_RC=$rc" >> "$GITHUB_ENV"; exit $rc
