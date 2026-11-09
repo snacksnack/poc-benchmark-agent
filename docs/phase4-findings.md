@@ -47,6 +47,14 @@ out every time, 358 never. That is the Phase 1 large-sort trap (s08 orders a
 filtered contact segment by id). Fixing it needs `work_mem` or an index
 outside the candidate list, both excluded from the permitted space by design.
 
+> **Correction, 2026-11-09 (RC1-635).** s08 is not the large-sort trap.
+> s08 is `segment_preview`, trap Q6 in `docs/nastiness.md` (correlated
+> predicates): a mismatched country and region makes the planner expect tens
+> of thousands of matches and walk the primary key over the whole table.
+> Phase 1 measured about 16% of segment calls timing out against a 20%
+> mismatch rate. The fix would be extended statistics, which is also outside
+> the permitted space. The large sort, Q8, is s09. The refusal is unchanged.
+
 The loop never tried 4 CU minus one index. The statement says "no tested
 candidate", which is exactly what the evidence supports.
 
