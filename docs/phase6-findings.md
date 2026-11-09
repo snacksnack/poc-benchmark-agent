@@ -9,6 +9,8 @@ Design: ADR 0026.
   `docs/measuring.md` and the weekly sweep. First run
   `poc-benchmark-agent-20261109T030243.271359Z`, shared store: 6 of 6 cases
   pass, 2 advisory failures (below), $0.539254 of model spend, 6 Claude calls.
+  Second run on the committed code (`poc-benchmark-agent-20261109T030850.599744Z`):
+  same outcome and the same seven-index choice, $0.4539.
 - **Loop traces with spend in the pane.** `ml_obs.trace{ml_app:poc-benchmark-agent}`
   = 6 traces under `service:evals`, `version:0.1.0`; 6 llm spans, 107,606
   input tokens; `ml_obs.span.llm.total.cost` = 539,254,000 nanodollars, the
