@@ -44,8 +44,50 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     permissions:
+      contents: read
+      actions: read # close_dora_failures.sh lists this workflow's runs
       pages: write
       id-token: write
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Record deploy start
+        run: echo "DEPLOY_STARTED_AT=$(date +%s)" >> "$GITHUB_ENV"
+
       - id: deploy
         uses: actions/deploy-pages@v4
+
+      # A DORA event should mean the site serves, not only that the upload
+      # finished (RC1-682). Three consecutive 200s, about three minutes at most.
+      - name: Gate on site health
+        id: site_gate
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+        run: |
+          set -uo pipefail
+          ok=0
+          for _ in $(seq 1 36); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -m 10 "$PAGE_URL" || true)
+            if [ "$code" = 200 ]; then ok=$((ok + 1)); else ok=0; fi
+            [ "$ok" -ge 3 ] && { echo "site healthy: $PAGE_URL"; exit 0; }
+            sleep 5
+          done
+          echo "::error::$PAGE_URL did not answer 200 three times in a row (last: $code)"
+          exit 1
+
+      - name: Report change failure to Datadog DORA
+        if: failure() && steps.site_gate.outcome == 'failure'
+        env:
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+        run: scripts/report_dora_failure.sh poc-benchmark-agent
+
+      - name: Report deploy to Datadog DORA
+        env:
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+        run: scripts/report_dora_deployment.sh poc-benchmark-agent "$DEPLOY_STARTED_AT"
+
+      - name: Close restored DORA change failures
+        env:
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/close_dora_failures.sh poc-benchmark-agent pages.yml "Gate on site health"
